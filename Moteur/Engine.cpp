@@ -284,12 +284,6 @@ void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
 
 void Engine::Engine_Initialize() {
 
-    if (!glfwInit()) {
-        std::cerr << "GLFW init failed." << std::endl;
-        glfwTerminate();
-        return;
-    }
-
     const char* glsl_version = "#version 420";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -326,6 +320,12 @@ void Engine::Engine_Initialize() {
 
 void Engine::Engine_CreateWindow(const char* title, const int width, const int height, bool fullScreen, bool enableMouse)
 {
+    if (!glfwInit()) {
+        std::cerr << "GLFW init failed." << std::endl;
+        glfwTerminate();
+        return;
+    }
+
     if (fullScreen) {
         GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
 
@@ -358,18 +358,23 @@ void Engine::Engine_SetEnableMouse(bool enableMouse)
     ::enableMouse = enableMouse;
 }
 
-void Engine::Engine_CreateShaderProgramFromFiles(unsigned int& id, const char* vertexShader, const char* fragmentShader)
+GLFWwindow* Engine::Engine_GetWindow()
+{
+    return ::window;
+}
+
+void Engine::Engine_CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader)
 {
     //Shader Manager
     cShaderManager* shadyMan = new cShaderManager();
 
-    cShaderManager::cShader v_Shader;
-    cShaderManager::cShader f_Shader;
+    cShaderManager::cShader vertexShader;
+    cShaderManager::cShader fragmentShader;
 
-    v_Shader.fileName = vertexShader;
-    f_Shader.fileName = fragmentShader;
+    vertexShader.fileName = vertShader;
+    fragmentShader.fileName = fragShader;
 
-    if (!shadyMan->createProgramFromFile("ShadyProgram", v_Shader, f_Shader)) {
+    if (!shadyMan->createProgramFromFile("ShadyProgram", vertexShader, fragmentShader)) {
         std::cout << "Error: Shader program failed to compile." << std::endl;
         std::cout << shadyMan->getLastError();
         return;
@@ -402,7 +407,7 @@ void Engine::Engine_LoadAssetsFromTextFile(const char* path)
     readFile.close();
 }
 
-void Engine::Engine_LoadModel(int& id, const char* filepath, const char* modelName, bool doNotLight, glm::vec4 color)
+void Engine::Engine_LoadModel(int& id, const char* filepath, const char* modelName, bool doNotLight, glm::vec3 position, glm::vec4 color)
 {
     sModelDrawInfo model;
 
@@ -414,6 +419,7 @@ void Engine::Engine_LoadModel(int& id, const char* filepath, const char* modelNa
 
     cMeshInfo* mesh = new cMeshInfo();
     mesh->meshName = modelName;
+    mesh->position = position;
     mesh->RGBAColour = color;
     mesh->doNotLight = doNotLight;
     mesh->useRGBAColour = true;
@@ -421,10 +427,10 @@ void Engine::Engine_LoadModel(int& id, const char* filepath, const char* modelNa
 
     getIndex(meshArray, mesh, id);
     if (id != -1) {
-        std::cout << "Model " << modelName << "loaded successfully";
+        std::cout << "Model " << modelName << " loaded successfully." << std::endl;
     }
     else {
-        std::cout << "Error: model " << modelName << "not found.";
+        std::cout << "Error: model " << modelName << " not found." << std::endl;
     }
 }
 
@@ -446,7 +452,7 @@ void Engine::Engine_Create2DTextureFromBMPFile(const char* filePath)
     }
     else
     {
-        std::cout << "Error: failed to load " << filePath << " texture.";
+        std::cout << "Error: failed to load " << filePath << " texture." << std::endl;
     }
 }
 
@@ -480,6 +486,16 @@ void Engine::Engine_SetDrawingArray(std::vector<cMeshInfo*> vecMesh)
 void Engine::Engine_SetPlayerMesh(cMeshInfo* playerMesh)
 {
     ::player_mesh = playerMesh;
+}
+
+void Engine::Engine_SetCameraPosition(glm::vec3 cameraEye)
+{
+    ::cameraEye = cameraEye;
+}
+
+void Engine::Engine_SetPlayerMesh(unsigned int id)
+{
+    ::player_mesh = meshArray[id];
 }
 
 void Engine::Engine_Update() {
@@ -790,12 +806,12 @@ void ManageLights() {
     GLint Param2Location = glGetUniformLocation(shaderID, "sLightsArray[0].param2");
 
     //glm::vec3 lightPosition0 = meshArray[1]->position;
-    glm::vec3 lightPosition0 = glm::vec3(0.f);
+    glm::vec3 lightPosition0 = glm::vec3(0.f, 50.f, 0.f);
     glUniform4f(PositionLocation, lightPosition0.x, lightPosition0.y, lightPosition0.z, 1.0f);
     //glUniform4f(PositionLocation, 0.f, 0.f, 0.f, 1.0f);
     glUniform4f(DiffuseLocation, 1.f, 1.f, 1.f, 1.f);
     glUniform4f(SpecularLocation, 1.f, 1.f, 1.f, 1.f);
-    glUniform4f(AttenLocation, 0.1f, 0.5f, 0.0f, 1.f);
+    glUniform4f(AttenLocation, 0.5f, 0.01f, 0.0f, 1.f);
     glUniform4f(DirectionLocation, 1.f, 1.f, 1.f, 1.f);
     glUniform4f(Param1Location, 0.f, 0.f, 0.f, 1.f); //x = Light Type
     glUniform4f(Param2Location, 1.f, 0.f, 0.f, 1.f); //x = Light on/off
