@@ -206,27 +206,49 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
     break;
     case TAKE_CONTROL: {
-        if (key == GLFW_KEY_W) {
-            player_mesh->velocity.x += 0.5f;
+        constexpr float PLAYER_MOVE_SPEED = 1.f;
+
+        if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+            player_mesh->velocity.x = PLAYER_MOVE_SPEED;
             player_mesh->rotation = glm::quat(glm::vec3(0.f, 67.55f, 0.f));
         }
-        if (key == GLFW_KEY_S) {
-            player_mesh->velocity.x -= 0.5f;
+        if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
+            player_mesh->KillAllForces();
+        }
+        if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+            player_mesh->velocity.x = -PLAYER_MOVE_SPEED;
             player_mesh->rotation = glm::quat(glm::vec3(0.f, -67.55f, 0.f));
         }
-        if (key == GLFW_KEY_A) {
-            player_mesh->velocity.z -= 0.5f;
+        if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
+            player_mesh->KillAllForces();
+        }
+        if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+            player_mesh->velocity.z = -PLAYER_MOVE_SPEED;
             player_mesh->rotation = glm::quat(glm::vec3(0.f, 0.f, 0.f));
         }
-        if (key == GLFW_KEY_D) {
-            player_mesh->velocity.z += 0.5f;
+        if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
+            player_mesh->KillAllForces();
+        }
+        if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+            player_mesh->velocity.z = PLAYER_MOVE_SPEED;
             player_mesh->rotation = glm::quat(glm::vec3(0.f, 135.10f, 0.f));
         }
-        if (key == GLFW_KEY_Q) {
-            player_mesh->velocity.y += 0.5f;
+        if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
+            player_mesh->KillAllForces();
         }
-        if (key == GLFW_KEY_E) {
-            player_mesh->velocity.y -= 0.5f;
+        if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+            player_mesh->velocity.y = PLAYER_MOVE_SPEED;
+            //player_mesh->rotation = glm::quat(glm::vec3(0.f, 1.f, 0.f));
+        }
+        if (key == GLFW_KEY_Q && action == GLFW_RELEASE) {
+            player_mesh->KillAllForces();
+        }
+        if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+            player_mesh->velocity.y = -PLAYER_MOVE_SPEED;
+            //player_mesh->rotation = glm::quat(glm::vec3(0.f, -1.f, 0.f));
+        }
+        if (key == GLFW_KEY_E && action == GLFW_RELEASE) {
+            player_mesh->KillAllForces();
         }
     }
     break;
@@ -542,6 +564,17 @@ void Engine::Engine_Update() {
     timeDiff = currentTime - beginTime;
     frameCount++;
 
+    if (player_mesh != NULL && theEditMode == TAKE_CONTROL) {
+        cameraEye = player_mesh->position - glm::vec3(35.f, -4.f, 0.f);
+        if (!enableMouse) {
+            cameraTarget = player_mesh->position;
+        }
+        // last velocity when it wasnt 0
+        if (player_mesh->velocity != glm::vec3(0.f)) {
+            player_mesh->facingDirection = player_mesh->velocity;
+        }
+    }
+
     //if (theEditMode == TAKE_CONTROL) {
     //    cameraEye = player_mesh->position - glm::vec3(35.f, -4.f, 0.f);
     //    if (!enableMouse) {
@@ -667,6 +700,8 @@ void Engine::Engine_Update() {
         {
             glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
         }
+
+        currentMesh->TranslateOverTime(0.5f);
 
         // Uncomment to:
         // Randomize the positions of ALL the objects

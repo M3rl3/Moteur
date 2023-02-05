@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
         const char* model_path = "../assets/meshes/steve.ply";
         const char* model_name = "steve";
         Engine::Engine_LoadModel(modelID, model_path, model_name, false, glm::vec3(0.f, 0.f, -75.f), glm::vec4(1.f));
-        //Engine::Engine_SetPlayerMesh(modelID);
+        Engine::Engine_SetPlayerMesh(modelID);
     }
     
     {
