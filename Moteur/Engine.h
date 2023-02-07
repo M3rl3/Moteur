@@ -48,5 +48,7 @@ namespace Engine {
 	void Engine_SetPlayerMesh(cMeshInfo* playerMesh);
 	void Engine_SetPlayerMesh(unsigned int id);
 
+	cMeshInfo* Engine_GetMeshObjectFromVector(int id);
+
 	GLFWwindow* Engine_GetWindow();
 }

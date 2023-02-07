@@ -58,7 +58,7 @@ void cMeshInfo::SetRotationFromEuler(glm::vec3 newEulerAngleXYZ)
 void cMeshInfo::AdjustRoationAngleFromEuler(glm::vec3 EulerAngleXYZ_Adjust)
 {
 	// To combine quaternion values, you multiply them together
-		// Make a quaternion that represents that CHANGE in angle
+	// Make a quaternion that represents that CHANGE in angle
 	glm::quat qChange = glm::quat(EulerAngleXYZ_Adjust);
 	// Multiply them together to get the change
 	this->rotation *= qChange;
@@ -67,6 +67,7 @@ void cMeshInfo::AdjustRoationAngleFromEuler(glm::vec3 EulerAngleXYZ_Adjust)
 	//		this->qRotation = this->qRotation * qChange;
 }
 
+// Sets a uniform scale for the mesh
 void cMeshInfo::SetUniformScale(float newScale)
 {
 	this->scale = glm::vec3(newScale, newScale, newScale);

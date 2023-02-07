@@ -520,6 +520,11 @@ void Engine::Engine_SetPlayerMesh(unsigned int id)
     ::player_mesh = meshArray[id];
 }
 
+cMeshInfo* Engine::Engine_GetMeshObjectFromVector(int id)
+{
+    return meshArray[id];
+}
+
 void Engine::Engine_Update() {
 
     //MVP
