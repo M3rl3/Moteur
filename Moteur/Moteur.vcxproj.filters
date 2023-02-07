@@ -49,6 +49,9 @@
     <Filter Include="Callback Functions">
       <UniqueIdentifier>{96fb319b-629d-403f-aba2-98c11d023351}</UniqueIdentifier>
     </Filter>
+    <Filter Include="JsonParser">
+      <UniqueIdentifier>{1c7fe62e-d066-4c32-bae1-65489bafab8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cameraEye.txt">
@@ -131,6 +134,9 @@
     <ClCompile Include="Callbacks.cpp">
       <Filter>Callback Functions</Filter>
     </ClCompile>
+    <ClCompile Include="JsonParser.cpp">
+      <Filter>JsonParser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMeshInfo.h">
@@ -204,6 +210,9 @@
     </ClInclude>
     <ClInclude Include="GlobalStuff.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonParser.h">
+      <Filter>JsonParser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

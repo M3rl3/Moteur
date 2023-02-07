@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Scene.h"
 
 int main(int argc, char** argv) {
 
@@ -37,9 +38,17 @@ int main(int argc, char** argv) {
         Engine::Engine_LoadModel(modelID, model_path, model_name, false, glm::vec3(50.f, -5.f, 0.f), glm::vec4(1.f));
     }
     
+    Scene* pScene = new Scene;
+    pScene->Ready();
+
     while (!glfwWindowShouldClose(Engine::Engine_GetWindow())) {
         Engine::Engine_Update();
+
+        pScene->Update(0.f);
+        pScene->Render();
     }
+
+    pScene->Destroy();
 
     Engine::Engine_Shutdown();
 
