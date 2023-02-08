@@ -318,7 +318,7 @@ void Engine::Engine_Initialize() {
     glfwSetScrollCallback(window, ScrollCallBack);
 
     // capture mouse input
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     glfwSetErrorCallback(ErrorCallback);
 
