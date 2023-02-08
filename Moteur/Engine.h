@@ -44,9 +44,17 @@ namespace Engine {
 					bool bIsSeamless, std::string& errorString);
 
 	void Engine_SetCameraPosition(glm::vec3 cameraEye);
+	void Engine_SetCameraTarget(glm::vec3 cameraTarget);
+	void Engine_SetEnableCrosshair(bool enabled);
+
 	void Engine_SetDrawingArray(std::vector<cMeshInfo*> vecMesh);
+
 	void Engine_SetPlayerMesh(cMeshInfo* playerMesh);
 	void Engine_SetPlayerMesh(unsigned int id);
+	void Engine_SetSkyboxMesh(cMeshInfo* skyboxMesh);
+	void Engine_SetSkyboxMesh(unsigned int id);
+
+	void Engine_SetDeltaTime(float dt);
 
 	cMeshInfo* Engine_GetMeshObjectFromVector(int id);
 

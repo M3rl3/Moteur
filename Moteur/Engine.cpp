@@ -1,5 +1,13 @@
 #include "Engine.h"
 
+enum eEditMode
+{
+    MOVING_CAMERA,
+    MOVING_LIGHT,
+    MOVING_SELECTED_OBJECT,
+    TAKE_CONTROL,
+};
+
 GLFWwindow* window;
 
 GLuint shaderID = 0;
@@ -7,14 +15,16 @@ GLuint shaderID = 0;
 cVAOManager* VAOMan;
 cBasicTextureManager* TextureMan;
 ParticleAccelerator partAcc;
-cRenderReticle crosshair;
 
+cRenderReticle crosshair;
+bool enableCrosshair = false; 
+
+cMeshInfo* player_mesh;
 cMeshInfo* skybox_sphere_mesh;
 
-cMeshInfo* bulb_mesh;
-
 unsigned int readIndex = 0;
-int elapsed_frames = 0;
+
+float deltaTime = 0.f;
 
 float beginTime = 0.f;
 float currentTime = 0.f;
@@ -24,20 +34,9 @@ int frameCount = 0;
 std::vector <cMeshInfo*> meshArray;
 std::vector <std::string> meshFiles;
 
-enum eEditMode
-{
-    MOVING_CAMERA,
-    MOVING_LIGHT,
-    MOVING_SELECTED_OBJECT,
-    TAKE_CONTROL,
-};
-
-glm::vec3 cameraEye;
-// controlled by mouse
+glm::vec3 cameraEye = glm::vec3(0.f);
 glm::vec3 cameraTarget = glm::vec3(0.f, 0.f, -1.f);
 eEditMode theEditMode = MOVING_CAMERA;
-
-cMeshInfo* player_mesh;
 
 float yaw = 0.f;
 float pitch = 0.f;
@@ -53,11 +52,13 @@ bool mouseClick = false;
 
 int object_index = 0;
 
+std::string cubemapName = "";
+
 void ReadSceneDescription();
 void ManageLights();
 float RandomFloat(float a, float b);
 bool RandomizePositions(cMeshInfo* mesh);
-void getIndex(std::vector<cMeshInfo*> v, cMeshInfo* theMesh, int& id);
+void GetIndex(std::vector<cMeshInfo*> v, cMeshInfo* theMesh, int& id);
 
 //// Callbacks
 // static void ErrorCallback(int error, const char* description);
@@ -185,17 +186,13 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
         // Cycle through objects in the scene
         if (key == GLFW_KEY_1 && action == GLFW_PRESS)
         {
-            if (!enableMouse) cameraTarget = glm::vec3(0.f, 0.f, 0.f);
-        }
-        if (key == GLFW_KEY_2 && action == GLFW_PRESS)
-        {
             object_index++;
             if (object_index > meshArray.size() - 1) {
                 object_index = 0;
             }
             if (!enableMouse) cameraTarget = meshArray[object_index]->position;
         }
-        if (key == GLFW_KEY_3 && action == GLFW_PRESS)
+        if (key == GLFW_KEY_2 && action == GLFW_PRESS)
         {
             object_index--;
             if (object_index < 0) {
@@ -447,7 +444,7 @@ void Engine::Engine_LoadModel(int& id, const char* filepath, const char* modelNa
     mesh->useRGBAColour = true;
     meshArray.push_back(mesh);
 
-    getIndex(meshArray, mesh, id);
+    GetIndex(meshArray, mesh, id);
     if (id != -1) {
         std::cout << "Model " << modelName << " loaded successfully." << std::endl;
     }
@@ -485,8 +482,11 @@ void Engine::Engine_CreateCubeMapTextureFromBMPFiles(
     std::string posZ_fileName, std::string negZ_fileName, 
     bool bIsSeamless, std::string& errorString)
 {
-    const char* skybox_name = "NightSky";
-    if (TextureMan->CreateCubeTextureFromBMPFiles("NightSky",
+    // make a copy of it to use later
+    ::cubemapName = cubeMapName;
+
+    const char* skybox_name = cubeMapName.c_str();
+    if (TextureMan->CreateCubeTextureFromBMPFiles(skybox_name,
         posX_fileName, negX_fileName,
         posY_fileName, negY_fileName,
         posZ_fileName, negZ_fileName,
@@ -515,9 +515,34 @@ void Engine::Engine_SetCameraPosition(glm::vec3 cameraEye)
     ::cameraEye = cameraEye;
 }
 
+void Engine::Engine_SetCameraTarget(glm::vec3 cameraTarget)
+{
+    ::cameraTarget = cameraTarget;
+}
+
+void Engine::Engine_SetEnableCrosshair(bool enabled)
+{
+    ::enableCrosshair = enabled;
+}
+
 void Engine::Engine_SetPlayerMesh(unsigned int id)
 {
     ::player_mesh = meshArray[id];
+}
+
+void Engine::Engine_SetSkyboxMesh(cMeshInfo* skyboxMesh)
+{
+    ::skybox_sphere_mesh = skyboxMesh;
+}
+
+void Engine::Engine_SetSkyboxMesh(unsigned int id)
+{
+    ::skybox_sphere_mesh = meshArray[id];
+}
+
+void Engine::Engine_SetDeltaTime(float dt)
+{
+    ::deltaTime = dt;
 }
 
 cMeshInfo* Engine::Engine_GetMeshObjectFromVector(int id)
@@ -580,24 +605,6 @@ void Engine::Engine_Update() {
         }
     }
 
-    //if (theEditMode == TAKE_CONTROL) {
-    //    cameraEye = player_mesh->position - glm::vec3(35.f, -4.f, 0.f);
-    //    if (!enableMouse) {
-    //        cameraTarget = player_mesh->position;
-    //    }
-    //    // last velocity when it wasnt 0
-    //    if (player_mesh->velocity != glm::vec3(0.f)) {
-    //        player_mesh->facingDirection = player_mesh->velocity;
-    //    }
-    //}
-
-    //bulb_mesh->position = player_mesh->position - glm::vec3(75.f, -25.f, 0.f);
-
-    /*if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-        mouseClick = true;
-    }
-    else mouseClick = false;*/
-
     for (int i = 0; i < meshArray.size(); i++) {
 
         cMeshInfo* currentMesh = meshArray[i];
@@ -610,10 +617,7 @@ void Engine::Engine_Update() {
         glm::mat4 translationMatrix = glm::translate(glm::mat4(1.f), currentMesh->position);
         glm::mat4 scaling = glm::scale(glm::mat4(1.f), currentMesh->scale);
 
-        /*glm::mat4 scaling = glm::scale(glm::mat4(1.f), glm::vec3(currentMesh->scale.x,
-                                                                 currentMesh->scale.y,
-                                                                 currentMesh->scale.z));*/
-        if (currentMesh->isSkyBoxMesh) {
+        if (currentMesh->isSkyBoxMesh || currentMesh == ::skybox_sphere_mesh) {
             model = glm::mat4x4(1.f);
         }
 
@@ -706,25 +710,7 @@ void Engine::Engine_Update() {
             glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
         }
 
-        currentMesh->TranslateOverTime(0.5f);
-
-        // Uncomment to:
-        // Randomize the positions of ALL the objects
-        // in the scene post every x amount of frames
-        // Cause why not?
-
-        //elapsed_frames++;
-        //if (elapsed_frames > 100) {
-        //    //for (int j = 0; j < meshArray.size(); j++) {
-        //    //    cMeshInfo* theMesh = meshArray[j];
-        //    //    RandomizePositions(theMesh);
-        //    //}
-        //    player_mesh->KillAllForces();
-        //    elapsed_frames = 0;
-        //}
-
-        // adds the model's velocity to its current position
-        // currentMesh->TranslateOverTime(0.5f);
+        currentMesh->TranslateOverTime(deltaTime);
 
         glm::vec3 cursorPos;
 
@@ -736,28 +722,28 @@ void Engine::Engine_Update() {
 
         glm::normalize(worldSpaceCoordinates);
 
-        // if (mouseClick) {}
-
         GLint bIsSkyboxObjectLocation = glGetUniformLocation(shaderID, "bIsSkyboxObject");
 
-        if (currentMesh->isSkyBoxMesh) {
+        if (currentMesh->isSkyBoxMesh || currentMesh == ::skybox_sphere_mesh) {
 
-            //skybox texture
-            GLuint cubeMapTextureNumber = TextureMan->getTextureIDFromName("NightSky");
-            GLuint texture30Unit = 30;			// Texture unit go from 0 to 79
-            glActiveTexture(texture30Unit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-            glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureNumber);
-            GLint skyboxTextureLocation = glGetUniformLocation(shaderID, "skyboxTexture");
-            glUniform1i(skyboxTextureLocation, texture30Unit);
+            // skybox texture
+            // fetches cube map name from the string passed in.
+            if (::cubemapName.length() != 0) {
+                GLuint cubeMapTextureNumber = TextureMan->getTextureIDFromName(::cubemapName);
+                GLuint texture30Unit = 30;			// Texture unit go from 0 to 79
+                glActiveTexture(texture30Unit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+                glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureNumber);
+                GLint skyboxTextureLocation = glGetUniformLocation(shaderID, "skyboxTexture");
+                glUniform1i(skyboxTextureLocation, texture30Unit);
 
-            glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_TRUE);
-            currentMesh->position = cameraEye;
-            currentMesh->SetUniformScale(7500.f);
+                glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_TRUE);
+                currentMesh->position = ::cameraEye;
+                currentMesh->SetUniformScale(7500.f);
+            } 
         }
         else {
             glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_FALSE);
         }
-
 
         sModelDrawInfo modelInfo;
         if (VAOMan->FindDrawInfoByModelName(meshArray[i]->meshName, modelInfo)) {
@@ -796,9 +782,11 @@ void Engine::Engine_Update() {
         }
     }
 
-    // Render the crosshair
-    crosshair.Update();
-
+    if (::enableCrosshair) {
+        // Render the crosshair
+        crosshair.Update();
+    }
+    
     glfwSwapBuffers(window);
     glfwPollEvents();
 
@@ -948,7 +936,7 @@ bool RandomizePositions(cMeshInfo* mesh) {
     return true;
 }
 
-void getIndex(std::vector<cMeshInfo*> v, cMeshInfo* theMesh, int &id)
+void GetIndex(std::vector<cMeshInfo*> v, cMeshInfo* theMesh, int &id)
 {
     auto it = find(v.begin(), v.end(), theMesh);
 
