@@ -1,33 +1,18 @@
 #pragma once
 
 #include "OpenGL.h"
-#include "LoadModel.h"
-#include "ParticleAccelerator.h"
-#include "DrawBoundingBox.h"
+#include "Window.h"
+#include "Camera.h"
+#include "cMeshInfo.h"
 
-#include <glm/glm.hpp>
-#include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "cShaderManager/cShaderManager.h"
-#include "cVAOManager/cVAOManager.h"
-#include "cBasicTextureManager/cBasicTextureManager.h"
-#include "cRenderReticle.h"
-
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <vector>
-#include <stdlib.h>
-#include <stdio.h>
+#include "AnimationManager.h"
 
 namespace Engine {
 
 	// Life Cycle
 	void Engine_Initialize();
 	void Engine_Update(const float& dt);
+	void Engine_UpdateCallback(void (*Callback)(float dt));
 	void Engine_Shutdown();
 
 	void Engine_CreateWindow(const char* title, const int width, const int height, bool fullScreen, bool enableMouse);
@@ -48,6 +33,7 @@ namespace Engine {
 	void Engine_SetEnableCrosshair(bool enabled);
 
 	void Engine_SetDrawingArray(std::vector<cMeshInfo*> vecMesh);
+	void Engine_GetDrawingArray(std::vector<cMeshInfo*> &vecMesh);
 
 	void Engine_SetPlayerMesh(cMeshInfo* playerMesh);
 	void Engine_SetPlayerMesh(unsigned int id);
@@ -55,8 +41,8 @@ namespace Engine {
 	void Engine_SetSkyboxMesh(unsigned int id);
 
 	//void Engine_SetDeltaTime(float dt);
-
+	AnimationManager* Engine_GetAnimationManager();
 	cMeshInfo* Engine_GetMeshObjectFromVector(int id);
-
-	GLFWwindow* Engine_GetWindow();
+	Window* Engine_GetWindow();
+	Camera* Engine_GetCameraObject();
 }

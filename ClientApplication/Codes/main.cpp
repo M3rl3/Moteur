@@ -1,12 +1,13 @@
 #include "Engine.h"
 #include "Scene.h"
 #include "Timer.h"
-#include "AnimationManager.h"
 
 #include <sstream>
 
-extern std::vector <cMeshInfo*> meshArray;
-extern AnimationManager* animationManager;
+//extern std::vector <cMeshInfo*> meshArray;
+//extern AnimationManager* animationManager;
+
+void Update(float dt);
 
 int main(int argc, char** argv)
 {
@@ -15,7 +16,6 @@ int main(int argc, char** argv)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     //_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
     //_CrtSetBreakAlloc(185080);
-
 
     Engine::Engine_CreateWindow("Engine", 1366, 768, false, false);
 
@@ -56,10 +56,17 @@ int main(int argc, char** argv)
     unsigned int iFPS = 0;
     float fCheckTime = 0.f;
     std::stringstream ssTitle;
-    GLFWwindow* pWindow = Engine::Engine_GetWindow();
+    GLFWwindow* pWindow = Engine::Engine_GetWindow()->theWindow;
+    
+    // made a getter for the mesh vector
+    std::vector <cMeshInfo*> theDrawingArray; 
+    Engine::Engine_GetDrawingArray(theDrawingArray);
 
     Scene* pScene = new Scene;
     pScene->Ready();
+
+    // callback for a user defined update method
+    Engine::Engine_UpdateCallback(&Update);
 
     while (!glfwWindowShouldClose(pWindow)) {
 
@@ -71,9 +78,9 @@ int main(int argc, char** argv)
 
             pScene->Update(dt);
             pScene->Render();
-
-            if (animationManager != nullptr) {
-                animationManager->Update(meshArray, dt);
+            
+            if (Engine::Engine_GetAnimationManager() != nullptr) {
+                Engine::Engine_GetAnimationManager()->Update(theDrawingArray, dt);
             }
 
             Engine::Engine_Update(dt);
@@ -85,6 +92,7 @@ int main(int argc, char** argv)
         {
             ssTitle.str("");
             ssTitle << "FPS: " << iFPS;
+
             glfwSetWindowTitle(pWindow, ssTitle.str().c_str());
 
             iFPS = 0;
@@ -97,4 +105,10 @@ int main(int argc, char** argv)
     Engine::Engine_Shutdown();
 
     return 0;
+}
+
+// example function for user input
+void Update(float dt) {
+
+    Engine::Engine_GetCameraObject()->position.x += 1.f;
 }
