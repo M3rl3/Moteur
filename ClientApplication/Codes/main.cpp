@@ -35,6 +35,7 @@ int main(int argc, char** argv)
     //    const char* model_path = "../assets/meshes/steve.ply";
     //    const char* model_name = "steve";
     //    Engine::Engine_LoadModel(modelID, model_path, model_name, false, glm::vec3(0.f, 0.f, -75.f), glm::vec4(1.f));
+    //    cMeshInfo* playermesh = Engine::Engine_GetMeshObjectFromVector(modelID);
     //    Engine::Engine_SetPlayerMesh(modelID);
     //}
     //
@@ -57,10 +58,7 @@ int main(int argc, char** argv)
     float fCheckTime = 0.f;
     std::stringstream ssTitle;
     GLFWwindow* pWindow = Engine::Engine_GetWindow()->theWindow;
-    
-    // made a getter for the mesh vector
-    std::vector <cMeshInfo*> theDrawingArray; 
-    Engine::Engine_GetDrawingArray(theDrawingArray);
+    Camera* pCamera = Engine::Engine_GetCameraObject();
 
     Scene* pScene = new Scene;
     pScene->Ready();
@@ -78,6 +76,10 @@ int main(int argc, char** argv)
 
             pScene->Update(dt);
             pScene->Render();
+
+            // made a getter for the mesh vector
+            std::vector <cMeshInfo*> theDrawingArray;
+            Engine::Engine_GetDrawingArray(theDrawingArray);
             
             if (Engine::Engine_GetAnimationManager() != nullptr) {
                 Engine::Engine_GetAnimationManager()->Update(theDrawingArray, dt);
@@ -91,7 +93,12 @@ int main(int argc, char** argv)
         if (fCheckTime >= 1.f)
         {
             ssTitle.str("");
-            ssTitle << "FPS: " << iFPS;
+
+            ssTitle << "Camera: " << "(" <<
+                pCamera->position.x << ", " <<
+                pCamera->position.y << ", " <<
+                pCamera->position.z << ") " <<
+                "FPS: " << iFPS;
 
             glfwSetWindowTitle(pWindow, ssTitle.str().c_str());
 
@@ -110,5 +117,5 @@ int main(int argc, char** argv)
 // example function for user input
 void Update(float dt) {
 
-    Engine::Engine_GetCameraObject()->position.x += 1.f;
+    //Engine::Engine_GetCameraObject()->position.x += 1.f;
 }

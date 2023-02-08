@@ -598,7 +598,9 @@ namespace Engine {
 
     void Engine_GetDrawingArray(std::vector<cMeshInfo*>& vecMesh)
     {
-        vecMesh = meshArray;
+        if (meshArray.size() != NULL) {
+            vecMesh = meshArray;
+        }
     }
 
     void Engine::Engine_SetPlayerMesh(cMeshInfo* playerMesh)
