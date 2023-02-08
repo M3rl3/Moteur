@@ -22,6 +22,7 @@ void CJsonParser::DestroyInstance()
 {
 	if (nullptr != m_pInstance)
 	{
+		m_pInstance->Destroy();
 		delete m_pInstance;
 		m_pInstance = nullptr;
 	}
@@ -32,6 +33,10 @@ CJsonParser::CJsonParser()
 }
 
 CJsonParser::~CJsonParser()
+{
+}
+
+void CJsonParser::Destroy()
 {
 }
 

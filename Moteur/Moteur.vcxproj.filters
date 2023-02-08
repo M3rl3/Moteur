@@ -49,11 +49,14 @@
     <Filter Include="Callback Functions">
       <UniqueIdentifier>{96fb319b-629d-403f-aba2-98c11d023351}</UniqueIdentifier>
     </Filter>
-    <Filter Include="JsonParser">
-      <UniqueIdentifier>{1c7fe62e-d066-4c32-bae1-65489bafab8a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Animation Manager">
       <UniqueIdentifier>{77b30e7b-0c92-4909-8b17-de4eb08c706f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.JsonParser">
+      <UniqueIdentifier>{1c7fe62e-d066-4c32-bae1-65489bafab8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Timer">
+      <UniqueIdentifier>{d192cada-c1c5-4192-9b60-ea49a47698b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,10 +141,13 @@
       <Filter>Callback Functions</Filter>
     </ClCompile>
     <ClCompile Include="JsonParser.cpp">
-      <Filter>JsonParser</Filter>
+      <Filter>99.JsonParser</Filter>
     </ClCompile>
     <ClCompile Include="AnimationManager.cpp">
       <Filter>Animation Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>98.Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -218,13 +224,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JsonParser.h">
-      <Filter>JsonParser</Filter>
+      <Filter>99.JsonParser</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Animation Manager</Filter>
     </ClInclude>
     <ClInclude Include="AnimationManager.h">
       <Filter>Animation Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>98.Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

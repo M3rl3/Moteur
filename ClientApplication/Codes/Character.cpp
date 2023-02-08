@@ -21,7 +21,7 @@ void Character::Destroy()
 
 void Character::Update(const float& dt)
 {
-	m_vRot.y += dt * 10.f;
+	m_vRot.y += dt * 100.f;
 
 	if (m_pMesh)
 	{

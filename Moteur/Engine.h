@@ -27,7 +27,7 @@ namespace Engine {
 
 	// Life Cycle
 	void Engine_Initialize();
-	void Engine_Update();
+	void Engine_Update(const float& dt);
 	void Engine_Shutdown();
 
 	void Engine_CreateWindow(const char* title, const int width, const int height, bool fullScreen, bool enableMouse);
@@ -54,7 +54,7 @@ namespace Engine {
 	void Engine_SetSkyboxMesh(cMeshInfo* skyboxMesh);
 	void Engine_SetSkyboxMesh(unsigned int id);
 
-	void Engine_SetDeltaTime(float dt);
+	//void Engine_SetDeltaTime(float dt);
 
 	cMeshInfo* Engine_GetMeshObjectFromVector(int id);
 

@@ -25,12 +25,12 @@ cMeshInfo* skybox_sphere_mesh;
 
 unsigned int readIndex = 0;
 
-float deltaTime = 0.f;
+//float deltaTime = 0.f;
 
-float beginTime = 0.f;
-float currentTime = 0.f;
-float timeDiff = 0.f;
-int frameCount = 0;
+//float beginTime = 0.f;
+//float currentTime = 0.f;
+//float timeDiff = 0.f;
+//int frameCount = 0;
 
 std::vector <cMeshInfo*> meshArray;
 std::vector <std::string> meshFiles;
@@ -602,17 +602,17 @@ void Engine::Engine_SetSkyboxMesh(unsigned int id)
     ::skybox_sphere_mesh = meshArray[id];
 }
 
-void Engine::Engine_SetDeltaTime(float dt)
-{
-    ::deltaTime = dt;
-}
+//void Engine::Engine_SetDeltaTime(float dt)
+//{
+//    ::deltaTime = dt;
+//}
 
 cMeshInfo* Engine::Engine_GetMeshObjectFromVector(int id)
 {
     return meshArray[id];
 }
 
-void Engine::Engine_Update() {
+void Engine::Engine_Update(const float& dt) {
 
     //MVP
     glm::mat4x4 model, view, projection;
@@ -652,9 +652,9 @@ void Engine::Engine_Update() {
     GLint eyeLocationLocation = glGetUniformLocation(shaderID, "eyeLocation");
     glUniform4f(eyeLocationLocation, ::cameraEye.x, ::cameraEye.y, ::cameraEye.z, 1.f);
 
-    currentTime = glfwGetTime();
-    timeDiff = currentTime - beginTime;
-    frameCount++;
+    //currentTime = glfwGetTime();
+    //timeDiff = currentTime - beginTime;
+    //frameCount++;
 
     if (player_mesh != NULL && theEditMode == TAKE_CONTROL) {
         cameraEye = player_mesh->position - glm::vec3(35.f, -4.f, 0.f);
@@ -772,7 +772,7 @@ void Engine::Engine_Update() {
             glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
         }
 
-        currentMesh->TranslateOverTime(deltaTime);
+        currentMesh->TranslateOverTime(dt);
 
         glm::vec3 cursorPos;
 
@@ -855,20 +855,20 @@ void Engine::Engine_Update() {
     //const GLubyte* vendor = glad_glGetString(GL_VENDOR); // Returns the vendor
     const GLubyte* renderer = glad_glGetString(GL_RENDERER); // Returns a hint to the model
 
-    if (timeDiff >= 1.f / 30.f) {
-        std::string frameRate = std::to_string((1.f / timeDiff) * frameCount);
-        std::string frameTime = std::to_string((timeDiff / frameCount) * 1000);
+    //if (timeDiff >= 1.f / 30.f) {
+    //    std::string frameRate = std::to_string((1.f / timeDiff) * frameCount);
+    //    std::string frameTime = std::to_string((timeDiff / frameCount) * 1000);
 
-        std::stringstream ss;
-        ss << " Camera: " << "(" << cameraEye.x << ", " << cameraEye.y << ", " << cameraEye.z << ")" /*
-            << " Target: Index = " << object_index << ", MeshName: " << meshArray[object_index]->friendlyName << ", Position: (" << meshArray[object_index]->position.x << ", " << meshArray[object_index]->position.y << ", " << meshArray[object_index]->position.z << ")" */
-            << " FPS: " << frameRate << " ms: " << frameTime << " GPU: " << renderer;
+    //    std::stringstream ss;
+    //    ss << " Camera: " << "(" << cameraEye.x << ", " << cameraEye.y << ", " << cameraEye.z << ")" /*
+    //        << " Target: Index = " << object_index << ", MeshName: " << meshArray[object_index]->friendlyName << ", Position: (" << meshArray[object_index]->position.x << ", " << meshArray[object_index]->position.y << ", " << meshArray[object_index]->position.z << ")" */
+    //        << " FPS: " << frameRate << " ms: " << frameTime << " GPU: " << renderer;
 
-        glfwSetWindowTitle(window, ss.str().c_str());
+    //    glfwSetWindowTitle(window, ss.str().c_str());
 
-        beginTime = currentTime;
-        frameCount = 0;
-    }
+    //    beginTime = currentTime;
+    //    frameCount = 0;
+    //}
 }
 
 void Engine::Engine_Shutdown() {

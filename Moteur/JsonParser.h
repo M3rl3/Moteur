@@ -27,6 +27,7 @@ public:
 private:
 	explicit CJsonParser();
 	~CJsonParser();
+	void Destroy();
 
 public:
 	void LoadSampleFunction(std::string path, std::string fileName, std::vector<sSampleData>& vec);
