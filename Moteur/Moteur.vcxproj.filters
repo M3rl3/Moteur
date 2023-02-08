@@ -52,6 +52,9 @@
     <Filter Include="JsonParser">
       <UniqueIdentifier>{1c7fe62e-d066-4c32-bae1-65489bafab8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animation Manager">
+      <UniqueIdentifier>{77b30e7b-0c92-4909-8b17-de4eb08c706f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cameraEye.txt">
@@ -137,6 +140,9 @@
     <ClCompile Include="JsonParser.cpp">
       <Filter>JsonParser</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationManager.cpp">
+      <Filter>Animation Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMeshInfo.h">
@@ -213,6 +219,12 @@
     </ClInclude>
     <ClInclude Include="JsonParser.h">
       <Filter>JsonParser</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Animation Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationManager.h">
+      <Filter>Animation Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

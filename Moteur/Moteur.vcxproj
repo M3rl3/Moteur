@@ -155,6 +155,7 @@
     <Text Include="sceneDescription.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="Callbacks.cpp" />
     <ClCompile Include="cBasicTextureManager\C24BitBMPpixel.cpp" />
     <ClCompile Include="cBasicTextureManager\cBasicTextureManager.cpp" />
@@ -180,6 +181,8 @@
     <ClCompile Include="ParticleAccelerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="Callbacks.h" />
     <ClInclude Include="cBasicTextureManager\C24BitBMPpixel.h" />
     <ClInclude Include="cBasicTextureManager\cBasicTextureManager.h" />

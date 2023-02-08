@@ -8,6 +8,7 @@
 
 #include "Particle.h"
 #include "cVAOManager/cVAOManager.h"
+#include "Animation.h"
 
 class cMeshInfo {
 
@@ -33,6 +34,7 @@ public:
 	float rotationAngle;
 	bool hasCompletedRotation;
 	bool completed = false;
+	bool enabled;
 
 	//float scale;
 	bool isWireframe;
@@ -54,6 +56,7 @@ public:
 	float textureRatios[8];
 
 	Particle* particle;
+	Animation animation;
 
 	std::vector <glm::vec3> vertices;
 	std::vector <glm::vec3> indices;
