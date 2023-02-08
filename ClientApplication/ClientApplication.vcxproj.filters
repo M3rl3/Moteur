@@ -7,6 +7,12 @@
     <Filter Include="Default">
       <UniqueIdentifier>{c8a5786f-bfe3-4aea-9331-606cd71e906c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{0e970338-751a-47c0-8f58-00925a95e8a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object">
+      <UniqueIdentifier>{02338913-e83f-4b4f-8b00-772ee6ed0edc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Codes\Scene.cpp">
@@ -15,10 +21,28 @@
     <ClCompile Include="Codes\main.cpp">
       <Filter>Default</Filter>
     </ClCompile>
+    <ClCompile Include="Codes\Factory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\BGObject.cpp">
+      <Filter>02.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Codes\Character.cpp">
+      <Filter>02.Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Codes\Scene.h">
       <Filter>01.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\Factory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\BGObject.h">
+      <Filter>02.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Codes\Character.h">
+      <Filter>02.Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

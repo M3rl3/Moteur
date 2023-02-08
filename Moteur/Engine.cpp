@@ -301,6 +301,42 @@ void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
     }
 }
 
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
+        float ratio;
+        int rWidth, rHeight;
+
+        glfwGetFramebufferSize(window, &rWidth, &rHeight);
+        ratio = rWidth / (float)rHeight;
+
+        glm::vec3 upVector = glm::vec3(0.f, 1.f, 0.f);
+        glm::mat4x4 projection = glm::perspective(0.6f, ratio, 0.1f, 10000.0f);
+        glm::mat4x4 view = glm::lookAt(::cameraEye, ::cameraTarget, upVector);
+
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+
+        float x = (float)xpos / width * 2 - 1;
+        float y = -((float)ypos / height * 2 - 1);
+
+        glm::vec4 ray_clip(x, y, -1.0, 1.0);
+
+        glm::vec4 ray_eye = glm::inverse(projection) * ray_clip;
+        ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0, 0.0);
+        glm::vec3 ray_world = glm::vec3(glm::inverse(view) * ray_eye);
+
+        ray_world = glm::normalize(ray_world);
+        float t = -(::cameraEye.y) / ray_world.y;
+
+        // Get target location
+        glm::vec3 targetLocation = ::cameraEye + t * ray_world;
+        std::cout << "Mouse left click at position: " << targetLocation.x << ", " << targetLocation.y << ", " << targetLocation.z << std::endl;
+    }
+}
+
 void Engine::Engine_Initialize() {
 
     const char* glsl_version = "#version 420";
@@ -313,9 +349,10 @@ void Engine::Engine_Initialize() {
     // mouse and scroll callback
     glfwSetCursorPosCallback(window, MouseCallBack);
     glfwSetScrollCallback(window, ScrollCallBack);
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);
 
     // capture mouse input
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     glfwSetErrorCallback(ErrorCallback);
 

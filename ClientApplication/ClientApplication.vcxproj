@@ -149,6 +149,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Codes\Character.cpp" />
+    <ClCompile Include="Codes\Factory.cpp" />
+    <ClCompile Include="Codes\BGObject.cpp" />
     <ClCompile Include="Codes\Scene.cpp" />
     <ClCompile Include="Codes\main.cpp" />
   </ItemGroup>
@@ -158,6 +161,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Codes\Character.h" />
+    <ClInclude Include="Codes\Factory.h" />
+    <ClInclude Include="Codes\BGObject.h" />
     <ClInclude Include="Codes\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
