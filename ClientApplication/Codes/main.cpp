@@ -1,5 +1,10 @@
 #include "Engine.h"
 #include "Scene.h"
+#include <AnimationManager.h>
+
+extern float timeDiff;
+extern std::vector <cMeshInfo*> meshArray;
+extern AnimationManager* animationManager;
 
 int main(int argc, char** argv)
 {
@@ -54,6 +59,10 @@ int main(int argc, char** argv)
 
         pScene->Update(0.1f);
         pScene->Render();
+
+        if (animationManager != nullptr) {
+            animationManager->Update(meshArray, timeDiff);
+        }
     }
 
     pScene->Destroy();

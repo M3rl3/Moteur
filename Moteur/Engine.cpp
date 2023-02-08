@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "AnimationManager.h"
 
 enum eEditMode
 {
@@ -37,6 +38,8 @@ std::vector <std::string> meshFiles;
 glm::vec3 cameraEye = glm::vec3(0.f);
 glm::vec3 cameraTarget = glm::vec3(0.f, 0.f, -1.f);
 eEditMode theEditMode = MOVING_CAMERA;
+
+AnimationManager* animationManager = nullptr;
 
 float yaw = 0.f;
 float pitch = 0.f;
@@ -303,6 +306,13 @@ void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
+
+        // quick cleanup
+        if (animationManager != nullptr) {
+            delete animationManager;
+            animationManager = nullptr;
+        }
+
         float ratio;
         int rWidth, rHeight;
 
@@ -334,6 +344,21 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
         // Get target location
         glm::vec3 targetLocation = ::cameraEye + t * ray_world;
         std::cout << "Mouse left click at position: " << targetLocation.x << ", " << targetLocation.y << ", " << targetLocation.z << std::endl;
+
+        animationManager = new AnimationManager();
+
+        for (cMeshInfo* meshInfo : meshArray) {
+            if (meshInfo->enabled) {
+                AnimationData testAnimation;
+                testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(meshInfo->position, 0.0f, EaseIn));
+                testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLocation, 0.50f, EaseIn));
+                testAnimation.Duration = 2.0f;
+                meshInfo->animation.IsPlaying = true;
+                meshInfo->animation.AnimationTime = 0.0f;
+
+                animationManager->Load("TestAnimation", testAnimation);
+            }
+        }   
     }
 }
 

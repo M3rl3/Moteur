@@ -40,6 +40,12 @@ bool Character::Ready(string modelPath, string modelName, vec3 position, vec4 co
 		return false;
 
 	m_pMesh = Engine::Engine_GetMeshObjectFromVector(modelID);
+	m_pMesh->enabled = true;
+	m_pMesh->animation.AnimationTime = 0.0f;
+	m_pMesh->animation.IsPlaying = true;
+	m_pMesh->animation.Speed = 0.05f;
+	m_pMesh->animation.AnimationType = "TestAnimation";
+
 }
 
 Character* Character::Create(string modelPath, string modelName, vec3 position, vec4 color)
