@@ -20,10 +20,14 @@ public:
 	void Destroy();
 	void Update(const float& dt);
 
-private:
-	bool Ready(std::string modelPath, std::string modelName, glm::vec3 position, glm::vec4 color);
 public:
-	static BGObject* Create(std::string modelPath, std::string modelName, glm::vec3 position, glm::vec4 color);
+	void SetRotation(glm::vec3 vRot);
+	void SetScale(glm::vec3 vScale);
+
+private:
+	bool Ready(std::string modelName, std::string texName, glm::vec3 position);
+public:
+	static BGObject* Create(std::string modelName, std::string texName, glm::vec3 position);
 };
 
 #endif //_BGOBJECT_H_

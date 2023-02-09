@@ -4,6 +4,7 @@
 #include "BGObject.h"
 #include "Character.h"
 #include "glm\vec3.hpp"
+#include "Engine.h"
 
 #include <vector>
 
@@ -47,6 +48,29 @@ void Scene::Destroy()
 
 void Scene::Ready()
 {
+	//Texture
+	Engine::Engine_SetTexturePath("../assets/texture_bg");
+	Engine::Engine_Create2DTextureFromBMPFile("barrel_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("beam_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("ceiling_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("chest_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("chest_B_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("door_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("floor_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("lantern_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("moss.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("mud_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("mushroom_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("pillar_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("pot_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("pot_B_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("rock_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("skull_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("spiderweb.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("table_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("torch_A_d.bmp");
+	Engine::Engine_Create2DTextureFromBMPFile("wall_A_d.bmp");
+
 	//Add.BGObjects
 	string path = "..\\assets\\Json\\";
 	string fileName = "mapObjects.json";
@@ -57,15 +81,19 @@ void Scene::Ready()
 	{
 		CJsonParser::sSampleData curData = vecMapObjs[i];
 		BGObject* newObj = Factory::CreateBGObject(
-			curData.MODELPATH, curData.MODELNAME, curData.POSITION, curData.COLOR);
+			curData.MODELNAME, curData.TEXNAME, curData.POSITION);
 		if (nullptr != newObj)
+		{
+			newObj->SetRotation(curData.ROTATION);
+			newObj->SetScale(curData.SCALE);
 			m_vecBGObjs.push_back(newObj);
+		}
 	}
 
 	//Add.Character
 	m_testCharacter = Factory::CreateCharacter(
 		"../assets/meshes/steve.ply", 
 		"steve", 
-		vec3(0.f, 0.f, 0.f));
+		vec3(10.f, 0.f, -20.f));
 
 }

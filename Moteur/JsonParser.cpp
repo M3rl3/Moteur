@@ -54,15 +54,14 @@ void CJsonParser::LoadSampleFunction(string path, string fileName, vector<sSampl
 	Document doc;
 	doc.ParseStream(input);
 
-	const Value& dataArray = doc["array"];
-	assert(dataArray.IsArray());
-	for (unsigned int i = 0; i < dataArray.Size(); ++i)
+	for (unsigned int i = 0; i < doc.Size(); ++i)
 	{
 		sSampleData data;
 
-		const Value& curData = dataArray[i];
-		data.MODELPATH = curData["modelPath"].GetString();
+		const Value& curData = doc[i];
+
 		data.MODELNAME = curData["modelName"].GetString();
+		data.TEXNAME= curData["texName"].GetString();
 
 		data.POSITION.x = curData["posX"].GetFloat();
 		data.POSITION.y = curData["posY"].GetFloat();
@@ -75,11 +74,6 @@ void CJsonParser::LoadSampleFunction(string path, string fileName, vector<sSampl
 		data.SCALE.x = curData["scaleX"].GetFloat();
 		data.SCALE.y = curData["scaleY"].GetFloat();
 		data.SCALE.z = curData["scaleZ"].GetFloat();
-
-		data.COLOR.r = curData["r"].GetFloat();
-		data.COLOR.g = curData["g"].GetFloat();
-		data.COLOR.b = curData["b"].GetFloat();
-		data.COLOR.a = curData["a"].GetFloat();
 
 		vec.push_back(data);
 	}

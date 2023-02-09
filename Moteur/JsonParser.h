@@ -19,12 +19,11 @@ private:
 public:
 	struct sSampleData
 	{
-		std::string MODELPATH;
 		std::string MODELNAME;
+		std::string TEXNAME;
 		glm::vec3 POSITION;
 		glm::vec3 ROTATION;
 		glm::vec3 SCALE;
-		glm::vec4 COLOR;
 	};
 
 private:

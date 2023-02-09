@@ -9,9 +9,9 @@ class Character;
 class Scene
 {
 private:
-	std::vector<BGObject*> m_vecBGObjs;
+	std::vector<BGObject*>	m_vecBGObjs;
 
-	Character*		m_testCharacter;
+	Character*				m_testCharacter;
 
 public:
 	explicit Scene();

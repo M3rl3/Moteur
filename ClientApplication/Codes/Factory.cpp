@@ -13,9 +13,9 @@ Factory::~Factory()
 {
 }
 
-BGObject* Factory::CreateBGObject(string modelPath, string modelName, vec3 position, vec4 color)
+BGObject* Factory::CreateBGObject(string modelPath, string modelName, vec3 position)
 {
-	return BGObject::Create(modelPath, modelName, position, color);
+	return BGObject::Create(modelPath, modelName, position);
 }
 
 Character* Factory::CreateCharacter(string modelPath, string modelName, vec3 position, vec4 color)
