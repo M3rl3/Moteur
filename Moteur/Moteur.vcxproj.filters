@@ -58,9 +58,6 @@
     <Filter Include="98.Timer">
       <UniqueIdentifier>{d192cada-c1c5-4192-9b60-ea49a47698b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Structs">
-      <UniqueIdentifier>{d1fa445c-5cc0-4294-a9e6-0082f603a2aa}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cameraEye.txt">
@@ -239,10 +236,10 @@
       <Filter>98.Timer</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Engine\Structs</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>Engine\Structs</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

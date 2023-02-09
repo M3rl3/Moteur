@@ -28,16 +28,24 @@ int main(int argc, char** argv)
     const char* v_Shader = "../assets/shaders/vertexShader.glsl";
     const char* f_Shader = "../assets/shaders/fragmentShader.glsl";
 
+    Engine::Engine_SetTexturePath("../assets/textures");
+    Engine::Engine_Create2DTextureFromBMPFile("man.bmp");
+
     Engine::Engine_CreateShaderProgramFromFiles(shaderID, v_Shader, f_Shader);
 
-    //{
-    //    int modelID;
-    //    const char* model_path = "../assets/meshes/steve.ply";
-    //    const char* model_name = "steve";
-    //    Engine::Engine_LoadModel(modelID, model_path, model_name, false, glm::vec3(0.f, 0.f, -75.f), glm::vec4(1.f));
-    //    cMeshInfo* playermesh = Engine::Engine_GetMeshObjectFromVector(modelID);
-    //    Engine::Engine_SetPlayerMesh(modelID);
-    //}
+    {
+        int modelID;
+        const char* model_path = "../assets/meshes/steve.ply";
+        const char* model_name = "steve";
+        Engine::Engine_LoadModel(modelID, model_path, model_name, false, glm::vec3(0.f, 0.f, -75.f), glm::vec4(1.f));
+    
+        cMeshInfo* playermesh = Engine::Engine_GetMeshObjectFromVector(modelID);
+        playermesh->useRGBAColour = false;
+        playermesh->hasTexture = true;
+        playermesh->textures[0] = "man.bmp";
+        playermesh->textureRatios[0] = 1.f;
+        Engine::Engine_SetPlayerMesh(modelID);
+    }
     //
     //{
     //    int modelID;
@@ -63,6 +71,9 @@ int main(int argc, char** argv)
     Scene* pScene = new Scene;
     pScene->Ready();
 
+    // made a getter for the mesh vector
+    std::vector <cMeshInfo*> theDrawingArray;
+
     // callback for a user defined update method
     Engine::Engine_UpdateCallback(&Update);
 
@@ -77,8 +88,6 @@ int main(int argc, char** argv)
             pScene->Update(dt);
             pScene->Render();
 
-            // made a getter for the mesh vector
-            std::vector <cMeshInfo*> theDrawingArray;
             Engine::Engine_GetDrawingArray(theDrawingArray);
             
             if (Engine::Engine_GetAnimationManager() != nullptr) {
