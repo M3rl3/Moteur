@@ -33,6 +33,8 @@ bool BGObject::Ready(string modelPath, string modelName, vec3 position, vec4 col
 		return false;
 
 	m_pMesh = Engine::Engine_GetMeshObjectFromVector(modelID);
+
+	m_pMesh->scale = vec3(0.05);
 }
 
 BGObject* BGObject::Create(string modelPath, string modelName, vec3 position, vec4 color)

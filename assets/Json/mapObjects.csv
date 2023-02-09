@@ -1,0 +1,10 @@
+modelPath,modelName,posX,posY,posZ,rotX,rotY,rotZ,scaleX,scaleY,scaleZ,r,g,b,a
+../assets/mesh_bg/floor_A.ply,floor_A,0,0,0,0,0,0,0.05,0.05,0.05,0,1,0,1
+../assets/mesh_bg/floor_A.ply,floor_A,10,0,0,0,0,0,0.05,0.05,0.05,1,0,0,1
+../assets/mesh_bg/floor_A.ply,floor_A,20,0,0,0,0,0,0.05,0.05,0.05,0,1,0,1
+../assets/mesh_bg/floor_A.ply,floor_A,0,0,10,0,0,0,0.05,0.05,0.05,1,0,0,1
+../assets/mesh_bg/floor_A.ply,floor_A,10,0,10,0,0,0,0.05,0.05,0.05,0,1,0,1
+../assets/mesh_bg/floor_A.ply,floor_A,20,0,10,0,0,0,0.05,0.05,0.05,1,0,0,1
+../assets/mesh_bg/floor_A.ply,floor_A,0,0,20,0,0,0,0.05,0.05,0.05,0,1,0,1
+../assets/mesh_bg/floor_A.ply,floor_A,10,0,20,0,0,0,0.05,0.05,0.05,1,0,0,1
+../assets/mesh_bg/floor_A.ply,floor_A,20,0,20,0,0,0,0.05,0.05,0.05,0,1,0,1

@@ -11,8 +11,9 @@ using namespace std;
 using namespace glm;
 
 Scene::Scene()
-	: m_testObj(nullptr), m_testCharacter(nullptr)
+	: m_testCharacter(nullptr)
 {
+	m_vecBGObjs.clear();
 }
 
 Scene::~Scene()
@@ -21,8 +22,8 @@ Scene::~Scene()
 
 void Scene::Update(const float& dt)
 {
-	if (m_testObj)
-		m_testObj->Update(dt);
+	for (int i = 0; i < m_vecBGObjs.size(); ++i)
+		m_vecBGObjs[i]->Update(dt);
 
 	if (m_testCharacter)
 		m_testCharacter->Update(dt);
@@ -34,8 +35,9 @@ void Scene::Render()
 
 void Scene::Destroy()
 {
-	if (m_testObj)
-		m_testObj->Destroy();
+	for (int i = 0; i < m_vecBGObjs.size(); ++i)
+		m_vecBGObjs[i]->Destroy();
+	m_vecBGObjs.clear();
 
 	if (m_testCharacter)
 		m_testCharacter->Destroy();
@@ -45,6 +47,7 @@ void Scene::Destroy()
 
 void Scene::Ready()
 {
+	//Add.BGObjects
 	string path = "..\\assets\\Json\\";
 	string fileName = "mapObjects.json";
 
@@ -52,17 +55,17 @@ void Scene::Ready()
 	CJsonParser::GetInstance()->LoadSampleFunction(path, fileName, vecMapObjs);
 	for (int i = 0; i < vecMapObjs.size(); ++i)
 	{
-
+		CJsonParser::sSampleData curData = vecMapObjs[i];
+		BGObject* newObj = Factory::CreateBGObject(
+			curData.MODELPATH, curData.MODELNAME, curData.POSITION, curData.COLOR);
+		if (nullptr != newObj)
+			m_vecBGObjs.push_back(newObj);
 	}
 
-	m_testObj = Factory::CreateBGObject(
-		"../assets/meshes/steve.ply", 
-		"steve", 
-		vec3(0.f));
-
+	//Add.Character
 	m_testCharacter = Factory::CreateCharacter(
 		"../assets/meshes/steve.ply", 
 		"steve", 
-		vec3(10.f, 0.f, 10.f));
+		vec3(0.f, 0.f, 0.f));
 
 }

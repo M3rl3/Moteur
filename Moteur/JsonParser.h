@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "glm\vec3.hpp";
+#include "glm\vec4.hpp";
 
 class CJsonParser
 {
@@ -18,10 +19,12 @@ private:
 public:
 	struct sSampleData
 	{
-		std::string MESHID;
+		std::string MODELPATH;
+		std::string MODELNAME;
 		glm::vec3 POSITION;
 		glm::vec3 ROTATION;
 		glm::vec3 SCALE;
+		glm::vec4 COLOR;
 	};
 
 private:

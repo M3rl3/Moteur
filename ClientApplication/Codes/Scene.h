@@ -1,13 +1,16 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
+#include <vector>
+
 class BGObject;
 class Character;
 
 class Scene
 {
 private:
-	BGObject*		m_testObj;
+	std::vector<BGObject*> m_vecBGObjs;
+
 	Character*		m_testCharacter;
 
 public:

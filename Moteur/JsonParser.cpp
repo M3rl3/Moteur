@@ -61,7 +61,8 @@ void CJsonParser::LoadSampleFunction(string path, string fileName, vector<sSampl
 		sSampleData data;
 
 		const Value& curData = dataArray[i];
-		data.MESHID = curData["meshId"].GetString();
+		data.MODELPATH = curData["modelPath"].GetString();
+		data.MODELNAME = curData["modelName"].GetString();
 
 		data.POSITION.x = curData["posX"].GetFloat();
 		data.POSITION.y = curData["posY"].GetFloat();
@@ -74,6 +75,11 @@ void CJsonParser::LoadSampleFunction(string path, string fileName, vector<sSampl
 		data.SCALE.x = curData["scaleX"].GetFloat();
 		data.SCALE.y = curData["scaleY"].GetFloat();
 		data.SCALE.z = curData["scaleZ"].GetFloat();
+
+		data.COLOR.r = curData["r"].GetFloat();
+		data.COLOR.g = curData["g"].GetFloat();
+		data.COLOR.b = curData["b"].GetFloat();
+		data.COLOR.a = curData["a"].GetFloat();
 
 		vec.push_back(data);
 	}
