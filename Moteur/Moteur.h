@@ -1,98 +1,48 @@
 #pragma once
 
 #include "OpenGL.h"
-#include "Callbacks.h"
-#include "LoadModel.h"
-#include "ParticleAccelerator.h"
-#include "DrawBoundingBox.h"
+#include "Window.h"
+#include "Camera.h"
+#include "cMeshInfo.h"
 
-#include <glm/glm.hpp>
-#include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "AnimationManager.h"
 
-#include "cShaderManager/cShaderManager.h"
-#include "cVAOManager/cVAOManager.h"
-#include "cBasicTextureManager/cBasicTextureManager.h"
-#include "cRenderReticle.h"
-
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <vector>
-#include <stdlib.h>
-#include <stdio.h>
-
-namespace Engine {
-	void Engine_Initialize();
-	void Engine_Render();
-	void Engine_Update();
-	void Engine_Shutdown();
-
-	void Engine_LoadModel();
-	void Engine_LoadTexture();
-}
-
-class Moteur {
-public:
+namespace Moteur {
 
 	// Life Cycle
-	void Initialize();
-	void Render();
-	void Update();
-	void Shutdown();
+	void Engine_Initialize();
+	void Engine_Update(const float& dt);
+	void Engine_UpdateCallback(void (*Callback)(float dt));
+	void Engine_Shutdown();
 
-	// Other Methods
-	void ReadFromFile();
-	void ManageLights();
-	float RandomFloat(float a, float b);
-	bool RandomizePositions(cMeshInfo* mesh);
+	void Engine_CreateWindow(const char* title, const int width, const int height, bool fullScreen, bool enableMouse);
+	void Engine_SetEnableMouse(bool enableMouse);
+	void Engine_CreateShaderProgramFromFiles(unsigned int& id, const char* vertexShader, const char* fragmentShader);
+	void Engine_LoadAssetsFromTextFile(const char* path);
+	void Engine_LoadModel(int& id, const char* filePath, const char* modelName, bool doNotLight, glm::vec3 position, glm::vec4 color);
+	void Engine_SetTexturePath(const char* filePath);
+	void Engine_Create2DTextureFromBMPFile(const char* filePath);
+	void Engine_CreateCubeMapTextureFromBMPFiles(std::string cubeMapName,
+					std::string posX_fileName, std::string negX_fileName,
+					std::string posY_fileName, std::string negY_fileName,
+					std::string posZ_fileName, std::string negZ_fileName,
+					bool bIsSeamless, std::string& errorString);
 
-	GLFWwindow* window;
+	void Engine_SetCameraPosition(glm::vec3 cameraEye);
+	void Engine_SetCameraTarget(glm::vec3 cameraTarget);
+	void Engine_SetEnableCrosshair(bool enabled);
 
-private:
-	GLuint shaderID = 0;
+	void Engine_SetDrawingArray(std::vector<cMeshInfo*> vecMesh);
+	void Engine_GetDrawingArray(std::vector<cMeshInfo*> &vecMesh);
 
-	cVAOManager* VAOMan;
-	cBasicTextureManager* TextureMan;
-	ParticleAccelerator partAcc;
-	cRenderReticle crosshair;
+	void Engine_SetPlayerMesh(cMeshInfo* playerMesh);
+	void Engine_SetPlayerMesh(unsigned int id);
+	void Engine_SetSkyboxMesh(cMeshInfo* skyboxMesh);
+	void Engine_SetSkyboxMesh(unsigned int id);
 
-	sModelDrawInfo player_obj;
-
-	cMeshInfo* skybox_sphere_mesh;
-	
-	cMeshInfo* cube_mesh;
-	cMeshInfo* bulb_mesh;
-
-	float beginTime = 0.f;
-	float currentTime = 0.f;
-	float timeDiff = 0.f;
-	int frameCount = 0;
-
-	unsigned int readIndex = 0;
-	int elapsed_frames = 0;
-
-	bool mouseClick = false;
-
-	glm::vec3 cameraEye;
-	glm::vec3 cameraTarget;
-
-	float yaw = 0.f;
-	float pitch = 0.f;
-	float fov = 45.f;
-
-	// mouse state
-	bool firstMouse = true;
-	float lastX = 800.f / 2.f;
-	float lastY = 600.f / 2.f;
-
-	cMeshInfo* player_mesh;
-	bool enableMouse = false;
-
-	eEditMode theEditMode = MOVING_CAMERA;
-	int object_index = 0;
-
-	std::vector <std::string> meshFiles;
-};
+	//void Engine_SetDeltaTime(float dt);
+	AnimationManager* Engine_GetAnimationManager();
+	cMeshInfo* Engine_GetMeshObjectFromVector(int id);
+	Window* Engine_GetWindow();
+	Camera* Engine_GetCameraObject();
+}

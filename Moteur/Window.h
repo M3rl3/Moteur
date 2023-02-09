@@ -3,6 +3,7 @@
 #include "OpenGL.h"
 
 struct Window {
+	Window(): theWindow(nullptr), width(NULL), height(NULL), title("") {}
 
 	GLFWwindow* theWindow;
 

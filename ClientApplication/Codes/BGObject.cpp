@@ -1,5 +1,5 @@
 #include "BGObject.h"
-#include "Engine.h"
+#include "Moteur.h"
 #include "cMeshInfo.h"
 
 #include <sstream>
@@ -42,13 +42,13 @@ bool BGObject::Ready(string modelName, string texName, vec3 position)
 	ss << "../assets/mesh_bg/" + modelName + ".ply";
 
 	int modelID = 0;
-	Engine::Engine_LoadModel(modelID, ss.str().c_str(), modelName.c_str(), false,
+	Moteur::Engine_LoadModel(modelID, ss.str().c_str(), modelName.c_str(), false,
 		position, vec4(1.f));
 
 	if (-1 == modelID)
 		return false;
 
-	m_pMesh = Engine::Engine_GetMeshObjectFromVector(modelID);
+	m_pMesh = Moteur::Engine_GetMeshObjectFromVector(modelID);
 	m_pMesh->textures[0] = texName.c_str();
 	m_pMesh->textureRatios[0] = 1.f;
 	m_pMesh->hasTexture = true;

@@ -166,6 +166,9 @@
     <ClCompile Include="cShaderManager\cShaderManager.cpp" />
     <ClCompile Include="cVAOManager\cVAOManager.cpp" />
     <ClCompile Include="DrawBoundingBox.cpp" />
+    <ClCompile Include="ECSengine.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="Moteur.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -176,12 +179,15 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="JsonParser.cpp" />
     <ClCompile Include="LoadModel.cpp" />
-    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleAccelerator.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\ECS\Component.h" />
+    <ClInclude Include="..\include\ECS\Entity.h" />
+    <ClInclude Include="..\include\ECS\System.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="Callbacks.h" />
@@ -194,6 +200,9 @@
     <ClInclude Include="cShaderManager\cShaderManager.h" />
     <ClInclude Include="cVAOManager\cVAOManager.h" />
     <ClInclude Include="DrawBoundingBox.h" />
+    <ClInclude Include="ECSengine.h" />
+    <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="Moteur.h" />
     <ClInclude Include="GlobalStuff.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -206,10 +215,10 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="JsonParser.h" />
     <ClInclude Include="LoadModel.h" />
-    <ClInclude Include="Engine.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleAccelerator.h" />
+    <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

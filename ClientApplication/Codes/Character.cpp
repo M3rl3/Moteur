@@ -1,5 +1,5 @@
 #include "Character.h"
-#include "Engine.h"
+#include "Moteur.h"
 #include <iostream>
 
 using namespace std;
@@ -33,13 +33,13 @@ void Character::Update(const float& dt)
 bool Character::Ready(string modelPath, string modelName, vec3 position, vec4 color)
 {
 	int modelID = 0;
-	Engine::Engine_LoadModel(modelID, modelPath.c_str(), modelName.c_str(), false,
+	Moteur::Engine_LoadModel(modelID, modelPath.c_str(), modelName.c_str(), false,
 		position, color);
 
 	if (-1 == modelID)
 		return false;
 
-	m_pMesh = Engine::Engine_GetMeshObjectFromVector(modelID);
+	m_pMesh = Moteur::Engine_GetMeshObjectFromVector(modelID);
 	m_pMesh->enabled = true;
 	m_pMesh->animation.AnimationTime = 0.0f;
 	m_pMesh->animation.IsPlaying = true;
