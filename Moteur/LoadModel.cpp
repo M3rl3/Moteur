@@ -2,22 +2,8 @@
 
 void LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
 
-    struct vertexLayout {
-
-        float x, y, z;
-        float nx, ny, nz;
-        float r, g, b, a;
-        float texture_u, texture_v;
-    };
-
-    struct triangleLayout {
-
-        unsigned int triangleIndices[3];
-    };
-
     vertexLayout* modelArray = NULL;
     triangleLayout* triangleArray = NULL;
-
 
     std::ifstream plyFile(fileName);
     if (!plyFile.is_open()) {

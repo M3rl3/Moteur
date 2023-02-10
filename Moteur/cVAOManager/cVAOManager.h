@@ -21,7 +21,6 @@ struct vertLayout
 	float ignore2;
 };
 
-
 struct sModelDrawInfo
 {
 	sModelDrawInfo(); 

@@ -14,21 +14,9 @@ public:
 
 	unsigned int CreateEntity();
 
-	template <class T>
-	void AddComponent(unsigned int entityId)
-	{
-		assert(entityId < entities.size());
-		Entity* entity = entities[entityId];
-		entity->AddComponent<T>();
-	}
+	void AddComponent(unsigned int entityId, std::string componentType);
 
-	template <class T>
-	void RemoveComponent(unsigned int entityId)
-	{
-		assert(entityId < entities.size());
-		Entity* entity = entities[entityId];
-		entity->RemoveComponent<T>();
-	}
+	void RemoveComponent(unsigned int entityId, std::string componentType);
 
 	const std::vector<Entity*>& GetEntities();
 

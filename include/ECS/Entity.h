@@ -10,61 +10,58 @@ public:
 	unsigned int id;
 	std::vector<Component*> components;
 
-	template <class T>
-	T* GetComponentByType()
+	Component* GetComponentByType(std::string type)
 	{
 		for (int i = 0; i < components.size(); i++)
 		{
-			T* component = dynamic_cast<T*>(components[i]);
-			if (component != nullptr)
+			Component* component = components[i];
+			if (type == component->GetType())
 				return component;
 		}
 
 		return nullptr;
 	}
 
-	template <class T>
-	bool HasComponent()
+	bool HasComponent(std::string type)
 	{
 		for (int i = 0; i < components.size(); i++)
 		{
-			T* component = dynamic_cast<T*>(components[i]);
-			if (component != nullptr)
+			Component* component = components[i];
+			if (type == component->GetType())
 				return true;
 		}
 
 		return false;
 	}
 
-	template <class T>
-	T* AddComponent()
+	bool AddComponent(std::string type)
 	{
-		static_assert(std::is_base_of<Component, T>::value);
-
-		if (HasComponent<T>())
+		if (HasComponent(type))
 		{
-			return;
+			return false;
 		}
 
-		T* newComponent = new T();
+		Component* newComponent = new Component();
 		components.push_back(newComponent);
-		return newComponent;
+		return true;
 	}
 
-	template <class T>
-	T* RemoveComponent()
+	bool RemoveComponent(std::string type)
 	{
+		if (!HasComponent(type)) 
+		{
+			return false;
+		}
+
 		for (std::vector<Component*>::iterator it = components.begin();
 			it != components.end(); it++)
 		{
-			T* component = dynamic_cast<T*>(*it);
-			if (component != nullptr)
+			Component* component = *it;
+			if (type == component->GetType())
 			{
 				components.erase(it);
-				return *it;
+				return true;
 			}
 		}
-
-		return nullptr;
 	}
 };

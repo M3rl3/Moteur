@@ -24,7 +24,7 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
-    if (key == GLFW_KEY_LEFT_ALT) {
+    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     if (key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE) {
@@ -106,6 +106,9 @@ void RenderSystem::Initialize() {
 
 void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
+    for (int i = 0; i < entities.size(); i++) {
+        Entity* currentEntity = entities[i];
+    }
 }
 
 void RenderSystem::Shutdown()

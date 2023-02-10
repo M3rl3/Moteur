@@ -202,6 +202,7 @@
     <ClInclude Include="DrawBoundingBox.h" />
     <ClInclude Include="ECSengine.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="Moteur.h" />
     <ClInclude Include="GlobalStuff.h" />
     <ClInclude Include="imgui\imconfig.h" />
