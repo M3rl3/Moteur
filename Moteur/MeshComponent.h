@@ -4,10 +4,11 @@
 
 #include "cVAOManager/cVAOManager.h"
 
-class MeshComponent : Component {
+struct MeshComponent : Component {
 public:
-	MeshComponent() : componentType("MeshComponent") {};
-	virtual ~MeshComponent() = 0;
+	MeshComponent() : 
+		componentType("MeshComponent") {};
+	~MeshComponent() {};
 
 	std::string GetType() {
 		return componentType;

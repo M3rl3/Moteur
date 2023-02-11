@@ -173,6 +173,12 @@
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMeshInfo.h">
@@ -284,6 +290,18 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="MeshComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

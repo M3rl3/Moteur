@@ -168,6 +168,7 @@
     <ClCompile Include="DrawBoundingBox.cpp" />
     <ClCompile Include="ECSengine.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="MeshSystem.cpp" />
     <ClCompile Include="Moteur.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleAccelerator.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="ShaderSystem.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +205,7 @@
     <ClInclude Include="ECSengine.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="MeshSystem.h" />
     <ClInclude Include="Moteur.h" />
     <ClInclude Include="GlobalStuff.h" />
     <ClInclude Include="imgui\imconfig.h" />
@@ -220,7 +223,10 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleAccelerator.h" />
     <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="ShaderComponent.h" />
+    <ClInclude Include="ShaderSystem.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
