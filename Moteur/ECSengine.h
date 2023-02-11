@@ -1,7 +1,10 @@
 #include <ECS/System.h>
 #include <vector>
 
+#include "TransformComponent.h"
+
 #include "EntityManager.h"
+#include "ShaderSystem.h"
 #include "RenderSystem.h"
 #include "Window.h"
 
@@ -17,20 +20,19 @@ public:
 	void Render();
 
 	void CreateWindow(const char* title, const int width, const int height, bool fullScreen);
+	void CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader);
 	unsigned int CreateEntity();
 
 	Window* GetWindow();
 
-	template <class T>
-	T* AddComponent(unsigned int entityId)
+	Component* AddComponent(unsigned int entityId, std::string componentType)
 	{
-		return entityManager.AddComponent<T>(entityId);
+		return entityManager.AddComponent(entityId, componentType);
 	}
 
-	template <class T>
-	T* RemoveComponent(unsigned int entityId)
+	void RemoveComponent(unsigned int entityId, std::string componentType)
 	{
-		return entityManager.RemoveComponent<T>(entityId);
+		entityManager.RemoveComponent(entityId, componentType);
 	}
 
 	void AddSystem(System* newSystem);
@@ -38,8 +40,9 @@ public:
 
 private:
 	EntityManager entityManager;
-
+	
 	RenderSystem* renderSystem;
+	ShaderSystem* shaderSystem;
 
 	std::vector<System*> systems;
 };

@@ -2,6 +2,8 @@
 
 #include <ECS/System.h>
 
+#include "TransformComponent.h"
+
 #include "Window.h"
 #include "Camera.h"
 
@@ -20,5 +22,9 @@ public:
 
 private:
 
+	TransformComponent* GetTransformComponent(const std::vector<Component*>& components);
+
 	Camera* camera;
+
+	std::string transformComponent = "TransformComponent";
 };

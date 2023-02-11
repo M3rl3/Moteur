@@ -1,10 +1,14 @@
 #include "ShaderSystem.h"
+#include "ShaderComponent.h"
 
 #include <iostream>
 
 ShaderSystem::ShaderSystem()
 {
 	shaderManager = new cShaderManager();
+    shaderComponent = "ShaderComponent";
+    meshComponent = "MeshComponent";
+    transformComponent = "TransformComponent";
 }
 
 ShaderSystem::~ShaderSystem()
@@ -18,7 +22,15 @@ cShaderManager* ShaderSystem::GetShaderManager() {
 
 
 void ShaderSystem::Process(const std::vector<Entity*>& entities, float dt) {
+    ShaderComponent* shaderComponent;
 
+    for (int i = 0; i < entities.size(); i++) {
+
+        Entity* entity = entities[i];
+        shaderComponent = GetShaderComponent(entities[i]->GetComponents());
+
+        
+    }
 }
 
 void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader)
@@ -44,3 +56,29 @@ void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* ve
 
     //shaderID = id;
 }
+
+ShaderComponent* ShaderSystem::GetShaderComponent(const std::vector<Component*>& components)
+{
+    ShaderComponent* component = nullptr;
+    for (int j = 0; j < components.size(); j++) {
+        component = dynamic_cast<ShaderComponent*>(components[j]);
+
+        if (component->GetType() == shaderComponent) {
+            return component;
+        }
+    }
+    return nullptr;
+}
+
+//TransfromComponent* ShaderSystem::GetTransformComponent(const std::vector<Component*>& components)
+//{
+//    TransfromComponent* component = nullptr;
+//    for (int j = 0; j < components.size(); j++) {
+//        component = dynamic_cast<TransfromComponent*>(components[j]);
+//
+//        if (component->GetType() == shaderComponent) {
+//            return component;
+//        }
+//    }
+//    return nullptr;
+//}

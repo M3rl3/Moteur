@@ -15,11 +15,18 @@ void GoldenAgeEngine();
 
 int main(int argc, char** argv)
 {
-    GoldenAgeEngine();
-    //ECSengine* engine = new ECSengine();
+
+    //GoldenAgeEngine();
+    ECSengine* engine = new ECSengine();
 
     //engine->CreateWindow("ECSdemo", 1366, 768, false);
-    //engine->Initialize(); 
+    //engine->Initialize();
+
+    unsigned int entityID = engine->CreateEntity();
+    std::string componentName = "TransfromComponent";
+    Component* transformComponent;
+    transformComponent = dynamic_cast<TransformComponent*>(engine->AddComponent(entityID, componentName));
+    //transformComponent->SetPosition(glm::vec3(1.f));
 
     //while (!glfwWindowShouldClose(engine->GetWindow()->theWindow)) {
     //    //std::cout << "bomb has been planted!";

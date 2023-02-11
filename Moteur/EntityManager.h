@@ -14,7 +14,7 @@ public:
 
 	unsigned int CreateEntity();
 
-	void AddComponent(unsigned int entityId, std::string componentType);
+	Component* AddComponent(unsigned int entityId, std::string componentType);
 
 	void RemoveComponent(unsigned int entityId, std::string componentType);
 

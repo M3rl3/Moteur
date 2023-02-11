@@ -104,10 +104,27 @@ void RenderSystem::Initialize() {
     glEnable(GL_DEPTH_TEST);
 }
 
+TransformComponent* RenderSystem::GetTransformComponent(const std::vector<Component*>& components)
+{
+    TransformComponent* component = nullptr;
+    for (int j = 0; j < components.size(); j++) {
+        component = dynamic_cast<TransformComponent*>(components[j]);
+
+        if (component->GetType() == transformComponent) {
+            return component;
+        }
+    }
+    return nullptr;
+}
+
 void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
+    TransformComponent* transformComponent;
     for (int i = 0; i < entities.size(); i++) {
         Entity* currentEntity = entities[i];
+
+        transformComponent = GetTransformComponent(currentEntity->components);
+
     }
 }
 

@@ -5,15 +5,15 @@
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-struct TransfromComponent : Component {
+struct TransformComponent : Component {
 public:
-	TransfromComponent() : 
-		componentType("TransfromComponent"), 
+	TransformComponent() :
+		componentType("TransfromComponent"),
 		position(glm::vec3(0.f)), 
 		scale(glm::vec3(0.f)), 
 		rotation(glm::quat(glm::vec3(0.f))) {}
 
-	~TransfromComponent() {}
+	~TransformComponent() {}
 
 private:
 	std::string componentType;

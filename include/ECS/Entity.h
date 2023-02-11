@@ -7,7 +7,6 @@
 
 class Entity {
 public:
-	unsigned int id;
 	std::vector<Component*> components;
 
 	Component* GetComponentByType(std::string type)
@@ -34,16 +33,17 @@ public:
 		return false;
 	}
 
-	bool AddComponent(std::string type)
+	Component* AddComponent(std::string type)
 	{
 		if (HasComponent(type))
 		{
-			return false;
+			return nullptr;
 		}
 
 		Component* newComponent = new Component();
+		newComponent->SetType(type);
 		components.push_back(newComponent);
-		return true;
+		return newComponent;
 	}
 
 	bool RemoveComponent(std::string type)
@@ -64,4 +64,11 @@ public:
 			}
 		}
 	}
+
+	std::vector<Component*>& GetComponents() {
+		return components;
+	}
+
+private:
+	unsigned int id;
 };

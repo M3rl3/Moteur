@@ -1,5 +1,7 @@
 #include "ECSengine.h"
 
+#include <iostream>
+
 ECSengine::ECSengine()
 {
 	renderSystem = new RenderSystem();
@@ -17,6 +19,11 @@ void ECSengine::Initialize() {
 void ECSengine::CreateWindow(const char* title, const int width, const int height, bool fullScreen) {
 
 	renderSystem->CreateWindow(title, width, height, fullScreen);
+}
+
+void ECSengine::CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader)
+{
+	shaderSystem->CreateShaderProgramFromFiles(id, vertShader, fragShader);
 }
 
 void ECSengine::Shutdown()
