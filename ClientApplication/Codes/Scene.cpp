@@ -70,6 +70,9 @@ void Scene::Ready()
 	Moteur::Engine_Create2DTextureFromBMPFile("table_A_d.bmp");
 	Moteur::Engine_Create2DTextureFromBMPFile("torch_A_d.bmp");
 	Moteur::Engine_Create2DTextureFromBMPFile("wall_A_d.bmp");
+	Moteur::Engine_Create2DTextureFromBMPFile("alpha.bmp");
+	Moteur::Engine_Create2DTextureFromBMPFile("albedo.bmp");
+	Moteur::Engine_Create2DTextureFromBMPFile("specular.bmp");
 
 	//Add.BGObjects
 	string path = "..\\assets\\Json\\";
@@ -91,9 +94,16 @@ void Scene::Ready()
 	}
 
 	//Add.Character
+	Animation animation = Animation();
+	//animation.enabled = true;
+	animation.AnimationTime = 0.0f;
+	animation.IsPlaying = true;
+	animation.Speed = 0.2f;
+	animation.AnimationType = "TestAnimation";
 	m_testCharacter = Factory::CreateCharacter(
-		"../assets/meshes/steve.ply", 
-		"steve", 
-		vec3(10.f, 0.f, -20.f));
+		"../assets/meshes/female_warrior.ply",
+		"female_warrior",
+		vec3(10.f, 0.f, -20.f), 
+		animation);
 
 }

@@ -1,6 +1,7 @@
 #include "Factory.h"
 #include "BGObject.h"
 #include "Character.h"
+#include <Animation.h>
 
 using namespace std;
 using namespace glm;
@@ -18,7 +19,7 @@ BGObject* Factory::CreateBGObject(string modelPath, string modelName, vec3 posit
 	return BGObject::Create(modelPath, modelName, position);
 }
 
-Character* Factory::CreateCharacter(string modelPath, string modelName, vec3 position, vec4 color)
+Character* Factory::CreateCharacter(string modelPath, string modelName, vec3 position, Animation animation, vec4 color)
 {
-	return Character::Create(modelPath, modelName, position, color);
+	return Character::Create(modelPath, modelName, position, color, animation);
 }

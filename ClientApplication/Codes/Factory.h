@@ -7,6 +7,7 @@
 
 class BGObject;
 class Character;
+class Animation;
 
 class Factory
 {
@@ -16,7 +17,12 @@ private:
 
 public:
 	static BGObject* CreateBGObject(std::string modelPath, std::string modelName, glm::vec3 position);
-	static Character* CreateCharacter(std::string modelPath, std::string modelName, glm::vec3 position, glm::vec4 color = glm::vec4(1.f));
+	static Character* CreateCharacter(
+		std::string modelPath, 
+		std::string modelName, 
+		glm::vec3 position, 
+		Animation animation,
+		glm::vec4 color = glm::vec4(1.f));
 };
 
 #endif //_FACTORY_H_

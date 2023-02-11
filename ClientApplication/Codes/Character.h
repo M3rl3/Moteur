@@ -4,6 +4,7 @@
 #include <string>
 #include "glm\vec3.hpp"
 #include "glm\vec4.hpp"
+#include <Animation.h>
 
 class cMeshInfo;
 
@@ -22,9 +23,9 @@ public:
 	void Update(const float& dt);
 
 private:
-	bool Ready(std::string modelPath, std::string modelName, glm::vec3 position, glm::vec4 color);
+	bool Ready(std::string modelPath, std::string modelName, glm::vec3 position, glm::vec4 color, Animation animation);
 public:
-	static Character* Create(std::string modelPath, std::string modelName, glm::vec3 position, glm::vec4 color);
+	static Character* Create(std::string modelPath, std::string modelName, glm::vec3 position, glm::vec4 color, Animation animation);
 };
 
 #endif //_CHARACTER_H_
