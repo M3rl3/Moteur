@@ -179,6 +179,9 @@
     <ClCompile Include="MeshSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="TextureComponent.h">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMeshInfo.h">

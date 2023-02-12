@@ -46,15 +46,31 @@ int main(int argc, char** argv)
     shaderComponent->shaderID = shaderID;
 
     MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
-    //MeshSystem* meshSystem = new MeshSystem();
 
     sModelDrawInfo steve;
     renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
     meshComponent->plyModel = steve;
 
+    MeshSystem* meshSystem = new MeshSystem();
+
+    TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
+    unsigned int textureID = 0;
+
+    meshSystem->SetTexturePath("../assets/textures");
+    meshSystem->Create2DTextureFromBMPFile(textureID, "man.bmp");
+
+    textureComponent->useRGBAColor = false;
+    textureComponent->textureID = textureID;
+    textureComponent->textures[0] = "man.bmp";
+
+    textureComponent->textureRatios[0] = 1.f;
+    textureComponent->textureRatios[1] = 0.f;
+    textureComponent->textureRatios[2] = 0.f;
+    textureComponent->textureRatios[3] = 0.f;
+    
     engine->AddSystem(renderSystem);
     engine->AddSystem(shaderSystem);
-    //engine->AddSystem(meshSystem);
+    engine->AddSystem(meshSystem);
 
     while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) {
         engine->Update(1.f);

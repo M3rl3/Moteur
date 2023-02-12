@@ -242,21 +242,8 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
             {
-                GLint useRGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "useRGBAColour");
-
-                GLint RGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "RGBAColour");
-
-                glm::vec4 color = glm::vec4(100.f, 100.f, 100.f, 1.f);
-
-                glUniform4f(RGBAColourLocation, color.r, color.g, color.b, color.w);
-
-                glUniform1f(useRGBAColourLocation, (GLfloat)GL_TRUE);
-
                 GLint useIsTerrainMeshLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsTerrainMesh");
                 glUniform1f(useIsTerrainMeshLocation, (GLfloat)GL_FALSE);
-
-                GLint bHasTextureLocation = glGetUniformLocation(shaderComponent->shaderID, "bHasTexture");
-                glUniform1f(bHasTextureLocation, (GLfloat)GL_FALSE);
 
                 GLint doNotLightLocation = glGetUniformLocation(shaderComponent->shaderID, "doNotLight");
                 glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);

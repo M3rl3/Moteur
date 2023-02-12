@@ -184,6 +184,7 @@
     <ClCompile Include="ParticleAccelerator.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="ShaderSystem.cpp" />
+    <ClCompile Include="TextureComponent.h" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
