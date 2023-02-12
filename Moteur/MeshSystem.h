@@ -2,8 +2,6 @@
 
 #include <ECS/System.h>
 
-#include "MeshComponent.h"
-
 #include "cVAOManager/cVAOManager.h"
 #include "LoadModel.h"
 
@@ -14,8 +12,11 @@ public:
 
 	cVAOManager* GetVAOManager();
 
-	void LoadMesh(std::string fileName, sModelDrawInfo& plyModel);
+	bool LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID);
+	void Process(const std::vector<Entity*>& entities, float dt);
 
 private:
+	std::string systemName;
+
 	cVAOManager* vaoManager;
 };

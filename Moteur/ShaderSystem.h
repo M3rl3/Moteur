@@ -2,6 +2,7 @@
 
 #include <ECS/System.h>
 
+#include "Camera.h"
 #include "ShaderComponent.h"
 #include "TransformComponent.h"
 #include "cShaderManager/cShaderManager.h"
@@ -16,14 +17,14 @@ public:
 	void Process(const std::vector<Entity*>& entities, float dt);
 	void CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader);
 
+	Camera* GetCamera();
+	void SetCameraPosition(glm::vec3 cameraEye);
+	void SetCameraTarget(glm::vec3 cameraTarget);
+
 private:
 	cShaderManager* shaderManager;
 
-	std::string shaderComponent;
-	std::string meshComponent;
-	std::string transformComponent;
+	Camera* camera;
 
-	ShaderComponent* GetShaderComponent(const std::vector<Component*>& components);
-	//TransformComponent* GetTransformComponent(const std::vector<Component*>& components);
-
+	unsigned int shaderID = 0;
 };

@@ -11,8 +11,8 @@ public:
 
 	~ShaderComponent() {};
 
+	unsigned int shaderID;
+
 private:
 	std::string componentType;
-
-	unsigned int shaderID;
 };

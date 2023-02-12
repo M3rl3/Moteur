@@ -1,4 +1,5 @@
 #include "ECSengine.h"
+#include "cVAOManager/cVAOManager.h"
 
 #include <iostream>
 
@@ -26,6 +27,12 @@ void ECSengine::CreateShaderProgramFromFiles(unsigned int& id, const char* vertS
 	shaderSystem->CreateShaderProgramFromFiles(id, vertShader, fragShader);
 }
 
+void ECSengine::LoadModel(std::string fileName, std::string modelName, unsigned int shaderID)
+{
+	sModelDrawInfo plyModel;
+	meshSystem->LoadMesh(fileName, modelName, plyModel, shaderID);
+}
+
 void ECSengine::Shutdown()
 {
 	renderSystem->Shutdown();
@@ -39,7 +46,7 @@ void ECSengine::Update(float dt) {
 
 void ECSengine::Render()
 {
-	renderSystem->Process(entityManager.GetEntities(), 0.f);
+	//renderSystem->Process(entityManager.GetEntities(), 0.f);
 }
 
 unsigned int ECSengine::CreateEntity()
@@ -55,11 +62,11 @@ Window* ECSengine::GetWindow()
 void ECSengine::AddSystem(System* system)
 {
 	std::vector<System*>::iterator itFind =
-		std::find(systems.begin(), systems.end(), system);
+		std::find(systems.begin(), systems.end(), system);	
 
 	if (itFind != systems.end())
 	{
-		printf("System already added!\n");
+		std::cout << "System already exists." << std::endl;
 		return;
 	}
 
@@ -73,7 +80,7 @@ void ECSengine::RemoveSystem(System* system)
 
 	if (itFind == systems.end())
 	{
-		printf("System is not added!\n");
+		std::cout << "System does not exist." << std::endl;
 		return;
 	}
 

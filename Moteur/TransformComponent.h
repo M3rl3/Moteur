@@ -15,10 +15,10 @@ public:
 
 	~TransformComponent() {}
 
-private:
-	std::string componentType;
-
 	glm::vec3 position;
 	glm::vec3 scale;
 	glm::quat rotation;
+
+private:
+	std::string componentType;
 };

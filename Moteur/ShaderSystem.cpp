@@ -1,14 +1,15 @@
 #include "ShaderSystem.h"
 #include "ShaderComponent.h"
 
+#include "OpenGL.h"
+
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
 ShaderSystem::ShaderSystem()
 {
 	shaderManager = new cShaderManager();
-    shaderComponent = "ShaderComponent";
-    meshComponent = "MeshComponent";
-    transformComponent = "TransformComponent";
 }
 
 ShaderSystem::~ShaderSystem()
@@ -20,16 +21,14 @@ cShaderManager* ShaderSystem::GetShaderManager() {
 	return shaderManager;
 }
 
-
 void ShaderSystem::Process(const std::vector<Entity*>& entities, float dt) {
     ShaderComponent* shaderComponent;
-
+    
     for (int i = 0; i < entities.size(); i++) {
 
-        Entity* entity = entities[i];
-        shaderComponent = GetShaderComponent(entities[i]->GetComponents());
-
-        
+        if (shaderComponent != nullptr) {
+            shaderComponent->shaderID = shaderID;
+        }
     }
 }
 
@@ -50,27 +49,42 @@ void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* ve
         std::cout << "Shaders compiled." << std::endl;
     }
 
-    shaderManager->useShaderProgram("ShadyProgram");
+    //shaderManager->useShaderProgram("ShadyProgram");
     id = shaderManager->getIDFromFriendlyName("ShadyProgram");
-    //glUseProgram(id);
+    glUseProgram(id);
 
-    //shaderID = id;
+    shaderID = id;
+}
+
+Camera* ShaderSystem::GetCamera()
+{
+    return camera;
+}
+
+void ShaderSystem::SetCameraPosition(glm::vec3 cameraEye)
+{
+    camera->position = cameraEye;
+}
+
+void ShaderSystem::SetCameraTarget(glm::vec3 cameraTarget)
+{
+    camera->target = cameraTarget;
 }
 
 ShaderComponent* ShaderSystem::GetShaderComponent(const std::vector<Component*>& components)
 {
-    ShaderComponent* component = nullptr;
+    Component* component = nullptr;
     for (int j = 0; j < components.size(); j++) {
-        component = dynamic_cast<ShaderComponent*>(components[j]);
 
+        component = components[j];
         if (component->GetType() == shaderComponent) {
-            return component;
+            return dynamic_cast<ShaderComponent*>(component);
         }
     }
     return nullptr;
 }
 
-//TransfromComponent* ShaderSystem::GetTransformComponent(const std::vector<Component*>& components)
+//TransformComponent* ShaderSystem::GetTransformComponent(const std::vector<Component*>& components)
 //{
 //    TransfromComponent* component = nullptr;
 //    for (int j = 0; j < components.size(); j++) {

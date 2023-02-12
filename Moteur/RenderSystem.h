@@ -14,7 +14,7 @@ public:
 	~RenderSystem();
 
 	void CreateWindow(const char* title, const int width, const int height, bool fullScreen);
-	void Initialize();
+	void Initialize(const char* title, const int width, const int height, bool fullScreen);
 	void Process(const std::vector<Entity*>& entities, float dt);
 	void Shutdown();
 
@@ -22,9 +22,7 @@ public:
 
 private:
 
-	TransformComponent* GetTransformComponent(const std::vector<Component*>& components);
+	std::string systemName;
 
 	Camera* camera;
-
-	std::string transformComponent = "TransformComponent";
 };

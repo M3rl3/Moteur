@@ -6,6 +6,8 @@
 #include "EntityManager.h"
 #include "ShaderSystem.h"
 #include "RenderSystem.h"
+#include "MeshSystem.h"
+
 #include "Window.h"
 
 class ECSengine {
@@ -21,6 +23,7 @@ public:
 
 	void CreateWindow(const char* title, const int width, const int height, bool fullScreen);
 	void CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader);
+	void LoadModel(std::string fileName, std::string modelName, unsigned int shaderID);
 	unsigned int CreateEntity();
 
 	Window* GetWindow();
@@ -43,6 +46,7 @@ private:
 	
 	RenderSystem* renderSystem;
 	ShaderSystem* shaderSystem;
+	MeshSystem* meshSystem;
 
 	std::vector<System*> systems;
 };
