@@ -339,7 +339,7 @@ void ManageLights(unsigned int shaderID) {
     GLint Param2Location = glGetUniformLocation(shaderID, "sLightsArray[0].param2");
 
     //glm::vec3 lightPosition0 = meshArray[1]->position;
-    glm::vec3 lightPosition0 = glm::vec3(0.f, 5.f, 0.f);
+    glm::vec3 lightPosition0 = glm::vec3(0.f, 25.f, 0.f);
     glUniform4f(PositionLocation, lightPosition0.x, lightPosition0.y, lightPosition0.z, 1.0f);
     //glUniform4f(PositionLocation, 0.f, 0.f, 0.f, 1.0f);
     glUniform4f(DiffuseLocation, 1.f, 1.f, 1.f, 1.f);

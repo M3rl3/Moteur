@@ -15,13 +15,30 @@
 //extern AnimationManager* animationManager;
 
 void Update(float dt);
+
+void ECSEngine();
 void GoldenAgeEngine();
 
 int main(int argc, char** argv)
 {
-    //GoldenAgeEngine();
+    // Uncomment to switch between engines
+ 
+    // GoldenAgeEngine();
+    ECSEngine();
+
+    return 0;
+}
+
+// example function for user input
+void Update(float dt) {
+
+    //Engine::Engine_GetCameraObject()->position.x += 1.f;
+}
+
+void ECSEngine() {
+
     ECSengine* engine = new ECSengine();
-    
+
     RenderSystem* renderSystem = new RenderSystem();
     renderSystem->Initialize("ECSengine", 1366, 768, false);
 
@@ -67,7 +84,7 @@ int main(int argc, char** argv)
     textureComponent->textureRatios[1] = 0.f;
     textureComponent->textureRatios[2] = 0.f;
     textureComponent->textureRatios[3] = 0.f;
-    
+
     engine->AddSystem(renderSystem);
     engine->AddSystem(shaderSystem);
     engine->AddSystem(meshSystem);
@@ -76,14 +93,6 @@ int main(int argc, char** argv)
         engine->Update(1.f);
     }
     engine->Shutdown();
-
-    return 0;
-}
-
-// example function for user input
-void Update(float dt) {
-
-    //Engine::Engine_GetCameraObject()->position.x += 1.f;
 }
 
 // engine from the golden age
