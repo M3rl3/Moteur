@@ -39,18 +39,18 @@ bool MeshSystem::LoadMesh(std::string fileName, std::string modelName, sModelDra
 
 void MeshSystem::SetTexturePath(const char* filePath)
 {
-    std::cout << "\nLoading Textures";
+    std::cout << "\nLoading Textures...";
 
     textureManager->SetBasePath(filePath);
 }
 
-bool MeshSystem::Create2DTextureFromBMPFile(unsigned int& textureID, const char* filePath)
+bool MeshSystem::Load2DTexture(unsigned int& textureID, const char* filePath)
 {
     if (textureManager->Create2DTextureFromBMPFile(filePath))
     {
         textureID = textureManager->getTextureIDFromName(filePath);
 
-        std::cout << "Loaded " << filePath << " texture." << std::endl;
+        std::cout << "\nLoaded " << filePath << " texture." << std::endl;
 		return true;
     }
     else
@@ -60,7 +60,7 @@ bool MeshSystem::Create2DTextureFromBMPFile(unsigned int& textureID, const char*
     }
 }
 
-bool MeshSystem::CreateCubeMapTextureFromBMPFiles(
+bool MeshSystem::LoadCubeMapTexture(
     unsigned int& textureID,
     std::string cubeMapName,
     std::string posX_fileName, std::string negX_fileName,
@@ -137,3 +137,11 @@ void MeshSystem::Process(const std::vector<Entity*>& entities, float dt)
 	}
 }
 
+void MeshSystem::Shutdown() {
+
+    vaoManager = nullptr;
+    delete vaoManager;
+
+    textureManager = nullptr;
+    delete textureManager;
+}

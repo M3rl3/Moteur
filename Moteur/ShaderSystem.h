@@ -17,14 +17,10 @@ public:
 	void Process(const std::vector<Entity*>& entities, float dt);
 	void CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader);
 
-	Camera* GetCamera();
-	void SetCameraPosition(glm::vec3 cameraEye);
-	void SetCameraTarget(glm::vec3 cameraTarget);
+	void Shutdown();
 
 private:
 	cShaderManager* shaderManager;
-
-	Camera* camera;
 
 	unsigned int shaderID = 0;
 };

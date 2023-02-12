@@ -9,7 +9,6 @@
 
 ShaderSystem::ShaderSystem()
 {
-    camera = new Camera();
 	shaderManager = new cShaderManager();
 }
 
@@ -56,4 +55,10 @@ void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* ve
     glUseProgram(id);
 
     shaderID = id;
+}
+
+void ShaderSystem::Shutdown()
+{
+    shaderManager = nullptr;
+    delete shaderManager;
 }

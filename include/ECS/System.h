@@ -11,6 +11,7 @@ public:
 	virtual ~System() {}
 
 	virtual void Process(const std::vector<Entity*>& entities, float dt) = 0;
+	virtual void Shutdown() = 0;
 
 private:
 	std::string systemName;

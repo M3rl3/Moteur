@@ -74,7 +74,7 @@ void ECSEngine() {
     unsigned int textureID = 0;
 
     meshSystem->SetTexturePath("../assets/textures");
-    meshSystem->Create2DTextureFromBMPFile(textureID, "man.bmp");
+    meshSystem->Load2DTexture(textureID, "man.bmp");
 
     textureComponent->useRGBAColor = false;
     textureComponent->textureID = textureID;

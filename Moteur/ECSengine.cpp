@@ -6,7 +6,6 @@
 ECSengine::ECSengine()
 {
 	entityManager = new EntityManager();
-	renderSystem = new RenderSystem();
 }
 
 ECSengine::~ECSengine() 
@@ -15,7 +14,15 @@ ECSengine::~ECSengine()
 
 void ECSengine::Shutdown()
 {
-	
+	entityManager = nullptr;
+	delete entityManager;
+
+	for (int i = 0; i < systems.size(); i++) {
+		systems[i]->Shutdown();
+
+		systems[i] = nullptr;
+		delete systems[i];
+	}
 }
 
 void ECSengine::Update(float dt) {

@@ -46,10 +46,6 @@ public:
 
 private:
 	EntityManager* entityManager;
-	
-	RenderSystem* renderSystem;
-	ShaderSystem* shaderSystem;
-	MeshSystem* meshSystem;
 
 	std::vector<System*> systems;
 };
