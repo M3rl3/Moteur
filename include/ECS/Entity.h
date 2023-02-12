@@ -9,60 +9,60 @@ class Entity {
 public:
 	std::vector<Component*> components;
 
-	Component* GetComponentByType(std::string type)
+	template <class T>
+	T* GetComponentByType()
 	{
 		for (int i = 0; i < components.size(); i++)
 		{
-			Component* component = components[i];
-			if (type == component->GetType())
+			T* component = dynamic_cast<T*>(components[i]);
+			if (component != nullptr)
 				return component;
 		}
 
 		return nullptr;
 	}
 
-	bool HasComponent(std::string type)
+	template <class T>
+	bool HasComponent()
 	{
 		for (int i = 0; i < components.size(); i++)
 		{
-			Component* component = components[i];
-			if (type == component->GetType())
+			T* component = dynamic_cast<T*>(components[i]);
+			if (component != nullptr)
 				return true;
 		}
 
 		return false;
 	}
 
-	Component* AddComponent(std::string type)
+	template <class T>
+	T* AddComponent()
 	{
-		if (HasComponent(type))
+		if (HasComponent<T>())
 		{
 			return nullptr;
 		}
 
-		Component* newComponent = new Component();
-		newComponent->SetType(type);
+		T* newComponent = new T();
 		components.push_back(newComponent);
 		return newComponent;
 	}
 
-	bool RemoveComponent(std::string type)
+	template <class T>
+	bool RemoveComponent()
 	{
-		if (!HasComponent(type)) 
-		{
-			return false;
-		}
-
 		for (std::vector<Component*>::iterator it = components.begin();
 			it != components.end(); it++)
 		{
-			Component* component = *it;
-			if (type == component->GetType())
+			T* component = dynamic_cast<T*>(*it);
+			if (component != nullptr)
 			{
 				components.erase(it);
 				return true;
 			}
 		}
+
+		return false;
 	}
 
 	std::vector<Component*>& GetComponents() {

@@ -10,16 +10,8 @@ public:
 		componentType("MeshComponent") {};
 	~MeshComponent() {};
 
-	std::string GetType() {
-		return componentType;
-	}
-
-	std::string GetMeshName() {
-		return plyModel.meshName;
-	}
+	sModelDrawInfo plyModel;
 
 private:
 	std::string componentType;
-
-	sModelDrawInfo plyModel;
 };

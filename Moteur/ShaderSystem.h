@@ -7,7 +7,7 @@
 #include "TransformComponent.h"
 #include "cShaderManager/cShaderManager.h"
 
-class ShaderSystem : System {
+class ShaderSystem : public System {
 public:
 	ShaderSystem();
 	~ShaderSystem();

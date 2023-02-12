@@ -37,16 +37,18 @@ bool MeshSystem::LoadMesh(std::string fileName, std::string modelName, sModelDra
 
 void MeshSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
-	ShaderComponent* shaderComponent;
+	/*ShaderComponent* shaderComponent;
 	MeshComponent* meshComponent;
 
 	for (int i = 0; i < entities.size(); i++) {
 		Entity* currentEntity = entities[i];
 
-		shaderComponent = dynamic_cast<ShaderComponent*>(currentEntity->GetComponentByType("ShaderComponent"));
-		meshComponent = dynamic_cast<MeshComponent*>(currentEntity->GetComponentByType("MeshComponent"));
+		shaderComponent = currentEntity->GetComponentByType<ShaderComponent>();
+		meshComponent = currentEntity->GetComponentByType<MeshComponent>();
 
-		std::string meshName = meshComponent->GetMeshName();
+		std::string meshName = meshComponent->plyModel.meshName;
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		sModelDrawInfo modelInfo;
 		if (vaoManager->FindDrawInfoByModelName(meshName, modelInfo)) {
@@ -58,6 +60,6 @@ void MeshSystem::Process(const std::vector<Entity*>& entities, float dt)
 		else {
 			std::cout << "Model " << meshName << " not found in VAO." << std::endl;
 		}
-	}
+	}*/
 }
 

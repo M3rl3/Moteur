@@ -2,6 +2,8 @@
 #include <vector>
 
 #include "TransformComponent.h"
+#include "MeshComponent.h"
+#include "ShaderComponent.h"
 
 #include "EntityManager.h"
 #include "ShaderSystem.h"
@@ -15,34 +17,34 @@ public:
 	ECSengine();
 	~ECSengine();
 
-	void Initialize();
 	void Shutdown();
 
 	void Update(float dt);
 	void Render();
 
-	void CreateWindow(const char* title, const int width, const int height, bool fullScreen);
-	void CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader);
-	void LoadModel(std::string fileName, std::string modelName, unsigned int shaderID);
 	unsigned int CreateEntity();
 
-	Window* GetWindow();
-
-	Component* AddComponent(unsigned int entityId, std::string componentType)
+	template <class T>
+	T* AddComponent(unsigned int entityId)
 	{
-		return entityManager.AddComponent(entityId, componentType);
+		return entityManager->AddComponent<T>(entityId);
 	}
 
-	void RemoveComponent(unsigned int entityId, std::string componentType)
+	template <class T>
+	T* RemoveComponent(unsigned int entityId)
 	{
-		entityManager.RemoveComponent(entityId, componentType);
+		return entityManager->RemoveComponent<T>(entityId);
+	}
+
+	EntityManager* GetEntityManager() {
+		return entityManager;
 	}
 
 	void AddSystem(System* newSystem);
 	void RemoveSystem(System* removeSystem);
 
 private:
-	EntityManager entityManager;
+	EntityManager* entityManager;
 	
 	RenderSystem* renderSystem;
 	ShaderSystem* shaderSystem;

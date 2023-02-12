@@ -9,6 +9,7 @@
 
 ShaderSystem::ShaderSystem()
 {
+    camera = new Camera();
 	shaderManager = new cShaderManager();
 }
 
@@ -22,14 +23,15 @@ cShaderManager* ShaderSystem::GetShaderManager() {
 }
 
 void ShaderSystem::Process(const std::vector<Entity*>& entities, float dt) {
-    ShaderComponent* shaderComponent;
+   /* ShaderComponent* shaderComponent;
     
     for (int i = 0; i < entities.size(); i++) {
-
+        Entity* currentEntity = entities[i];
+        shaderComponent = dynamic_cast<ShaderComponent*>(currentEntity->GetComponentByType("ShaderComponent"));
         if (shaderComponent != nullptr) {
             shaderComponent->shaderID = shaderID;
         }
-    }
+    }*/
 }
 
 void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader)
@@ -55,44 +57,3 @@ void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* ve
 
     shaderID = id;
 }
-
-Camera* ShaderSystem::GetCamera()
-{
-    return camera;
-}
-
-void ShaderSystem::SetCameraPosition(glm::vec3 cameraEye)
-{
-    camera->position = cameraEye;
-}
-
-void ShaderSystem::SetCameraTarget(glm::vec3 cameraTarget)
-{
-    camera->target = cameraTarget;
-}
-
-ShaderComponent* ShaderSystem::GetShaderComponent(const std::vector<Component*>& components)
-{
-    Component* component = nullptr;
-    for (int j = 0; j < components.size(); j++) {
-
-        component = components[j];
-        if (component->GetType() == shaderComponent) {
-            return dynamic_cast<ShaderComponent*>(component);
-        }
-    }
-    return nullptr;
-}
-
-//TransformComponent* ShaderSystem::GetTransformComponent(const std::vector<Component*>& components)
-//{
-//    TransfromComponent* component = nullptr;
-//    for (int j = 0; j < components.size(); j++) {
-//        component = dynamic_cast<TransfromComponent*>(components[j]);
-//
-//        if (component->GetType() == shaderComponent) {
-//            return component;
-//        }
-//    }
-//    return nullptr;
-//}

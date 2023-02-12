@@ -5,7 +5,7 @@
 #include "cVAOManager/cVAOManager.h"
 #include "LoadModel.h"
 
-class MeshSystem : System {
+class MeshSystem : public System {
 public:
 	MeshSystem();
 	~MeshSystem();

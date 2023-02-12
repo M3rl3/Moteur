@@ -4,16 +4,25 @@
 #include "TransformComponent.h"
 #include "MeshComponent.h"
 
+#include "LoadModel.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
+#include <sstream>
+
+Camera* cam;
+void ManageLights(unsigned int shaderID);
 
 RenderSystem::RenderSystem()
 {
     systemName = "RenderSystem";
+    vaoManager = new cVAOManager();
+
     window = new Window();
 	camera = new Camera();
+    cam = camera;
 }
 
 RenderSystem::~RenderSystem() 
@@ -30,6 +39,32 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+
+    const float CAMERA_MOVE_SPEED = 1.f;
+    if (key == GLFW_KEY_A)     // Left
+    {
+        cam->position.x -= CAMERA_MOVE_SPEED;
+    }
+    if (key == GLFW_KEY_D)     // Right
+    {
+        cam->position.x += CAMERA_MOVE_SPEED;
+    }
+    if (key == GLFW_KEY_W)     // Forward
+    {
+        cam->position.z += CAMERA_MOVE_SPEED;
+    }
+    if (key == GLFW_KEY_S)     // Backwards
+    {
+        cam->position.z -= CAMERA_MOVE_SPEED;
+    }
+    if (key == GLFW_KEY_Q)     // Down
+    {
+        cam->position.y -= CAMERA_MOVE_SPEED;
+    }
+    if (key == GLFW_KEY_E)     // Up
+    {
+        cam->position.y += CAMERA_MOVE_SPEED;
     }
 }
 
@@ -144,17 +179,17 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
 
 void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
-    TransformComponent* transformComponent;
-    ShaderComponent* shaderComponent;
-    //MeshComponent* meshComponent;
-
+    TransformComponent* transformComponent = nullptr;
+    ShaderComponent* shaderComponent = nullptr;
+    MeshComponent* meshComponent;
+    
     for (int i = 0; i < entities.size(); i++) {
         Entity* currentEntity = entities[i];
 
-        transformComponent = dynamic_cast<TransformComponent*>(currentEntity->GetComponentByType("TransformComponent"));
-        shaderComponent = dynamic_cast<ShaderComponent*>(currentEntity->GetComponentByType("ShaderComponent"));
-        //meshComponent = dynamic_cast<MeshComponent*>(currentEntity->GetComponentByType("MeshComponent"));
-        
+        transformComponent = currentEntity->GetComponentByType<TransformComponent>();
+        shaderComponent = currentEntity->GetComponentByType<ShaderComponent>();
+        meshComponent = currentEntity->GetComponentByType<MeshComponent>();
+
         if (transformComponent != nullptr && shaderComponent != nullptr)
         {
             //MVP
@@ -165,6 +200,8 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             GLint viewLocation = glGetUniformLocation(shaderComponent->shaderID, "View");
             GLint projectionLocation = glGetUniformLocation(shaderComponent->shaderID, "Projection");
             GLint modelInverseLocation = glGetUniformLocation(shaderComponent->shaderID, "ModelInverse");
+
+            ManageLights(shaderComponent->shaderID);
 
             float ratio;
             int width, height;
@@ -178,7 +215,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            view = glm::lookAt(camera->position, camera->position + camera->target, upVector);
+            view = glm::lookAt(camera->position, camera->target, upVector);
             projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
 
             glm::vec4 viewport = glm::vec4(0, 0, width, height);
@@ -202,6 +239,52 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             glm::mat4 modelInverse = glm::inverse(glm::transpose(model));
             glUniformMatrix4fv(modelInverseLocation, 1, GL_FALSE, glm::value_ptr(modelInverse));
 
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            {
+                GLint useRGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "useRGBAColour");
+
+                GLint RGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "RGBAColour");
+
+                glm::vec4 color = glm::vec4(100.f, 100.f, 100.f, 1.f);
+
+                glUniform4f(RGBAColourLocation, color.r, color.g, color.b, color.w);
+
+                glUniform1f(useRGBAColourLocation, (GLfloat)GL_TRUE);
+
+                GLint useIsTerrainMeshLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsTerrainMesh");
+                glUniform1f(useIsTerrainMeshLocation, (GLfloat)GL_FALSE);
+
+                GLint bHasTextureLocation = glGetUniformLocation(shaderComponent->shaderID, "bHasTexture");
+                glUniform1f(bHasTextureLocation, (GLfloat)GL_FALSE);
+
+                GLint doNotLightLocation = glGetUniformLocation(shaderComponent->shaderID, "doNotLight");
+                glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
+
+                GLint bIsSkyboxObjectLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsSkyboxObject");
+                glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_FALSE);
+            }
+
+            std::string meshName = meshComponent->plyModel.meshName;
+
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            sModelDrawInfo modelInfo;
+            if (vaoManager->FindDrawInfoByModelName(meshName, modelInfo)) {
+
+                glBindVertexArray(modelInfo.VAO_ID);
+                glDrawElements(GL_TRIANGLES, modelInfo.numberOfIndices, GL_UNSIGNED_INT, (void*)0);
+                glBindVertexArray(0);
+            }
+            else {
+                std::cout << "Model " << meshName << " not found in VAO." << std::endl;
+            }
+
+            std::stringstream ss;
+            ss << " Camera: " << "(" << camera->position.x << ", " << camera->position.y << ", " << camera->position.z << ")";
+
+            glfwSetWindowTitle(window->theWindow, ss.str().c_str());
+
             glfwSwapBuffers(window->theWindow);
             glfwPollEvents();
         }
@@ -223,4 +306,59 @@ void RenderSystem::Shutdown()
     delete camera;
 
     exit(EXIT_SUCCESS);
+}
+
+bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
+{
+    LoadModel(fileName, plyModel);
+
+    if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
+        std::cout << "Model " << modelName << " loaded successfully." << std::endl;
+        return true;
+    }
+    else {
+        std::cout << "Could not load model " << modelName << " into VAO" << std::endl;
+        return false;
+    }
+}
+
+Window* RenderSystem::GetWindow() {
+    return window;
+}
+
+Camera* RenderSystem::GetCamera()
+{
+    return camera;
+}
+
+void RenderSystem::SetCameraPosition(glm::vec3 pos)
+{
+    camera->position = pos;
+}
+
+void RenderSystem::SetCameraTarget(glm::vec3 cameraTarget)
+{
+    camera->target = cameraTarget;
+}
+
+void ManageLights(unsigned int shaderID) {
+
+    GLint PositionLocation = glGetUniformLocation(shaderID, "sLightsArray[0].position");
+    GLint DiffuseLocation = glGetUniformLocation(shaderID, "sLightsArray[0].diffuse");
+    GLint SpecularLocation = glGetUniformLocation(shaderID, "sLightsArray[0].specular");
+    GLint AttenLocation = glGetUniformLocation(shaderID, "sLightsArray[0].atten");
+    GLint DirectionLocation = glGetUniformLocation(shaderID, "sLightsArray[0].direction");
+    GLint Param1Location = glGetUniformLocation(shaderID, "sLightsArray[0].param1");
+    GLint Param2Location = glGetUniformLocation(shaderID, "sLightsArray[0].param2");
+
+    //glm::vec3 lightPosition0 = meshArray[1]->position;
+    glm::vec3 lightPosition0 = glm::vec3(0.f, 5.f, 0.f);
+    glUniform4f(PositionLocation, lightPosition0.x, lightPosition0.y, lightPosition0.z, 1.0f);
+    //glUniform4f(PositionLocation, 0.f, 0.f, 0.f, 1.0f);
+    glUniform4f(DiffuseLocation, 1.f, 1.f, 1.f, 1.f);
+    glUniform4f(SpecularLocation, 1.f, 1.f, 1.f, 1.f);
+    glUniform4f(AttenLocation, 0.5f, 0.01f, 0.0f, 1.f);
+    glUniform4f(DirectionLocation, 1.f, 1.f, 1.f, 1.f);
+    glUniform4f(Param1Location, 0.f, 0.f, 0.f, 1.f); //x = Light Type
+    glUniform4f(Param2Location, 1.f, 0.f, 0.f, 1.f); //x = Light on/off
 }

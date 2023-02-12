@@ -1,7 +1,5 @@
 #include "ECSengine.h"
 
-#include <ECS/>
-
 #include "RenderSystem.h"
 #include "MeshSystem.h"
 #include "ShaderSystem.h"
@@ -21,21 +19,47 @@ void GoldenAgeEngine();
 
 int main(int argc, char** argv)
 {
-
     //GoldenAgeEngine();
     ECSengine* engine = new ECSengine();
     
     RenderSystem* renderSystem = new RenderSystem();
     renderSystem->Initialize("ECSengine", 1366, 768, false);
-    //engine->AddSystem(&renderSystem);
+
+    renderSystem->SetCameraPosition(glm::vec3(0.f, 0.f, -5.f));
+    renderSystem->SetCameraTarget(glm::vec3(1.f));
 
     unsigned int entityID = engine->CreateEntity();
-    
 
-    //while (!glfwWindowShouldClose(engine->GetWindow()->theWindow)) {
-    //    //std::cout << "bomb has been planted!";
-    //}
-    //engine->Shutdown();
+    TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
+    transformComponent->position = glm::vec3(0.f, 0.f, 5.f);
+    transformComponent->scale = glm::vec3(1.f);
+    transformComponent->rotation = glm::quat(glm::vec3(0.f));
+
+    ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
+
+    unsigned int shaderID = 0;
+    const char* v_Shader = "../assets/shaders/vertexShader.glsl";
+    const char* f_Shader = "../assets/shaders/fragmentShader.glsl";
+
+    ShaderSystem* shaderSystem = new ShaderSystem();
+    shaderSystem->CreateShaderProgramFromFiles(shaderID, v_Shader, f_Shader);
+    shaderComponent->shaderID = shaderID;
+
+    MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
+    //MeshSystem* meshSystem = new MeshSystem();
+
+    sModelDrawInfo steve;
+    renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
+    meshComponent->plyModel = steve;
+
+    engine->AddSystem(renderSystem);
+    engine->AddSystem(shaderSystem);
+    //engine->AddSystem(meshSystem);
+
+    while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) {
+        engine->Update(1.f);
+    }
+    engine->Shutdown();
 
     return 0;
 }
