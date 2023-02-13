@@ -4,6 +4,7 @@
 
 #include "TransformComponent.h"
 
+#include "AnimationManager.h"
 #include "cVAOManager/cVAOManager.h"
 
 #include "Window.h"
@@ -36,4 +37,5 @@ private:
 	Camera* camera;
 
 	cVAOManager* vaoManager;
+	AnimationManager* animationManager;
 };

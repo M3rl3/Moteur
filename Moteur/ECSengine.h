@@ -5,6 +5,7 @@
 #include "MeshComponent.h"
 #include "ShaderComponent.h"
 #include "TextureComponent.h"
+#include "AnimationComponent.h"
 
 #include "EntityManager.h"
 #include "ShaderSystem.h"

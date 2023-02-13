@@ -3,6 +3,7 @@
 #include "ShaderComponent.h"
 #include "TransformComponent.h"
 #include "MeshComponent.h"
+#include "AnimationComponent.h"
 
 #include "LoadModel.h"
 
@@ -13,16 +14,34 @@
 #include <sstream>
 
 Camera* cam;
+AnimationManager* animeMan;
+
+float yaw = 0.f;
+float pitch = 0.f;
+float fov = 45.f;
+
+// mouse state
+bool firstMouse = true;
+float lastX = 800.f / 2.f;
+float lastY = 600.f / 2.f;
+
+bool enableMouse = false;
+bool mouseClick = false;
+
+glm::vec3 targetLoc = glm::vec3(0.f);
+
 void ManageLights(unsigned int shaderID);
 
 RenderSystem::RenderSystem()
 {
     systemName = "RenderSystem";
     vaoManager = new cVAOManager();
+    animationManager = new AnimationManager();
 
     window = new Window();
 	camera = new Camera();
     cam = camera;
+    animeMan = animationManager;
 }
 
 RenderSystem::~RenderSystem() 
@@ -65,6 +84,120 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
     if (key == GLFW_KEY_E)     // Up
     {
         cam->position.y += CAMERA_MOVE_SPEED;
+    }
+
+    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
+        enableMouse = !enableMouse;
+    }
+}
+
+void MouseCallBack(GLFWwindow* window, double xposition, double yposition) {
+
+    if (firstMouse) {
+        lastX = xposition;
+        lastY = yposition;
+        firstMouse = false;
+    }
+
+    float xoffset = xposition - lastX;
+    float yoffset = lastY - yposition;  // reversed since y coordinates go from bottom to up
+    lastX = xposition;
+    lastY = yposition;
+
+    float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    // prevent perspective from getting flipped by capping it
+    if (pitch > 89.f) {
+        pitch = 89.f;
+    }
+    if (pitch < -89.f) {
+        pitch = -89.f;
+    }
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    if (enableMouse) {
+        cam->target = glm::normalize(front);
+    }
+}
+
+void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
+    if (fov >= 1.f && fov <= 45.f) {
+        fov -= yoffset;
+    }
+    if (fov <= 1.f) {
+        fov = 1.f;
+    }
+    if (fov >= 45.f) {
+        fov = 45.f;
+    }
+}
+
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
+
+        // quick cleanup
+        if (animeMan != nullptr) {
+            animeMan = nullptr;
+            delete animeMan;
+        }
+
+        float ratio;
+        int rWidth, rHeight;
+
+        glfwGetFramebufferSize(window, &rWidth, &rHeight);
+        ratio = rWidth / (float)rHeight;
+
+        glm::vec3 upVector = glm::vec3(0.f, 1.f, 0.f);
+        glm::mat4x4 projection = glm::perspective(0.6f, ratio, 0.1f, 10000.0f);
+        glm::mat4x4 view = glm::lookAt(cam->position, cam->target, upVector);
+
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+
+        float x = (float)xpos / width * 2 - 1;
+        float y = -((float)ypos / height * 2 - 1);
+
+        glm::vec4 ray_clip(x, y, -1.0, 1.0);
+
+        glm::vec4 ray_eye = glm::inverse(projection) * ray_clip;
+        ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0, 0.0);
+        glm::vec3 ray_world = glm::vec3(glm::inverse(view) * ray_eye);
+
+        ray_world = glm::normalize(ray_world);
+        float t = -(cam->position.y) / ray_world.y;
+
+        // Get target location
+        glm::vec3 targetLocation = cam->position + t * ray_world;
+        std::cout << "Mouse left click at position: " << targetLocation.x << ", " << targetLocation.y << ", " << targetLocation.z << std::endl;
+
+        animeMan = new AnimationManager();
+
+        targetLoc = targetLocation;
+
+        mouseClick = true;
+        /*for (cMeshInfo* meshInfo : meshArray) {
+            if (meshInfo->enabled) {
+                AnimationData testAnimation;
+                testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(meshInfo->position, 0.0f, EaseIn));
+                testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLocation, 0.50f, EaseIn));
+                testAnimation.Duration = 2.0f;
+                meshInfo->animation.IsPlaying = true;
+                meshInfo->animation.AnimationTime = 0.0f;
+
+                animationManager->Load("TestAnimation", testAnimation);
+            }
+        }*/
     }
 }
 
@@ -156,12 +289,12 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     glfwSetKeyCallback(window->theWindow, KeyCallback);
 
     // mouse and scroll callback
-    //glfwSetCursorPosCallback(window->theWindow, MouseCallBack);
-    //glfwSetScrollCallback(window->theWindow, ScrollCallBack);
-    //glfwSetMouseButtonCallback(window->theWindow, MouseButtonCallback);
+    glfwSetCursorPosCallback(window->theWindow, MouseCallBack);
+    glfwSetScrollCallback(window->theWindow, ScrollCallBack);
+    glfwSetMouseButtonCallback(window->theWindow, MouseButtonCallback);
 
     // capture mouse input
-    //glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     glfwSetErrorCallback(ErrorCallback);
 
@@ -181,7 +314,8 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
     TransformComponent* transformComponent = nullptr;
     ShaderComponent* shaderComponent = nullptr;
-    MeshComponent* meshComponent;
+    MeshComponent* meshComponent = nullptr;
+    AnimationComponent* animationComponent = nullptr;
     
     for (int i = 0; i < entities.size(); i++) {
         Entity* currentEntity = entities[i];
@@ -189,6 +323,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
         transformComponent = currentEntity->GetComponentByType<TransformComponent>();
         shaderComponent = currentEntity->GetComponentByType<ShaderComponent>();
         meshComponent = currentEntity->GetComponentByType<MeshComponent>();
+        animationComponent = currentEntity->GetComponentByType<AnimationComponent>();
 
         if (transformComponent != nullptr && shaderComponent != nullptr)
         {
@@ -215,8 +350,18 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            view = glm::lookAt(camera->position, camera->target, upVector);
-            projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
+            //view = glm::lookAt(camera->position, camera->target, upVector);
+            //projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
+
+            // mouse support
+            if (enableMouse) {
+                view = glm::lookAt(camera->position, camera->position + camera->target, upVector);
+                projection = glm::perspective(glm::radians(fov), ratio, 0.1f, 10000.f);
+            }
+            else {
+                view = glm::lookAt(camera->position, camera->target, upVector);
+                projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
+            }
 
             glm::vec4 viewport = glm::vec4(0, 0, width, height);
 
@@ -241,17 +386,21 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-            {
-                GLint useIsTerrainMeshLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsTerrainMesh");
-                glUniform1f(useIsTerrainMeshLocation, (GLfloat)GL_FALSE);
+            if (animationComponent != nullptr) {
+                if (mouseClick) {
+                    AnimationData testAnimation;
+                    testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(transformComponent->position, 0.0f, EaseIn));
+                    testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLoc, 0.50f, EaseIn));
+                    testAnimation.Duration = 1.0f;
 
-                GLint doNotLightLocation = glGetUniformLocation(shaderComponent->shaderID, "doNotLight");
-                glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
+                    //animationComponent->animation = new Animation();
+                    animationComponent->animation.IsPlaying = true;
+                    animationComponent->animation.AnimationTime = 1.0f;
 
-                GLint bIsSkyboxObjectLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsSkyboxObject");
-                glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_FALSE);
+                    animationManager->Load("TestAnimation", testAnimation);
+                }
+                
             }
-
             std::string meshName = meshComponent->plyModel.meshName;
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -274,6 +423,8 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             glfwSwapBuffers(window->theWindow);
             glfwPollEvents();
+
+            mouseClick = false;
         }
     }
 }
