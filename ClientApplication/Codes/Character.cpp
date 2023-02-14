@@ -5,20 +5,27 @@
 using namespace std;
 using namespace glm;
 
+// The constructor
 Character::Character()
 	: m_pMesh(nullptr), m_vRot(vec3(0.f))
 {
 }
 
+// The destructor
 Character::~Character()
 {
 }
 
+// Cleanup method
 void Character::Destroy()
 {
 	delete this;
 }
 
+/// <summary>
+/// Update scene at delta time.
+/// </summary>
+/// <param name="dt">The delta time</param>
 void Character::Update(const float& dt)
 {
 	/*m_vRot.y += dt * 100.f;
@@ -30,6 +37,15 @@ void Character::Update(const float& dt)
 	}*/
 }
 
+/// <summary>
+/// Load meshe character
+/// </summary>
+/// <param name="modelPath">The model path</param>
+/// <param name="modelName">Model name</param>
+/// <param name="position">The position</param>
+/// <param name="color">Color to set</param>
+/// <param name="animation">Character animation</param>
+/// <returns>true if character is in ready state or otherwise</returns>
 bool Character::Ready(string modelPath, string modelName, vec3 position, vec4 color, Animation animation)
 {
 	int modelID = 0;
@@ -48,6 +64,15 @@ bool Character::Ready(string modelPath, string modelName, vec3 position, vec4 co
 
 }
 
+/// <summary>
+/// Create new character from mesh
+/// </summary>
+/// <param name="modelPath">The model path</param>
+/// <param name="modelName">Model name</param>
+/// <param name="position">The position</param>
+/// <param name="color">Color to set</param>
+/// <param name="animation">The character animation</param>
+/// <returns></returns>
 Character* Character::Create(string modelPath, string modelName, vec3 position, vec4 color, Animation animation)
 {
 	Character* pInstance = new Character();

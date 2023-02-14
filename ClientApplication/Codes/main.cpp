@@ -15,10 +15,10 @@
 //extern AnimationManager* animationManager;
 
 void Update(float dt);
-
 void ECSEngine();
 void GoldenAgeEngine();
 
+// The main class
 int main(int argc, char** argv)
 {
     // Uncomment to switch between engines
@@ -35,6 +35,9 @@ void Update(float dt) {
     //Engine::Engine_GetCameraObject()->position.x += 1.f;
 }
 
+/// <summary>
+/// The new engine initialization. Still WIP
+/// </summary>
 void ECSEngine() {
 
     // Check Memory Leak
@@ -104,7 +107,7 @@ void ECSEngine() {
     engine->Shutdown();
 }
 
-// engine from the golden age
+// The current game engine used
 void GoldenAgeEngine() {
 
     // Check Memory Leak

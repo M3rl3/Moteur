@@ -7,35 +7,63 @@
 using namespace std;
 using namespace glm;
 
+/// <summary>
+/// The constructor
+/// </summary>
 BGObject::BGObject()
 	: m_pMesh(nullptr)
 {
 }
 
+/// <summary>
+/// The destructor
+/// </summary>
 BGObject::~BGObject()
 {
 }
 
+/// <summary>
+/// Cleanup method
+/// </summary>
 void BGObject::Destroy()
 {
 	delete this;
 }
 
+/// <summary>
+/// Update scene at delta time.
+/// </summary>
+/// <param name="dt">The delta time</param>
 void BGObject::Update(const float& dt)
 {
 }
 
+/// <summary>
+/// Set Euler rotation for mesh object
+/// </summary>
+/// <param name="vRot">Vector3 of new angle</param>
 void BGObject::SetRotation(glm::vec3 vRot)
 {
 	vec3 vEuler = vec3(radians(vRot.x), radians(vRot.y), radians(vRot.z));
 	m_pMesh->SetRotationFromEuler(vEuler);
 }
 
+/// <summary>
+/// Set scale for object
+/// </summary>
+/// <param name="vScale">Vector3 of new scale</param>
 void BGObject::SetScale(glm::vec3 vScale)
 {
 	m_pMesh->scale = vScale;
 }
 
+/// <summary>
+/// Load textures and meshes
+/// </summary>
+/// <param name="modelName">model name</param>
+/// <param name="texName"> text name</param>
+/// <param name="position">The position where object will be placed</param>
+/// <returns></returns>
 bool BGObject::Ready(string modelName, string texName, vec3 position)
 {
 	stringstream ss;
@@ -55,6 +83,13 @@ bool BGObject::Ready(string modelName, string texName, vec3 position)
 	m_pMesh->useRGBAColour = false;
 }
 
+/// <summary>
+/// Create instance of an object
+/// </summary>
+/// <param name="modelName">Model name</param>
+/// <param name="texName">The text name</param>
+/// <param name="position">The position where object will be placed</param>
+/// <returns></returns>
 BGObject* BGObject::Create(string modelName, string texName, vec3 position)
 {
 	BGObject* pInstance = new BGObject();
