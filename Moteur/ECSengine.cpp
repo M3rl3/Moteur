@@ -3,44 +3,32 @@
 
 #include <iostream>
 
+// Constructor
 ECSengine::ECSengine()
-{
+{	
+	// Init entity manager to add/remove components
 	entityManager = new EntityManager();
 }
 
+// Destructor
 ECSengine::~ECSengine() 
 {
 }
 
-void ECSengine::Shutdown()
-{
-	entityManager = nullptr;
-	delete entityManager;
-
-	for (int i = 0; i < systems.size(); i++) {
-		systems[i]->Shutdown();
-
-		systems[i] = nullptr;
-		delete systems[i];
-	}
-}
-
+// Calls update on all systems currently present every tick
 void ECSengine::Update(float dt) {
 	for (int i = 0; i < systems.size(); i++) {
 		systems[i]->Process(entityManager->GetEntities(), dt);
 	}
 }
 
-void ECSengine::Render()
-{
-	//renderSystem->Process(entityManager.GetEntities(), 0.f);
-}
-
+// Creates an entity and returns its ID
 unsigned int ECSengine::CreateEntity()
 {
 	return entityManager->CreateEntity();
 }
 
+// Add a system to the array of systems
 void ECSengine::AddSystem(System* system)
 {
 	std::vector<System*>::iterator itFind =
@@ -55,6 +43,7 @@ void ECSengine::AddSystem(System* system)
 	systems.push_back(system);
 }
 
+// Remove a system from the array of systems
 void ECSengine::RemoveSystem(System* system)
 {
 	std::vector<System*>::iterator itFind =
@@ -69,3 +58,16 @@ void ECSengine::RemoveSystem(System* system)
 	systems.erase(itFind);
 }
 
+// Calls shutdown on all added systems
+void ECSengine::Shutdown()
+{
+	entityManager = nullptr;
+	delete entityManager;
+
+	for (int i = 0; i < systems.size(); i++) {
+		systems[i]->Shutdown();
+
+		systems[i] = nullptr;
+		delete systems[i];
+	}
+}

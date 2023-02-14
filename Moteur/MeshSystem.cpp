@@ -6,6 +6,7 @@
 
 #include "OpenGL.h"
 
+// Constructor
 MeshSystem::MeshSystem()
 {
 	systemName = "MeshSystem";
@@ -13,20 +14,24 @@ MeshSystem::MeshSystem()
 	textureManager = new cBasicTextureManager();
 }
 
+// Destructor
 MeshSystem::~MeshSystem() 
 {
 
 }
 
+// Getter for the VAO manager object
 cVAOManager* MeshSystem::GetVAOManager() 
 {
 	return vaoManager;
 }
 
+// Load the mesh model from ply file into VAO
 bool MeshSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
 {
 	LoadModel(fileName, plyModel);
 
+    // Check if model loaded
 	if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
 		std::cout << "Model " << modelName << " loaded successfully." << std::endl;
 		return true;
@@ -37,15 +42,18 @@ bool MeshSystem::LoadMesh(std::string fileName, std::string modelName, sModelDra
 	}
 }
 
+// Set the path where the textures are located
 void MeshSystem::SetTexturePath(const char* filePath)
 {
-    std::cout << "\nLoading Textures...";
+    std::cout << "\nLoading Textures..." << std::endl;
 
     textureManager->SetBasePath(filePath);
 }
 
+// Load a 2D texture
 bool MeshSystem::Load2DTexture(unsigned int& textureID, const char* filePath)
 {
+    // Check if the texture loaded
     if (textureManager->Create2DTextureFromBMPFile(filePath))
     {
         textureID = textureManager->getTextureIDFromName(filePath);
@@ -60,6 +68,7 @@ bool MeshSystem::Load2DTexture(unsigned int& textureID, const char* filePath)
     }
 }
 
+// Load a skybox texture
 bool MeshSystem::LoadCubeMapTexture(
     unsigned int& textureID,
     std::string cubeMapName,
@@ -69,6 +78,8 @@ bool MeshSystem::LoadCubeMapTexture(
     bool bIsSeamless, std::string& errorString)
 {
     const char* skybox_name = cubeMapName.c_str();
+
+    // Check if the skybox loaded
     if (textureManager->CreateCubeTextureFromBMPFiles(skybox_name,
         posX_fileName, negX_fileName,
         posY_fileName, negY_fileName,
@@ -86,23 +97,27 @@ bool MeshSystem::LoadCubeMapTexture(
     }
 }
 
+// The update method called every tick
 void MeshSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
 	ShaderComponent* shaderComponent;
     TextureComponent* textureComponent;
 
+    // Iterate through vec entities
 	for (int i = 0; i < entities.size(); i++) {
 		Entity* currentEntity = entities[i];
 
 		shaderComponent = currentEntity->GetComponentByType<ShaderComponent>();
 		textureComponent = currentEntity->GetComponentByType<TextureComponent>();
 
+        // Check if entity has the components needed
         if (shaderComponent != nullptr && textureComponent != nullptr) {
 
             GLint useRGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "useRGBAColour");
             GLint RGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "RGBAColour");
             GLint hasTextureLocation = glGetUniformLocation(shaderComponent->shaderID, "bHasTexture");
 
+            // Check if it uses RGBA color or a texture
             if (textureComponent->useRGBAColor) {
 
                 glUniform1f(useRGBAColourLocation, (GLfloat)GL_TRUE);
@@ -123,6 +138,7 @@ void MeshSystem::Process(const std::vector<Entity*>& entities, float dt)
                 glActiveTexture(texture0Unit + GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, texture0ID);
 
+                // set uniform locations
                 GLint texture0Location = glGetUniformLocation(shaderComponent->shaderID, "texture0");
                 glUniform1i(texture0Location, texture0Unit);
 
@@ -137,6 +153,7 @@ void MeshSystem::Process(const std::vector<Entity*>& entities, float dt)
 	}
 }
 
+// Gracefully closes everything down
 void MeshSystem::Shutdown() {
 
     vaoManager = nullptr;
