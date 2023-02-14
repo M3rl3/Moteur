@@ -359,6 +359,11 @@ namespace Moteur {
 
             for (cMeshInfo* meshInfo : meshArray) {
                 if (meshInfo->enabled) {
+                    glm::vec3 direction = glm::normalize(targetLocation - meshInfo->position);
+                    float targetAngle = glm::degrees(glm::atan(direction.x, direction.z));
+                    for (float i = 0.0f; i < targetAngle; i++)
+                        meshInfo->AdjustRoationAngleFromEuler(glm::vec3(0, glm::radians(1.0f), 0));
+
                     AnimationData testAnimation;
                     testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(meshInfo->position, 0.0f, EaseIn));
                     testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLocation, 0.50f, EaseIn));

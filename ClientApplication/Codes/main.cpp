@@ -23,8 +23,8 @@ int main(int argc, char** argv)
 {
     // Uncomment to switch between engines
  
-    // GoldenAgeEngine();
-    ECSEngine();
+     GoldenAgeEngine();
+    //ECSEngine();
 
     return 0;
 }
