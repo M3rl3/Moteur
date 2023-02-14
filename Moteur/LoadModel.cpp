@@ -1,5 +1,6 @@
 #include "LoadModel.h"
 
+// Function for loading the vertices, indices, color, uv coordinates from ply files
 void LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
 
     vertexLayout* modelArray = NULL;

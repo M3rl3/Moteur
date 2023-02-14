@@ -29,33 +29,39 @@ cMeshInfo::~cMeshInfo() {
 
 }
 
+// set a location to translate mesh to
 void cMeshInfo::LockTarget(glm::vec3 target)
 {
 	this->target = target - this->position;
 	this->velocity = glm::normalize(this->target);
 }
 
+// Add the velocity to the position with some delta time
 void cMeshInfo::TranslateOverTime(float dt)
 {
 	this->position += this->velocity * dt;
 }
 
+// Add the velocity to the position with some delta time
 void cMeshInfo::TranslateOverTime(glm::vec3 velocity, float dt)
 {
 	this->velocity = velocity;
 	this->position += this->velocity * dt;
 }
 
+// Remove all forces being applied
 void cMeshInfo::KillAllForces()
 {
 	this->velocity = glm::vec3(0.f);
 }
 
+// Set the rotation based on euler angles
 void cMeshInfo::SetRotationFromEuler(glm::vec3 newEulerAngleXYZ)
 {
 	this->rotation = glm::quat(newEulerAngleXYZ);
 }
 
+// Adjust euler angle and convert it to a quaternion
 void cMeshInfo::AdjustRoationAngleFromEuler(glm::vec3 EulerAngleXYZ_Adjust)
 {
 	// To combine quaternion values, you multiply them together
@@ -74,6 +80,7 @@ void cMeshInfo::SetUniformScale(float newScale)
 	this->scale = glm::vec3(newScale, newScale, newScale);
 }
 
+// Initialize all the texture ratios to a value
 void cMeshInfo::SetTextureRatiosAcrossTheBoard(float newTextureRatio)
 {
 	for (int i = 0; i < 8; i++) {
@@ -101,6 +108,7 @@ void cMeshInfo::CopyVertices(sModelDrawInfo model) {
 	this->vertices = vertices;
 }
 
+// Make a local copy of the indices
 void cMeshInfo::CopyIndices(sModelDrawInfo model) {
 	unsigned int numIndices = model.numberOfIndices;
 	std::vector <unsigned int> indices(numIndices);

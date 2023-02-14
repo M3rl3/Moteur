@@ -5,10 +5,18 @@
 class cRenderReticle {
 public:
 
+	// Constructor
 	cRenderReticle();
+
+	// Destructor
 	~cRenderReticle();
 
+	// Init DearImGui
 	void Initialize(GLFWwindow* window, const char* glsl_version);
+
+	// Update method that runs every tick
 	void Update();
+
+	// Gracefully close everything down
 	void Shutdown();
 };
