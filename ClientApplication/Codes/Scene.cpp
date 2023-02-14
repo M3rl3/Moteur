@@ -11,16 +11,26 @@
 using namespace std;
 using namespace glm;
 
+/// <summary>
+/// The constructor
+/// </summary>
 Scene::Scene()
 	: m_testCharacter(nullptr)
 {
 	m_vecBGObjs.clear();
 }
 
+/// <summary>
+/// The destructor
+/// </summary>
 Scene::~Scene()
 {
 }
 
+/// <summary>
+/// Update scene at delta time.
+/// </summary>
+/// <param name="dt"> The delta time</param>
 void Scene::Update(const float& dt)
 {
 	for (int i = 0; i < m_vecBGObjs.size(); ++i)
@@ -30,10 +40,16 @@ void Scene::Update(const float& dt)
 		m_testCharacter->Update(dt);
 }
 
+/// <summary>
+/// Display scene
+/// </summary>
 void Scene::Render()
 {
 }
 
+/// <summary>
+/// Cleanup method
+/// </summary>
 void Scene::Destroy()
 {
 	for (int i = 0; i < m_vecBGObjs.size(); ++i)
@@ -46,6 +62,9 @@ void Scene::Destroy()
 	delete this;
 }
 
+/// <summary>
+/// Load textures and meshes
+/// </summary>
 void Scene::Ready()
 {
 	//Texture
