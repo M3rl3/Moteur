@@ -4,14 +4,17 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+// Constructor
 cRenderReticle::cRenderReticle() {
 
 }
 
+// Destructor
 cRenderReticle::~cRenderReticle() {
 
 }
 
+// Init DearImGui
 void cRenderReticle::Initialize(GLFWwindow* window, const char* glsl_version) {
 
     // Init dear ImGUI	
@@ -25,6 +28,7 @@ void cRenderReticle::Initialize(GLFWwindow* window, const char* glsl_version) {
     ImGui::StyleColorsDark();		//dark theme
 }
 
+// Update method that runs every tick
 void cRenderReticle::Update() {
 
     // Start a new frame
@@ -53,9 +57,9 @@ void cRenderReticle::Update() {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+// Gracefully close everything down
 void cRenderReticle::Shutdown() {
 
-    // Gracefully close everything down
     // ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui::DestroyContext();

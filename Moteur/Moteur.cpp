@@ -31,19 +31,32 @@ namespace Moteur {
     };
 
     // GLFWwindow* window;
+    // The window object
     Window* window;
+
+    // Camera object
     Camera* camera;
 
+    // Compiled shaderID
     GLuint shaderID = 0;
 
+    // Manager for all things VAO related
     cVAOManager* VAOMan;
+
+    // Manager for all things texture related
     cBasicTextureManager* TextureMan;
+
+    // Physics particle
     ParticleAccelerator partAcc;
 
+    // The crosshair
     cRenderReticle crosshair;
     bool enableCrosshair = false;
 
+    // Player model
     cMeshInfo* player_mesh;
+
+    // Skybox sphere with inverted normals
     cMeshInfo* skybox_sphere_mesh;
 
     unsigned int readIndex = 0;
@@ -55,15 +68,22 @@ namespace Moteur {
     //float timeDiff = 0.f;
     //int frameCount = 0;
 
+    // The actual drawing array
     std::vector <cMeshInfo*> meshArray;
+
+    // array for mesh file names
     std::vector <std::string> meshFiles;
 
     //glm::vec3 cameraEye = glm::vec3(0.f);
     //glm::vec3 cameraTarget = glm::vec3(0.f, 0.f, -1.f);
+    
+    // Enum for user input
     eEditMode theEditMode = MOVING_CAMERA;
 
+    // Manager for all things animation related
     AnimationManager* animationManager = nullptr;
 
+    // mouse input
     float yaw = 0.f;
     float pitch = 0.f;
     float fov = 45.f;
@@ -78,12 +98,22 @@ namespace Moteur {
 
     int object_index = 0;
 
+    // name of the cubemap texture
     std::string cubemapName = "";
 
+    // User defined update method
     void (*Updatecallback)(float dt);
+
+    // Manager for all things related to lighting
     void ManageLights();
+
+    // gen a random float value
     float RandomFloat(float a, float b);
+
+    // Randomize the position of a mesh 
     bool RandomizePositions(cMeshInfo* mesh);
+
+    // Return the index of a mesh from the drawing vector
     void GetIndex(std::vector<cMeshInfo*> v, cMeshInfo* theMesh, int& id);
 
     //// Callbacks
@@ -92,11 +122,13 @@ namespace Moteur {
     // static void MouseCallBack(GLFWwindow* window, double xposition, double yposition);
     // static void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset);
 
+    // if something goes wrong
     static void ErrorCallback(int error, const char* description)
     {
         fprintf(stderr, "Error: %s\n", description);
     }
 
+    // keyboard input
     static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -127,12 +159,12 @@ namespace Moteur {
                 meshArray[i]->isWireframe = false;
             }
         }
-        if (key == GLFW_KEY_LEFT_ALT) {
+        /*if (key == GLFW_KEY_LEFT_ALT) {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
         if (key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE) {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        }
+        }*/
         if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
             enableMouse = !enableMouse;
         }
@@ -215,9 +247,10 @@ namespace Moteur {
             }
         }
         break;
-        case TAKE_CONTROL: {
+        case TAKE_CONTROL: { // player object
             constexpr float PLAYER_MOVE_SPEED = 1.f;
 
+            // move the player through forces applied
             if (key == GLFW_KEY_W && action == GLFW_PRESS) {
                 player_mesh->velocity.x = PLAYER_MOVE_SPEED;
                 player_mesh->rotation = glm::quat(glm::vec3(0.f, 67.55f, 0.f));
@@ -265,6 +298,7 @@ namespace Moteur {
         }
     }
 
+    // Mouse camera pan
     void MouseCallBack(GLFWwindow* window, double xposition, double yposition) {
 
         if (firstMouse) {
@@ -302,6 +336,7 @@ namespace Moteur {
         }
     }
 
+    // Callback for zooming in with the mouse scroll wheel
     void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
         if (fov >= 1.f && fov <= 45.f) {
             fov -= yoffset;
@@ -314,6 +349,7 @@ namespace Moteur {
         }
     }
 
+    // Callback for mouse buttons
     void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
         if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
 
@@ -364,6 +400,7 @@ namespace Moteur {
                     for (float i = 0.0f; i < targetAngle; i++)
                         meshInfo->AdjustRoationAngleFromEuler(glm::vec3(0, glm::radians(1.0f), 0));
 
+                    // Create an animation based on the positions
                     AnimationData testAnimation;
                     testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(meshInfo->position, 0.0f, EaseIn));
                     testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLocation, 0.50f, EaseIn));
@@ -371,12 +408,14 @@ namespace Moteur {
                     meshInfo->animation.IsPlaying = true;
                     meshInfo->animation.AnimationTime = 0.0f;
 
+                    // Load the animations for them to actually play
                     animationManager->Load("TestAnimation", testAnimation);
                 }
             }
         }
     }
 
+    // Init the engine
     void Moteur::Engine_Initialize() {
 
         const char* glsl_version = "#version 420";
@@ -417,6 +456,7 @@ namespace Moteur {
         glEnable(GL_DEPTH_TEST);
     }
 
+    // Init the window object
     void Moteur::Engine_CreateWindow(const char* title, const int width, const int height, bool fullScreen, bool enableMouse)
     {
         if (!glfwInit()) {
@@ -428,6 +468,7 @@ namespace Moteur {
         // Init Window
         window = new Window();
 
+        // Fullscreen support
         if (fullScreen) {
             GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
 
@@ -452,32 +493,38 @@ namespace Moteur {
             window->theWindow = glfwCreateWindow(window->width, window->height, window->title, NULL, NULL);
         }
 
+        // Check if window was created
         if (!window) {
             std::cerr << "Window creation failed." << std::endl;
             glfwTerminate();
             return;
         }
 
+        // Set aspect ratio
         glfwSetWindowAspectRatio(window->theWindow, 16, 9);
 
         Engine_SetEnableMouse(enableMouse);
     }
 
+    // Setter for enabling mouse input
     void Moteur::Engine_SetEnableMouse(bool enableMouse)
     {
         enableMouse = enableMouse;
     }
 
+    // Getter for the window object
     Window* Moteur::Engine_GetWindow()
     {
         return window;
     }
 
+    // Getter for the camera object
     Camera* Engine_GetCameraObject()
     {
         return camera;
     }
 
+    // Compile the shaders provided
     void Moteur::Engine_CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader)
     {
         //Shader Manager
@@ -489,6 +536,7 @@ namespace Moteur {
         vertexShader.fileName = vertShader;
         fragmentShader.fileName = fragShader;
 
+        // Check if shaders compiled
         if (!shadyMan->createProgramFromFile("ShadyProgram", vertexShader, fragmentShader)) {
             std::cout << "Error: Shader program failed to compile." << std::endl;
             std::cout << shadyMan->getLastError();
@@ -498,6 +546,7 @@ namespace Moteur {
             std::cout << "Shaders compiled." << std::endl;
         }
 
+        // Use the compiled shader
         shadyMan->useShaderProgram("ShadyProgram");
         id = shadyMan->getIDFromFriendlyName("ShadyProgram");
         glUseProgram(id);
@@ -505,6 +554,7 @@ namespace Moteur {
         shaderID = id;
     }
 
+    // Set a readfile for asset names and paths
     void Moteur::Engine_LoadAssetsFromTextFile(const char* path)
     {
         std::ifstream readFile(path);
@@ -522,6 +572,7 @@ namespace Moteur {
         readFile.close();
     }
 
+    // Load a mesh model into VAO
     void Moteur::Engine_LoadModel(int& id, const char* filepath, const char* modelName, bool doNotLight, glm::vec3 position, glm::vec4 color)
     {
         sModelDrawInfo model;
@@ -541,6 +592,8 @@ namespace Moteur {
         meshArray.push_back(mesh);
 
         GetIndex(meshArray, mesh, id);
+
+        // Check if model was loaded
         if (id != -1) {
             std::cout << "Model " << modelName << " loaded successfully." << std::endl;
         }
@@ -549,6 +602,7 @@ namespace Moteur {
         }
     }
 
+    // Set the path where the textures are located
     void Moteur::Engine_SetTexturePath(const char* filePath)
     {
         std::cout << "\nLoading Textures";
@@ -559,8 +613,10 @@ namespace Moteur {
         TextureMan->SetBasePath(filePath);
     }
 
+    // Load a 2D texture from bmp file
     void Moteur::Engine_Create2DTextureFromBMPFile(const char* filePath)
     {
+        // Check if texture was loaded
         if (TextureMan->Create2DTextureFromBMPFile(filePath))
         {
             std::cout << "Loaded " << filePath << " texture." << std::endl;
@@ -571,6 +627,7 @@ namespace Moteur {
         }
     }
 
+    // Load a cubemap texture from bmp files
     void Moteur::Engine_CreateCubeMapTextureFromBMPFiles(
         std::string cubeMapName,
         std::string posX_fileName, std::string negX_fileName,
@@ -582,6 +639,8 @@ namespace Moteur {
         cubemapName = cubeMapName;
 
         const char* skybox_name = cubeMapName.c_str();
+
+        // Check if the texture was loaded
         if (TextureMan->CreateCubeTextureFromBMPFiles(skybox_name,
             posX_fileName, negX_fileName,
             posY_fileName, negY_fileName,
@@ -596,48 +655,58 @@ namespace Moteur {
         }
     }
 
+    // Manually create an array of objects to be drawn
     void Moteur::Engine_SetDrawingArray(std::vector<cMeshInfo*> vecMesh)
     {
         meshArray = vecMesh;
     }
 
+    // Getter for the array of objects to be drawn
     void Engine_GetDrawingArray(std::vector<cMeshInfo*>& vecMesh)
     {
+        // Error check
         if (meshArray.size() != NULL) {
             vecMesh = meshArray;
         }
     }
 
+    // Set a player model
     void Moteur::Engine_SetPlayerMesh(cMeshInfo* playerMesh)
     {
         player_mesh = playerMesh;
     }
 
+    // Set initial position of the camera
     void Moteur::Engine_SetCameraPosition(glm::vec3 cameraEye)
     {
         camera->position = cameraEye;
     }
 
+    // Set the camera lookAt
     void Moteur::Engine_SetCameraTarget(glm::vec3 cameraTarget)
     {
         camera->target = cameraTarget;
     }
 
+    // Toggle if reticle should be visible
     void Moteur::Engine_SetEnableCrosshair(bool enabled)
     {
         enableCrosshair = enabled;
     }
 
+    // Set a player model
     void Moteur::Engine_SetPlayerMesh(unsigned int id)
     {
         player_mesh = meshArray[id];
     }
 
+    // Set a skybox model
     void Moteur::Engine_SetSkyboxMesh(cMeshInfo* skyboxMesh)
     {
         skybox_sphere_mesh = skyboxMesh;
     }
 
+    // Set a skybox model
     void Moteur::Engine_SetSkyboxMesh(unsigned int id)
     {
         skybox_sphere_mesh = meshArray[id];
@@ -648,16 +717,19 @@ namespace Moteur {
     //    ::deltaTime = dt;
     //}
 
+    // Getter for animation manager
     AnimationManager* Engine_GetAnimationManager()
     {
         return animationManager;
     }
 
+    // Getter for a specific object from the drawing array
     cMeshInfo* Moteur::Engine_GetMeshObjectFromVector(int id)
     {
         return meshArray[id];
     }
 
+    // Update function running every tick
     void Moteur::Engine_Update(const float& dt) {
 
         //MVP
@@ -923,11 +995,13 @@ namespace Moteur {
         //}
     }
 
+    // Callback for a user defined update method
     void Engine_UpdateCallback(void(*Callback)(float dt))
     {
         Updatecallback = Callback;
     }
 
+    // Gracefully closes everything down
     void Moteur::Engine_Shutdown() {
 
         glfwDestroyWindow(window->theWindow);
