@@ -40,6 +40,12 @@ void Update(float dt) {
 /// </summary>
 void ECSEngine() {
 
+    // Check Memory Leak
+    _CrtDumpMemoryLeaks();
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+    //_CrtSetBreakAlloc(185080);
+
     ECSengine* engine = new ECSengine();
 
     RenderSystem* renderSystem = new RenderSystem();

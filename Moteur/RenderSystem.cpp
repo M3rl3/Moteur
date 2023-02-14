@@ -13,6 +13,7 @@
 #include <iostream>
 #include <sstream>
 
+// Global variables
 Camera* cam;
 AnimationManager* animeMan;
 
@@ -30,30 +31,38 @@ bool mouseClick = false;
 
 glm::vec3 targetLoc = glm::vec3(0.f);
 
+// Function for managing all the lights in the scene
 void ManageLights(unsigned int shaderID);
 
+// Constructor
 RenderSystem::RenderSystem()
 {
     systemName = "RenderSystem";
+
+    // Initialize all the managers
     vaoManager = new cVAOManager();
     animationManager = new AnimationManager();
 
+    // Initialize all the structs
     window = new Window();
 	camera = new Camera();
     cam = camera;
     animeMan = animationManager;
 }
 
+// Destructor
 RenderSystem::~RenderSystem() 
 {
 
 }
 
+// If something goes wrong
 static void ErrorCallback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
 
+// Keyboard inputs
 static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -86,11 +95,12 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
         cam->position.y += CAMERA_MOVE_SPEED;
     }
 
-    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
+    /*if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
         enableMouse = !enableMouse;
-    }
+    }*/
 }
 
+// Callback for panning camera with the mouse
 void MouseCallBack(GLFWwindow* window, double xposition, double yposition) {
 
     if (firstMouse) {
@@ -128,6 +138,7 @@ void MouseCallBack(GLFWwindow* window, double xposition, double yposition) {
     }
 }
 
+// Callback for zooming in with the mouse scroll wheel
 void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
     if (fov >= 1.f && fov <= 45.f) {
         fov -= yoffset;
@@ -140,6 +151,7 @@ void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
     }
 }
 
+// Callback for mouse buttons
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
 
@@ -201,14 +213,17 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     }
 }
 
+// Init window
 void RenderSystem::CreateWindow(const char* title, const int width, const int height, bool fullScreen) {
 
+    // Init GLFW
     if (!glfwInit()) {
         std::cerr << "GLFW init failed." << std::endl;
         glfwTerminate();
         return;
     }
 
+    // Fullscreen support
     if (fullScreen) {
         GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
 
@@ -233,23 +248,27 @@ void RenderSystem::CreateWindow(const char* title, const int width, const int he
         window->theWindow = glfwCreateWindow(window->width, window->height, window->title, NULL, NULL);
     }
 
+    // If window creation fails
     if (!window->theWindow) {
         std::cerr << "Window creation failed." << std::endl;
         glfwTerminate();
         return;
     }
 
+    // set aspect ratio
     glfwSetWindowAspectRatio(window->theWindow, 16, 9);
 }
 
 void RenderSystem::Initialize(const char* title, const int width, const int height, bool fullScreen) {
 
+    // Init GLFW
     if (!glfwInit()) {
         std::cerr << "GLFW init failed." << std::endl;
         glfwTerminate();
         return;
     }
 
+    // Fullscreen support based on current monitor
     if (fullScreen) {
         GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
 
@@ -266,6 +285,7 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
 
         window->theWindow = glfwCreateWindow(window->width, window->height, window->title, currentMonitor, NULL);
     }
+    // Otherwise uses the provied size for window
     else {
         window->width = width;
         window->height = height;
@@ -274,13 +294,17 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
         window->theWindow = glfwCreateWindow(window->width, window->height, window->title, NULL, NULL);
     }
 
+    // if init window failed
     if (!window->theWindow) {
         std::cerr << "Window creation failed." << std::endl;
         glfwTerminate();
         return;
     }
 
+    // Set aspect ratio
     glfwSetWindowAspectRatio(window->theWindow, 16, 9);
+
+    // GLFW and glsl upper and lower version
     const char* glsl_version = "#version 420";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -288,7 +312,7 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     // keyboard callback
     glfwSetKeyCallback(window->theWindow, KeyCallback);
 
-    // mouse and scroll callback
+    // mouse, mouse button and, scroll callback
     glfwSetCursorPosCallback(window->theWindow, MouseCallBack);
     glfwSetScrollCallback(window->theWindow, ScrollCallBack);
     glfwSetMouseButtonCallback(window->theWindow, MouseButtonCallback);
@@ -296,35 +320,44 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     // capture mouse input
     glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
+    // Error callback
     glfwSetErrorCallback(ErrorCallback);
 
+    // bring the window in front
     glfwMakeContextCurrent(window->theWindow);
 
+    // Get process address for the app
     if (!gladLoadGLLoader((GLADloadproc)(glfwGetProcAddress))) {
         std::cerr << "Error: unable to obtain pocess address." << std::endl;
         return;
     }
     glfwSwapInterval(1); //vsync
 
+    // Dont draw any back facing triangles
     glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
 }
 
+// Update method called every tick
 void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
+    // Make a copy of all the entity components
     TransformComponent* transformComponent = nullptr;
     ShaderComponent* shaderComponent = nullptr;
     MeshComponent* meshComponent = nullptr;
     AnimationComponent* animationComponent = nullptr;
     
+    // Iterate through all entities
     for (int i = 0; i < entities.size(); i++) {
         Entity* currentEntity = entities[i];
 
+        // get the specific instance for all components
         transformComponent = currentEntity->GetComponentByType<TransformComponent>();
         shaderComponent = currentEntity->GetComponentByType<ShaderComponent>();
         meshComponent = currentEntity->GetComponentByType<MeshComponent>();
         animationComponent = currentEntity->GetComponentByType<AnimationComponent>();
 
+        // check if the component exists
         if (transformComponent != nullptr && shaderComponent != nullptr)
         {
             //MVP
@@ -336,6 +369,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             GLint projectionLocation = glGetUniformLocation(shaderComponent->shaderID, "Projection");
             GLint modelInverseLocation = glGetUniformLocation(shaderComponent->shaderID, "ModelInverse");
 
+            // Lighting
             ManageLights(shaderComponent->shaderID);
 
             float ratio;
@@ -363,11 +397,13 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
             }
 
+            // Size of the viewport
             glm::vec4 viewport = glm::vec4(0, 0, width, height);
 
             GLint eyeLocationLocation = glGetUniformLocation(shaderComponent->shaderID, "eyeLocation");
             glUniform4f(eyeLocationLocation, camera->position.x, camera->position.y, camera->position.z, 1.f);
 
+            // Set the model matrix based on transformations applied
             model = glm::mat4x4(1.f);
             glm::mat4 translationMatrix = glm::translate(glm::mat4(1.f), transformComponent->position);
             glm::mat4 scaling = glm::scale(glm::mat4(1.f), transformComponent->scale);
@@ -377,6 +413,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             model *= rotation;
             model *= scaling;
 
+            // Uniform location in the shader
             glUniformMatrix4fv(modelLocaction, 1, GL_FALSE, glm::value_ptr(model));
             glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
             glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
@@ -386,12 +423,13 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+            // Manage animations
             if (animationComponent != nullptr) {
                 if (mouseClick) {
                     AnimationData testAnimation;
                     testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(transformComponent->position, 0.0f, EaseIn));
                     testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLoc, 0.50f, EaseIn));
-                    testAnimation.Duration = 1.0f;
+                    testAnimation.Duration = 2.0f;
 
                     //animationComponent->animation = new Animation();
                     animationComponent->animation.IsPlaying = true;
@@ -403,11 +441,14 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             }
             std::string meshName = meshComponent->plyModel.meshName;
 
+            // Polygon mode
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+            // Find the models vertices and indices
             sModelDrawInfo modelInfo;
             if (vaoManager->FindDrawInfoByModelName(meshName, modelInfo)) {
 
+                // Bind and draw
                 glBindVertexArray(modelInfo.VAO_ID);
                 glDrawElements(GL_TRIANGLES, modelInfo.numberOfIndices, GL_UNSIGNED_INT, (void*)0);
                 glBindVertexArray(0);
@@ -416,6 +457,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 std::cout << "Model " << meshName << " not found in VAO." << std::endl;
             }
 
+            // Set window title
             std::stringstream ss;
             ss << " Camera: " << "(" << camera->position.x << ", " << camera->position.y << ", " << camera->position.z << ")";
 
@@ -429,6 +471,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
     }
 }
 
+// Gracefully closes everything down
 void RenderSystem::Shutdown()
 {
     glfwDestroyWindow(window->theWindow);
@@ -446,6 +489,7 @@ void RenderSystem::Shutdown()
     exit(EXIT_SUCCESS);
 }
 
+// Loads model from ply file and gets it into the VAO
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
 {
     LoadModel(fileName, plyModel);
@@ -460,25 +504,30 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
     }
 }
 
+// Returns the instance of the window
 Window* RenderSystem::GetWindow() {
     return window;
 }
 
+// Returns the instance of the camera
 Camera* RenderSystem::GetCamera()
 {
     return camera;
 }
 
+// Set camera position
 void RenderSystem::SetCameraPosition(glm::vec3 pos)
 {
     camera->position = pos;
 }
 
+// Set camera lookat
 void RenderSystem::SetCameraTarget(glm::vec3 cameraTarget)
 {
     camera->target = cameraTarget;
 }
 
+// Manage all lighting
 void ManageLights(unsigned int shaderID) {
 
     GLint PositionLocation = glGetUniformLocation(shaderID, "sLightsArray[0].position");

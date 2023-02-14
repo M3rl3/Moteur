@@ -5,10 +5,13 @@
 
 #include <ECS/Component.h>
 
+// Interface for all entities
 class Entity {
 public:
+	// array to hold all components that will be added
 	std::vector<Component*> components;
 
+	// returns the specific instance of the component
 	template <class T>
 	T* GetComponentByType()
 	{
@@ -22,6 +25,7 @@ public:
 		return nullptr;
 	}
 
+	// Checks if a component is already added
 	template <class T>
 	bool HasComponent()
 	{
@@ -35,6 +39,7 @@ public:
 		return false;
 	}
 
+	// Adds a component and calls constructor on it
 	template <class T>
 	T* AddComponent()
 	{
@@ -48,6 +53,7 @@ public:
 		return newComponent;
 	}
 
+	// Removes a components and erases it
 	template <class T>
 	bool RemoveComponent()
 	{
@@ -61,14 +67,15 @@ public:
 				return true;
 			}
 		}
-
 		return false;
 	}
 
+	// Returns all the components added to the entity
 	std::vector<Component*>& GetComponents() {
 		return components;
 	}
 
 private:
+	// identifier for each entity
 	unsigned int id;
 };
