@@ -182,6 +182,9 @@
     <ClCompile Include="TextureComponent.h">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="MotionSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMeshInfo.h">
@@ -309,6 +312,12 @@
     </ClInclude>
     <ClInclude Include="AnimationComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="VelocityComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionSystem.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

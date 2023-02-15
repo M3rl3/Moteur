@@ -23,8 +23,8 @@ int main(int argc, char** argv)
 {
     // Uncomment to switch between engines
  
-     GoldenAgeEngine();
-    //ECSEngine();
+    // GoldenAgeEngine();
+    ECSEngine();
 
     return 0;
 }
@@ -97,12 +97,20 @@ void ECSEngine() {
     AnimationComponent* animationComponent = engine->AddComponent<AnimationComponent>(entityID);
     animationComponent->animation.AnimationType = "TestAnimation";
 
+    VelocityCompoent* velocityComponent = engine->AddComponent<VelocityCompoent>(entityID);
+    velocityComponent->targeting = true;
+    //velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
+    velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
+
+    MotionSystem* motionSystem = new MotionSystem();
+
     engine->AddSystem(renderSystem);
     engine->AddSystem(shaderSystem);
     engine->AddSystem(meshSystem);
+    engine->AddSystem(motionSystem);
 
     while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) {
-        engine->Update(1.f);
+        engine->Update(0.25f);
     }
     engine->Shutdown();
 }

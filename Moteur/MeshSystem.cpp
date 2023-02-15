@@ -45,7 +45,7 @@ bool MeshSystem::LoadMesh(std::string fileName, std::string modelName, sModelDra
 // Set the path where the textures are located
 void MeshSystem::SetTexturePath(const char* filePath)
 {
-    std::cout << "\nLoading Textures..." << std::endl;
+    std::cout << "\nLoading Textures...";
 
     textureManager->SetBasePath(filePath);
 }

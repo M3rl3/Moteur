@@ -6,11 +6,13 @@
 #include "ShaderComponent.h"
 #include "TextureComponent.h"
 #include "AnimationComponent.h"
+#include "VelocityComponent.h"
 
 #include "EntityManager.h"
 #include "ShaderSystem.h"
 #include "RenderSystem.h"
 #include "MeshSystem.h"
+#include "MotionSystem.h"
 
 #include "Window.h"
 
