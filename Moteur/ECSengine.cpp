@@ -21,7 +21,7 @@ void ECSengine::Update(float dt) {
 	for (int i = 0; i < systems.size(); i++) {
 		systems[i]->Process(entityManager->GetEntities(), dt);
 	}
-	// Set the update callback
+	// Execute the update callback
 	if (UpdateCallBack != NULL) {
 		UpdateCallBack(dt);
 	}

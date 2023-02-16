@@ -1,3 +1,6 @@
+//#define ECS_ENGINE
+#define MOTEUR
+
 #include "ECSengine.h"
 
 #include "RenderSystem.h"
@@ -29,9 +32,14 @@ void GoldenAgeEngine();
 int main(int argc, char** argv)
 {
     // Uncomment to switch between engines
- 
-    //GoldenAgeEngine();
+    
+#ifdef ECS_ENGINE
     ECSEngine();
+#endif // ECS_ENGINE
+
+#ifdef MOTEUR
+    GoldenAgeEngine();
+#endif // MOTEUR
 
     return 0;
 }
@@ -39,8 +47,13 @@ int main(int argc, char** argv)
 // example function for user input
 void Update(float dt) {
 
-    //MoteurKeysCheck(Moteur::Engine_GetKeyPressedArray());
+#ifdef MOTEUR
+    MoteurKeysCheck(Moteur::Engine_GetKeyPressedArray());
+#endif // MOTEUR
+
+#ifdef ECS_ENGINE
     ECSKeysCheck(renderSystem->GetKeyPressedArray());
+#endif // ECS_ENGINE
 }
 
 void MoteurKeysCheck(bool* keys) {
