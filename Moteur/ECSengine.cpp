@@ -8,6 +8,7 @@ ECSengine::ECSengine()
 {	
 	// Init entity manager to add/remove components
 	entityManager = new EntityManager();
+	UpdateCallBack = NULL;
 }
 
 // Destructor
@@ -20,6 +21,15 @@ void ECSengine::Update(float dt) {
 	for (int i = 0; i < systems.size(); i++) {
 		systems[i]->Process(entityManager->GetEntities(), dt);
 	}
+	// Set the update callback
+	if (UpdateCallBack != NULL) {
+		UpdateCallBack(dt);
+	}
+}
+
+void ECSengine::UpdateCallback(void(*Callback)(float dt))
+{
+	UpdateCallBack = Callback;
 }
 
 // Creates an entity and returns its ID

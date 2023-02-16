@@ -45,6 +45,11 @@ public:
 
 	// Sets the initial camera lookAt
 	void SetCameraTarget(glm::vec3 tar);
+
+	bool* GetKeyPressedArray();
+
+	// Keyboard Callback
+	static void ProcessInput(GLFWwindow* window, int key, int scancode, int action, int mods);
 	
 private:
 

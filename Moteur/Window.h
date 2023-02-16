@@ -33,7 +33,7 @@ public:
 	const char* title;
 
 	// boolean array for handling input
-	bool keyPressedID[100];
+	bool keyPressedID[255];
 
 	bool* GetKeyPressedArray() {
 		return keyPressedID;

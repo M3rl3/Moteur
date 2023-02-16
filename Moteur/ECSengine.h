@@ -26,6 +26,9 @@ public:
 	// Calls update on all systems currently present every tick
 	void Update(float dt);
 
+	// Callback for a user defined update method
+	void UpdateCallback(void (*Callback)(float dt));
+
 	// Creates a new entity and returns its ID
 	unsigned int CreateEntity();
 
@@ -63,4 +66,7 @@ private:
 
 	// Array for all added systems
 	std::vector<System*> systems;
+
+	// User defined update method
+	void (*UpdateCallBack)(float dt);
 };

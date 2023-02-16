@@ -14,8 +14,13 @@
 //extern std::vector <cMeshInfo*> meshArray;
 //extern AnimationManager* animationManager;
 
+ECSengine* engine;
+RenderSystem* renderSystem;
+
 void Update(float dt);
-void KeysCheck(bool* keys);
+
+void MoteurKeysCheck(bool* keys);
+void ECSKeysCheck(bool* keys);
 
 void ECSEngine();
 void GoldenAgeEngine();
@@ -25,8 +30,8 @@ int main(int argc, char** argv)
 {
     // Uncomment to switch between engines
  
-    GoldenAgeEngine();
-    //ECSEngine();
+    //GoldenAgeEngine();
+    ECSEngine();
 
     return 0;
 }
@@ -34,10 +39,11 @@ int main(int argc, char** argv)
 // example function for user input
 void Update(float dt) {
 
-    KeysCheck(Moteur::Engine_GetKeyPressedArray());
+    //MoteurKeysCheck(Moteur::Engine_GetKeyPressedArray());
+    ECSKeysCheck(renderSystem->GetKeyPressedArray());
 }
 
-void KeysCheck(bool* keys) {
+void MoteurKeysCheck(bool* keys) {
 
     const float CAMERA_MOVE_SPEED = 1.f;
     if (keys[GLFW_KEY_A])     // Left
@@ -66,6 +72,35 @@ void KeysCheck(bool* keys) {
     }
 }
 
+void ECSKeysCheck(bool* keys) {
+
+    const float CAMERA_MOVE_SPEED = 1.f;
+    if (keys[GLFW_KEY_A])     // Left
+    {
+        renderSystem->GetCamera()->position.x -= CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_D])     // Right
+    {
+        renderSystem->GetCamera()->position.x += CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_W])     // Forward
+    {
+        renderSystem->GetCamera()->position.z += CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_S])     // Backwards
+    {
+        renderSystem->GetCamera()->position.z -= CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_Q])     // Down
+    {
+        renderSystem->GetCamera()->position.y -= CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_E])     // Up
+    {
+        renderSystem->GetCamera()->position.y += CAMERA_MOVE_SPEED;
+    }
+}
+
 /// <summary>
 /// The new engine initialization. Still WIP
 /// </summary>
@@ -77,9 +112,9 @@ void ECSEngine() {
     //_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
     //_CrtSetBreakAlloc(185080);
 
-    ECSengine* engine = new ECSengine();
+    engine = new ECSengine();
 
-    RenderSystem* renderSystem = new RenderSystem();
+    renderSystem = new RenderSystem();
     renderSystem->Initialize("ECSengine", 1366, 768, false);
 
     renderSystem->SetCameraPosition(glm::vec3(0.f, 0.1f, -60.f));
@@ -139,6 +174,8 @@ void ECSEngine() {
     engine->AddSystem(shaderSystem);
     engine->AddSystem(meshSystem);
     engine->AddSystem(motionSystem);
+
+    engine->UpdateCallback(&Update);
 
     while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) {
         engine->Update(0.25f);

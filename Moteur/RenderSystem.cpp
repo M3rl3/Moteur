@@ -31,6 +31,9 @@ bool mouseClick = false;
 
 glm::vec3 targetLoc = glm::vec3(0.f);
 
+// Boolean array for handling user input
+bool keyPressedID[255];
+
 // Function for managing all the lights in the scene
 void ManageLights(unsigned int shaderID);
 
@@ -98,6 +101,23 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
     /*if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
         enableMouse = !enableMouse;
     }*/
+}
+
+// keyboard callback
+void RenderSystem::ProcessInput(GLFWwindow* window, int key, int scancode, int action, int mods) {
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+
+    if (key > 0 && key < 255) {
+        if (action == GLFW_PRESS) {
+            keyPressedID[key] = true;
+        }
+        else if (action == GLFW_RELEASE) {
+            keyPressedID[key] = false;
+        }
+    }
 }
 
 // Callback for panning camera with the mouse
@@ -310,7 +330,7 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     // keyboard callback
-    glfwSetKeyCallback(window->theWindow, KeyCallback);
+    glfwSetKeyCallback(window->theWindow, ProcessInput);
 
     // mouse, mouse button and, scroll callback
     glfwSetCursorPosCallback(window->theWindow, MouseCallBack);
@@ -525,6 +545,11 @@ void RenderSystem::SetCameraPosition(glm::vec3 pos)
 void RenderSystem::SetCameraTarget(glm::vec3 cameraTarget)
 {
     camera->target = cameraTarget;
+}
+
+bool* RenderSystem::GetKeyPressedArray()
+{
+    return keyPressedID;
 }
 
 // Manage all lighting
