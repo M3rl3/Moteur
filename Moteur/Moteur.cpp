@@ -122,6 +122,9 @@ namespace Moteur {
     // static void MouseCallBack(GLFWwindow* window, double xposition, double yposition);
     // static void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset);
 
+    // bool array for keyboard input
+    bool keyPressedID[255];
+
     // if something goes wrong
     static void ErrorCallback(int error, const char* description)
     {
@@ -415,6 +418,23 @@ namespace Moteur {
         }
     }
 
+    // keyboard callback
+    static void ProcessInput(GLFWwindow* window, int key, int scancode, int action, int mods) {
+
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        }
+
+        if (key > 0 && key < 100) {
+            if (action == GLFW_PRESS) {
+                keyPressedID[key] = true;
+            }
+            else if (action == GLFW_RELEASE) {
+                keyPressedID[key] = false;
+            }
+        }
+    }
+
     // Init the engine
     void Moteur::Engine_Initialize() {
 
@@ -423,7 +443,8 @@ namespace Moteur {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
         // keyboard callback
-        glfwSetKeyCallback(window->theWindow, KeyCallback);
+        //glfwSetKeyCallback(window->theWindow, KeyCallback);
+        glfwSetKeyCallback(window->theWindow, ProcessInput);
 
         // mouse and scroll callback
         glfwSetCursorPosCallback(window->theWindow, MouseCallBack);
@@ -710,6 +731,11 @@ namespace Moteur {
     void Moteur::Engine_SetSkyboxMesh(unsigned int id)
     {
         skybox_sphere_mesh = meshArray[id];
+    }
+
+    bool* Engine_GetKeyPressedArray()
+    {
+        return keyPressedID;
     }
 
     //void Engine::Engine_SetDeltaTime(float dt)

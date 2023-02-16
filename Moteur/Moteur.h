@@ -74,6 +74,9 @@ namespace Moteur {
 	void Engine_SetSkyboxMesh(cMeshInfo* skyboxMesh);
 	void Engine_SetSkyboxMesh(unsigned int id);
 
+	// Getter for keyboard input array
+	bool* Engine_GetKeyPressedArray();
+
 	//void Engine_SetDeltaTime(float dt);
 	
 	// Getter for animation manager

@@ -14,7 +14,14 @@ public:
 		textureID(NULL),
 		rgbaColor(glm::vec4(0.f)),
 		useRGBAColor(false)
-	{};
+	{
+		for (int i = 0; i < 8; i++) {
+			textures[i] = "";
+		}
+		for (int i = 0; i < 8; i++) {
+			textureRatios[i] = 0.f;
+		}
+	};
 
 	// Destructor
 	~TextureComponent() {};

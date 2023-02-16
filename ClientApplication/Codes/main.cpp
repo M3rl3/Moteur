@@ -15,6 +15,8 @@
 //extern AnimationManager* animationManager;
 
 void Update(float dt);
+void KeysCheck(bool* keys);
+
 void ECSEngine();
 void GoldenAgeEngine();
 
@@ -23,8 +25,8 @@ int main(int argc, char** argv)
 {
     // Uncomment to switch between engines
  
-    // GoldenAgeEngine();
-    ECSEngine();
+    GoldenAgeEngine();
+    //ECSEngine();
 
     return 0;
 }
@@ -32,7 +34,36 @@ int main(int argc, char** argv)
 // example function for user input
 void Update(float dt) {
 
-    //Engine::Engine_GetCameraObject()->position.x += 1.f;
+    KeysCheck(Moteur::Engine_GetKeyPressedArray());
+}
+
+void KeysCheck(bool* keys) {
+
+    const float CAMERA_MOVE_SPEED = 1.f;
+    if (keys[GLFW_KEY_A])     // Left
+    {
+        Moteur::Engine_GetCameraObject()->position.x -= CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_D])     // Right
+    {
+        Moteur::Engine_GetCameraObject()->position.x += CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_W])     // Forward
+    {
+        Moteur::Engine_GetCameraObject()->position.z += CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_S])     // Backwards
+    {
+        Moteur::Engine_GetCameraObject()->position.z -= CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_Q])     // Down
+    {
+        Moteur::Engine_GetCameraObject()->position.y -= CAMERA_MOVE_SPEED;
+    }
+    if (keys[GLFW_KEY_E])     // Up
+    {
+        Moteur::Engine_GetCameraObject()->position.y += CAMERA_MOVE_SPEED;
+    }
 }
 
 /// <summary>
