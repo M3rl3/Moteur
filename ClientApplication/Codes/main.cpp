@@ -1,5 +1,10 @@
-//#define ECS_ENGINE
-#define MOTEUR
+#ifndef MOTEUR
+//#define MOTEUR
+#endif // !MOTEUR
+
+#ifndef ECS_ENGINE
+#define ECS_ENGINE    
+#endif // !ECS_ENGINE
 
 #include "ECSengine.h"
 
