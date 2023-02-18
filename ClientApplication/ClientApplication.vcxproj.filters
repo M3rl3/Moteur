@@ -1,48 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="01.Scene">
-      <UniqueIdentifier>{ea4b105b-e1ee-4845-b9da-91f53416a68e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Default">
-      <UniqueIdentifier>{c8a5786f-bfe3-4aea-9331-606cd71e906c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Factory">
       <UniqueIdentifier>{0e970338-751a-47c0-8f58-00925a95e8a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object">
+    <Filter Include="Main">
+      <UniqueIdentifier>{c8a5786f-bfe3-4aea-9331-606cd71e906c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
       <UniqueIdentifier>{02338913-e83f-4b4f-8b00-772ee6ed0edc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{ea4b105b-e1ee-4845-b9da-91f53416a68e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Codes\Scene.cpp">
-      <Filter>01.Scene</Filter>
+    <ClCompile Include="src\Scene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Codes\main.cpp">
-      <Filter>Default</Filter>
+    <ClCompile Include="src\BGObject.cpp">
+      <Filter>Object</Filter>
     </ClCompile>
-    <ClCompile Include="Codes\Factory.cpp">
+    <ClCompile Include="src\Character.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Factory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
-    <ClCompile Include="Codes\BGObject.cpp">
-      <Filter>02.Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Codes\Character.cpp">
-      <Filter>02.Object</Filter>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Codes\Scene.h">
-      <Filter>01.Scene</Filter>
+    <ClInclude Include="src\Scene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Codes\Factory.h">
+    <ClInclude Include="src\BGObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Character.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Factory.h">
       <Filter>Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="Codes\BGObject.h">
-      <Filter>02.Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Codes\Character.h">
-      <Filter>02.Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -149,11 +149,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Codes\Character.cpp" />
-    <ClCompile Include="Codes\Factory.cpp" />
-    <ClCompile Include="Codes\BGObject.cpp" />
-    <ClCompile Include="Codes\Scene.cpp" />
-    <ClCompile Include="Codes\main.cpp" />
+    <ClCompile Include="src\BGObject.cpp" />
+    <ClCompile Include="src\Character.cpp" />
+    <ClCompile Include="src\Factory.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Moteur\Moteur.vcxproj">
@@ -161,10 +161,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Codes\Character.h" />
-    <ClInclude Include="Codes\Factory.h" />
-    <ClInclude Include="Codes\BGObject.h" />
-    <ClInclude Include="Codes\Scene.h" />
+    <ClInclude Include="src\BGObject.h" />
+    <ClInclude Include="src\Character.h" />
+    <ClInclude Include="src\Factory.h" />
+    <ClInclude Include="src\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

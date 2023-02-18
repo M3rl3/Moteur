@@ -435,6 +435,10 @@ namespace Moteur {
         }
     }
 
+    void KeysCheck(bool* keys) {
+
+    }
+
     // Init the engine
     void Moteur::Engine_Initialize() {
 
