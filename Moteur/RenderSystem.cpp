@@ -367,7 +367,6 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
 void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
     memcpy(&(lastKeyPressedID[0]), &(keyPressedID[0]), 255);
-    mouseClick = false;
 
     // Make a copy of all the entity components
     TransformComponent* transformComponent = nullptr;
@@ -430,11 +429,13 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             // Size of the viewport
             glm::vec4 viewport = glm::vec4(0, 0, width, height);
 
+            // Where the camera is at
             GLint eyeLocationLocation = glGetUniformLocation(shaderComponent->shaderID, "eyeLocation");
             glUniform4f(eyeLocationLocation, camera->position.x, camera->position.y, camera->position.z, 1.f);
 
             // Set the model matrix based on transformations applied
             model = glm::mat4x4(1.f);
+
             glm::mat4 translationMatrix = glm::translate(glm::mat4(1.f), transformComponent->position);
             glm::mat4 scaling = glm::scale(glm::mat4(1.f), transformComponent->scale);
             glm::mat4 rotation = glm::mat4(transformComponent->rotation);
@@ -504,6 +505,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             glfwSwapBuffers(window->theWindow);
             glfwPollEvents();
 
+            mouseClick = false;
         }
     }
 }

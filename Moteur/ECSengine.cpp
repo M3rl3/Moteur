@@ -18,8 +18,10 @@ ECSengine::~ECSengine()
 
 // Calls update on all systems currently present every tick
 void ECSengine::Update(float dt) {
+
 	for (int i = 0; i < systems.size(); i++) {
-		systems[i]->Process(entityManager->GetEntities(), dt);
+		System* currentSystem = systems[i];
+		currentSystem->Process(entityManager->GetEntities(), dt);
 	}
 	// Execute the update callback
 	if (UpdateCallBack != NULL) {

@@ -134,6 +134,9 @@ void ECSEngine() {
     // Meshes loaded here
     sModelDrawInfo steve;
     renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
+    
+    sModelDrawInfo plain;
+    renderSystem->LoadMesh("../assets/meshes/plane_reoriented.ply", "plain", plain, shaderID);
 
     // Textures loaded here
     MeshSystem* meshSystem = new MeshSystem();
@@ -180,7 +183,26 @@ void ECSEngine() {
         //velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
         velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
     }
-    
+
+    {   // Entity "plain"
+
+        unsigned int entityID = engine->CreateEntity();
+
+        TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
+        transformComponent->position = glm::vec3(0.f);
+        transformComponent->scale = glm::vec3(10.f);
+        transformComponent->rotation = glm::quat(glm::vec3(0.f));
+
+        ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
+        shaderComponent->shaderID = shaderID;
+
+        MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
+        meshComponent->plyModel = plain;
+
+        TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
+        textureComponent->useRGBAColor = true;
+        textureComponent->rgbaColor = glm::vec4(100, 100, 100, 1);
+    }
 
     // Add all the systems
     engine->AddSystem(renderSystem);
