@@ -113,80 +113,90 @@ void ECSKeysCheck() {
 /// </summary>
 void ECSEngine() {
 
-    // Check Memory Leak
-    _CrtDumpMemoryLeaks();
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
-    //_CrtSetBreakAlloc(185080);
-
+    // Engine init
     ECSengine* engine = new ECSengine();
 
+    // Init window and rendering systems
     renderSystem = new RenderSystem();
     renderSystem->Initialize("ECSengine", 1366, 768, false);
 
     renderSystem->SetCameraPosition(glm::vec3(0.f, 0.1f, -60.f));
     renderSystem->SetCameraTarget(glm::vec3(1.f));
 
-    unsigned int entityID = engine->CreateEntity();
-
-    TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
-    transformComponent->position = glm::vec3(0.f, 0.f, 5.f);
-    transformComponent->scale = glm::vec3(1.f);
-    transformComponent->rotation = glm::quat(glm::vec3(0.f));
-
-    ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
-
+    // Shaders loaded here
     unsigned int shaderID = 0;
     const char* v_Shader = "../assets/shaders/vertexShader.glsl";
     const char* f_Shader = "../assets/shaders/fragmentShader.glsl";
 
     ShaderSystem* shaderSystem = new ShaderSystem();
     shaderSystem->CreateShaderProgramFromFiles(shaderID, v_Shader, f_Shader);
-    shaderComponent->shaderID = shaderID;
 
-    MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
-
+    // Meshes loaded here
     sModelDrawInfo steve;
     renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
-    meshComponent->plyModel = steve;
 
+    // Textures loaded here
     MeshSystem* meshSystem = new MeshSystem();
-
-    TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
     unsigned int textureID = 0;
 
     meshSystem->SetTexturePath("../assets/textures");
     meshSystem->Load2DTexture(textureID, "man.bmp");
 
-    textureComponent->useRGBAColor = false;
-    textureComponent->rgbaColor = glm::vec4(100, 0, 0, 1);
-    textureComponent->textureID = textureID;
-    textureComponent->textures[0] = "man.bmp";
-    textureComponent->textureRatios[0] = 1.f;
-
-    BoundingBoxComponent* boundingBoxComponent = engine->AddComponent<BoundingBoxComponent>(entityID);
-    boundingBoxComponent->drawBBox = true;
-    
-    AnimationComponent* animationComponent = engine->AddComponent<AnimationComponent>(entityID);
-    animationComponent->animation.AnimationType = "TestAnimation";
-
-    VelocityCompoent* velocityComponent = engine->AddComponent<VelocityCompoent>(entityID);
-    velocityComponent->targeting = true;
-    //velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
-    velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
-
+    // If a velocity component exits
     MotionSystem* motionSystem = new MotionSystem();
 
+    // Scene
+
+    {   // Entity "steve"
+    
+        unsigned int entityID = engine->CreateEntity();
+
+        TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
+        transformComponent->position = glm::vec3(0.f, 0.f, 5.f);
+        transformComponent->scale = glm::vec3(1.f);
+        transformComponent->rotation = glm::quat(glm::vec3(0.f));
+
+        ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
+        shaderComponent->shaderID = shaderID;
+
+        MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
+        meshComponent->plyModel = steve;
+
+        TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
+        textureComponent->useRGBAColor = false;
+        textureComponent->rgbaColor = glm::vec4(100, 0, 0, 1);
+        textureComponent->textureID = textureID;
+        textureComponent->textures[0] = "man.bmp";
+        textureComponent->textureRatios[0] = 1.f;
+
+        BoundingBoxComponent* boundingBoxComponent = engine->AddComponent<BoundingBoxComponent>(entityID);
+        boundingBoxComponent->drawBBox = true;
+
+        AnimationComponent* animationComponent = engine->AddComponent<AnimationComponent>(entityID);
+        animationComponent->animation.AnimationType = "TestAnimation";
+
+        VelocityCompoent* velocityComponent = engine->AddComponent<VelocityCompoent>(entityID);
+        velocityComponent->targeting = true;
+        //velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
+        velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
+    }
+    
+
+    // Add all the systems
     engine->AddSystem(renderSystem);
     engine->AddSystem(shaderSystem);
     engine->AddSystem(meshSystem);
     engine->AddSystem(motionSystem);
 
+    // User defined update method (for user inputs)
     engine->UpdateCallback(&Update);
 
+    // The actual update method
     while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) {
         engine->Update(0.25f);
     }
+
+    // Gracefully close everything down
     engine->Shutdown();
 }
 
