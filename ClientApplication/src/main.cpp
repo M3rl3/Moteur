@@ -140,9 +140,9 @@ void ECSEngine() {
 
     // Textures loaded here
     MeshSystem* meshSystem = new MeshSystem();
-    unsigned int textureID = 0;
-
     meshSystem->SetTexturePath("../assets/textures");
+
+    unsigned int textureID = 0;
     meshSystem->Load2DTexture(textureID, "man.bmp");
 
     // If a velocity component exits
@@ -206,8 +206,8 @@ void ECSEngine() {
 
     // Add all the systems
     engine->AddSystem(renderSystem);
-    engine->AddSystem(shaderSystem);
     engine->AddSystem(meshSystem);
+    engine->AddSystem(shaderSystem);
     engine->AddSystem(motionSystem);
 
     // User defined update method (for user inputs)

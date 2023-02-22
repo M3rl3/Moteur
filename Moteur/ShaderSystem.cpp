@@ -28,8 +28,9 @@ cShaderManager* ShaderSystem::GetShaderManager()
 
 // Update method of the system, called every tick
 void ShaderSystem::Process(const std::vector<Entity*>& entities, float dt) {
-    ShaderComponent* shaderComponent;
-    MeshComponent* meshComponent;
+
+    ShaderComponent* shaderComponent = nullptr;
+    MeshComponent* meshComponent = nullptr;
     // TransformComponent* transformComponent;
     
     // Iterate vec entities

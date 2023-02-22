@@ -8,7 +8,7 @@
 
 #include "DrawBoundingBox.h"
 
-//#include "LoadModel.h"
+#include "LoadModel.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -452,8 +452,6 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             glm::mat4 modelInverse = glm::inverse(glm::transpose(model));
             glUniformMatrix4fv(modelInverseLocation, 1, GL_FALSE, glm::value_ptr(modelInverse));
 
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
             // Manage animations
             if (animationComponent != nullptr) {
                 if (mouseClick) {
@@ -531,7 +529,7 @@ void RenderSystem::Shutdown()
 // Loads model from ply file and gets it into the VAO
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
 {
-    int modelID = plyFileLoader->LoadModel(fileName, plyModel);
+    plyFileLoader->LoadModel(fileName, plyModel);
 
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
         std::cout << "Model " << modelName << " loaded successfully." << std::endl;

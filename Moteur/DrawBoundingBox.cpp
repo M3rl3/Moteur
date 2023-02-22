@@ -242,7 +242,7 @@ void draw_bbox(sModelDrawInfo* model, unsigned int shaderID, glm::mat4 meshTrans
     min_y = max_y = model->pVertices[0].y;
     min_z = max_z = model->pVertices[0].z;
 
-    for (int i = 0; i < model->vecVertices.size(); i++) {
+    for (int i = 0; i < sizeof(model->pVertices); i++) {
         if (model->pVertices[i].x < min_x) min_x = model->pVertices[i].x;
         if (model->pVertices[i].x > max_x) max_x = model->pVertices[i].x;
         if (model->pVertices[i].y < min_y) min_y = model->pVertices[i].y;

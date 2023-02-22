@@ -15,8 +15,6 @@ sModelDrawInfo* cPlyFileLoader::GetPlyModelByID(unsigned int id) {
 
 int cPlyFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
 
-    sModelDrawInfo model;
-
     vertexLayout* modelArray = NULL;
     triangleLayout* triangleArray = NULL;
 
@@ -37,7 +35,7 @@ int cPlyFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
         }
     }
 
-    plyFile >> model.numberOfVertices;
+    plyFile >> plyModel.numberOfVertices;
 
     // Scan for the word "face"
     while (plyFile >> input1)
@@ -48,7 +46,7 @@ int cPlyFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
         }
     }
 
-    plyFile >> model.numberOfTriangles;
+    plyFile >> plyModel.numberOfTriangles;
 
     // Scan for the word "end_header"
     while (plyFile >> input1)
@@ -60,10 +58,10 @@ int cPlyFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
     }
 
     //Vertex Layout
-    modelArray = new vertexLayout[model.numberOfVertices];
+    modelArray = new vertexLayout[plyModel.numberOfVertices];
 
     std::cout << "Loading " << fileName << std::endl;
-    for (unsigned int count = 0; count != model.numberOfVertices; count++)
+    for (unsigned int count = 0; count != plyModel.numberOfVertices; count++)
     {
         plyFile >> modelArray[count].x;
         plyFile >> modelArray[count].y;
@@ -83,10 +81,10 @@ int cPlyFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
         int breakpoint = 1;
     }
 
-    triangleArray = new triangleLayout[model.numberOfTriangles];
+    triangleArray = new triangleLayout[plyModel.numberOfTriangles];
 
     // Triangle Layout
-    for (unsigned int count = 0; count != model.numberOfTriangles; count++) {
+    for (unsigned int count = 0; count != plyModel.numberOfTriangles; count++) {
         unsigned int temp = 0;
         plyFile >> temp;
 
@@ -97,49 +95,47 @@ int cPlyFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
     }
     plyFile.close();
 
-    model.pVertices = new vertLayout[model.numberOfVertices];
+    plyModel.pVertices = new vertLayout[plyModel.numberOfVertices];
 
-    for (unsigned int index = 0; index != model.numberOfVertices; index++)
+    for (unsigned int index = 0; index != plyModel.numberOfVertices; index++)
     {
-        model.pVertices[index].x = modelArray[index].x;
-        model.pVertices[index].y = modelArray[index].y;
-        model.pVertices[index].z = modelArray[index].z;
+        plyModel.pVertices[index].x = modelArray[index].x;
+        plyModel.pVertices[index].y = modelArray[index].y;
+        plyModel.pVertices[index].z = modelArray[index].z;
 
-        model.pVertices[index].r = modelArray[index].r;
-        model.pVertices[index].g = modelArray[index].g;
-        model.pVertices[index].b = modelArray[index].b;
+        plyModel.pVertices[index].r = modelArray[index].r;
+        plyModel.pVertices[index].g = modelArray[index].g;
+        plyModel.pVertices[index].b = modelArray[index].b;
 
-        model.pVertices[index].nx = modelArray[index].nx;
-        model.pVertices[index].ny = modelArray[index].ny;
-        model.pVertices[index].nz = modelArray[index].nz;
+        plyModel.pVertices[index].nx = modelArray[index].nx;
+        plyModel.pVertices[index].ny = modelArray[index].ny;
+        plyModel.pVertices[index].nz = modelArray[index].nz;
 
-        model.pVertices[index].texture_u = modelArray[index].texture_u;
-        model.pVertices[index].texture_v = modelArray[index].texture_v;
+        plyModel.pVertices[index].texture_u = modelArray[index].texture_u;
+        plyModel.pVertices[index].texture_v = modelArray[index].texture_v;
     }
 
-    model.numberOfIndices = model.numberOfTriangles * 3;
-    model.pIndices = new unsigned int[model.numberOfIndices];
+    plyModel.numberOfIndices = plyModel.numberOfTriangles * 3;
+    plyModel.pIndices = new unsigned int[plyModel.numberOfIndices];
 
     unsigned int indexIndices = 0;
 
-    for (unsigned int triangleIndex = 0; triangleIndex != model.numberOfTriangles; triangleIndex++)
+    for (unsigned int triangleIndex = 0; triangleIndex != plyModel.numberOfTriangles; triangleIndex++)
     {
-        model.pIndices[indexIndices + 0] = triangleArray[triangleIndex].triangleIndices[0];
-        model.pIndices[indexIndices + 1] = triangleArray[triangleIndex].triangleIndices[1];
-        model.pIndices[indexIndices + 2] = triangleArray[triangleIndex].triangleIndices[2];
+        plyModel.pIndices[indexIndices + 0] = triangleArray[triangleIndex].triangleIndices[0];
+        plyModel.pIndices[indexIndices + 1] = triangleArray[triangleIndex].triangleIndices[1];
+        plyModel.pIndices[indexIndices + 2] = triangleArray[triangleIndex].triangleIndices[2];
 
         indexIndices += 3;
     }
 
-    if (&model != nullptr) {
+    if (&plyModel != nullptr) {
 
-        plyModels.push_back(&model);
+        plyModels.push_back(&plyModel);
     }
 
     delete[] modelArray;
     delete[] triangleArray;
-
-    plyModel = model;
 
     return plyModels.size() - 1;
 }

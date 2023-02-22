@@ -15,6 +15,7 @@ public:
 		rgbaColor(glm::vec4(0.f)),
 		useRGBAColor(false)
 	{
+		// Iterate through all textures and set them to null
 		for (int i = 0; i < 8; i++) {
 			textures[i] = "";
 		}

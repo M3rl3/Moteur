@@ -100,8 +100,8 @@ bool MeshSystem::LoadCubeMapTexture(
 // The update method called every tick
 void MeshSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
-	ShaderComponent* shaderComponent;
-    TextureComponent* textureComponent;
+	ShaderComponent* shaderComponent = nullptr;
+    TextureComponent* textureComponent = nullptr;
 
     // Iterate through vec entities
 	for (int i = 0; i < entities.size(); i++) {
@@ -121,13 +121,14 @@ void MeshSystem::Process(const std::vector<Entity*>& entities, float dt)
             if (textureComponent->useRGBAColor) {
 
                 glUniform1f(useRGBAColourLocation, (GLfloat)GL_TRUE);
+                glUniform1f(hasTextureLocation, (GLfloat)GL_FALSE);
 
                 glm::vec4 color = textureComponent->rgbaColor;
 
                 glUniform4f(RGBAColourLocation, color.r, color.g, color.b, color.w);
             }
             else {
-                glUniform1f(useRGBAColourLocation, (GLfloat)GL_FALSE);        
+                glUniform1f(useRGBAColourLocation, (GLfloat)GL_FALSE);   
                 glUniform1f(hasTextureLocation, (GLfloat)GL_TRUE);
 
                 std::string texture0 = textureComponent->textures[0];
