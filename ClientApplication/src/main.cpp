@@ -1,9 +1,9 @@
 #ifndef MOTEUR
-#define MOTEUR
+//#define MOTEUR
 #endif // !MOTEUR
 
 #ifndef ECS_ENGINE
-//#define ECS_ENGINE    
+#define ECS_ENGINE    
 #endif // !ECS_ENGINE
 
 #include "ECSengine.h"
@@ -19,16 +19,13 @@
 
 #include <sstream>
 
-//extern std::vector <cMeshInfo*> meshArray;
-//extern AnimationManager* animationManager;
-
 ECSengine* engine;
 RenderSystem* renderSystem;
 
 void Update(float dt);
 
 void MoteurKeysCheck(bool* keys);
-void ECSKeysCheck(bool* keys);
+void ECSKeysCheck();
 
 void ECSEngine();
 void GoldenAgeEngine();
@@ -36,7 +33,6 @@ void GoldenAgeEngine();
 // The main class
 int main(int argc, char** argv)
 {
-    // Uncomment to switch between engines
     
 #ifdef ECS_ENGINE
     ECSEngine();
@@ -49,7 +45,7 @@ int main(int argc, char** argv)
     return 0;
 }
 
-// example function for user input
+// custom user-defined update function
 void Update(float dt) {
 
 #ifdef MOTEUR
@@ -57,7 +53,7 @@ void Update(float dt) {
 #endif // MOTEUR
 
 #ifdef ECS_ENGINE
-    ECSKeysCheck(renderSystem->GetKeyPressedArray());
+    ECSKeysCheck();
 #endif // ECS_ENGINE
 }
 
@@ -90,32 +86,26 @@ void MoteurKeysCheck(bool* keys) {
     }
 }
 
-void ECSKeysCheck(bool* keys) {
+void ECSKeysCheck() {
+    constexpr float CAMERA_MOVE_SPEED = 1.f;
 
-    const float CAMERA_MOVE_SPEED = 1.f;
-    if (keys[GLFW_KEY_A])     // Left
-    {
-        renderSystem->GetCamera()->position.x -= CAMERA_MOVE_SPEED;
-    }
-    if (keys[GLFW_KEY_D])     // Right
-    {
-        renderSystem->GetCamera()->position.x += CAMERA_MOVE_SPEED;
-    }
-    if (keys[GLFW_KEY_W])     // Forward
-    {
+    if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
         renderSystem->GetCamera()->position.z += CAMERA_MOVE_SPEED;
     }
-    if (keys[GLFW_KEY_S])     // Backwards
-    {
+    if (renderSystem->IsKeyHeldDown(GLFW_KEY_S)) {
         renderSystem->GetCamera()->position.z -= CAMERA_MOVE_SPEED;
     }
-    if (keys[GLFW_KEY_Q])     // Down
-    {
-        renderSystem->GetCamera()->position.y -= CAMERA_MOVE_SPEED;
+    if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
+        renderSystem->GetCamera()->position.x += CAMERA_MOVE_SPEED;
     }
-    if (keys[GLFW_KEY_E])     // Up
-    {
+    if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
+        renderSystem->GetCamera()->position.x -= CAMERA_MOVE_SPEED;
+    }
+    if (renderSystem->IsKeyHeldDown(GLFW_KEY_Q)) {
         renderSystem->GetCamera()->position.y += CAMERA_MOVE_SPEED;
+    }
+    if (renderSystem->IsKeyHeldDown(GLFW_KEY_E)) {
+        renderSystem->GetCamera()->position.y -= CAMERA_MOVE_SPEED;
     }
 }
 
@@ -172,12 +162,8 @@ void ECSEngine() {
     textureComponent->useRGBAColor = false;
     textureComponent->textureID = textureID;
     textureComponent->textures[0] = "man.bmp";
-
     textureComponent->textureRatios[0] = 1.f;
-    textureComponent->textureRatios[1] = 0.f;
-    textureComponent->textureRatios[2] = 0.f;
-    textureComponent->textureRatios[3] = 0.f;
-
+    
     AnimationComponent* animationComponent = engine->AddComponent<AnimationComponent>(entityID);
     animationComponent->animation.AnimationType = "TestAnimation";
 

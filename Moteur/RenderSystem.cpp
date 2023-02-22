@@ -31,8 +31,9 @@ bool mouseClick = false;
 
 glm::vec3 targetLoc = glm::vec3(0.f);
 
-// Boolean array for handling user input
+// Boolean arrays for handling user input
 bool keyPressedID[255];
+bool lastKeyPressedID[255];
 
 // Function for managing all the lights in the scene
 void ManageLights(unsigned int shaderID);
@@ -361,6 +362,9 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
 // Update method called every tick
 void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
+    memcpy(&(lastKeyPressedID[0]), &(keyPressedID[0]), 255);
+    mouseClick = false;
+
     // Make a copy of all the entity components
     TransformComponent* transformComponent = nullptr;
     ShaderComponent* shaderComponent = nullptr;
@@ -486,7 +490,6 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             glfwSwapBuffers(window->theWindow);
             glfwPollEvents();
 
-            mouseClick = false;
         }
     }
 }
@@ -550,6 +553,21 @@ void RenderSystem::SetCameraTarget(glm::vec3 cameraTarget)
 bool* RenderSystem::GetKeyPressedArray()
 {
     return keyPressedID;
+}
+
+bool RenderSystem::IsKeyHeldDown(unsigned char key)
+{
+    return lastKeyPressedID[key] && keyPressedID[key];
+}
+
+bool RenderSystem::IsKeyPressed(unsigned char key)
+{
+    return !lastKeyPressedID[key] && keyPressedID[key];
+}
+
+bool RenderSystem::IsKeyReleased(unsigned char key)
+{
+    return lastKeyPressedID[key] && !keyPressedID[key];
 }
 
 // Manage all lighting

@@ -48,6 +48,11 @@ public:
 
 	bool* GetKeyPressedArray();
 
+	// User Input
+	bool IsKeyHeldDown(unsigned char key);
+	bool IsKeyPressed(unsigned char key);
+	bool IsKeyReleased(unsigned char key);
+
 	// Keyboard Callback
 	static void ProcessInput(GLFWwindow* window, int key, int scancode, int action, int mods);
 	
