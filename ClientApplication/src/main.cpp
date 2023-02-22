@@ -19,7 +19,6 @@
 
 #include <sstream>
 
-ECSengine* engine;
 RenderSystem* renderSystem;
 
 void Update(float dt);
@@ -120,7 +119,7 @@ void ECSEngine() {
     //_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
     //_CrtSetBreakAlloc(185080);
 
-    engine = new ECSengine();
+    ECSengine* engine = new ECSengine();
 
     renderSystem = new RenderSystem();
     renderSystem->Initialize("ECSengine", 1366, 768, false);
@@ -160,9 +159,13 @@ void ECSEngine() {
     meshSystem->Load2DTexture(textureID, "man.bmp");
 
     textureComponent->useRGBAColor = false;
+    textureComponent->rgbaColor = glm::vec4(100, 0, 0, 1);
     textureComponent->textureID = textureID;
     textureComponent->textures[0] = "man.bmp";
     textureComponent->textureRatios[0] = 1.f;
+
+    BoundingBoxComponent* boundingBoxComponent = engine->AddComponent<BoundingBoxComponent>(entityID);
+    boundingBoxComponent->drawBBox = true;
     
     AnimationComponent* animationComponent = engine->AddComponent<AnimationComponent>(entityID);
     animationComponent->animation.AnimationType = "TestAnimation";

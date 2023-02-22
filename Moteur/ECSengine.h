@@ -7,6 +7,7 @@
 #include "TextureComponent.h"
 #include "AnimationComponent.h"
 #include "VelocityComponent.h"
+#include "BoundingBoxComponent.h"
 
 #include "EntityManager.h"
 #include "ShaderSystem.h"

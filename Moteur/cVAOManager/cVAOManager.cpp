@@ -33,7 +33,32 @@ sModelDrawInfo::sModelDrawInfo()
 //	scale = 5.0/maxExtent;		-> 5x5x5
 	float maxExtent;
 
+	// calculate the min and max values of the model
+	// this->CalculateExtents();
+
+	// copy the vertices into a vector of glm::vec3
+	// this->CopyVertices();
+
 	return;
+}
+
+void sModelDrawInfo::CopyVertices() {
+	unsigned int numVertices = this->numberOfVertices;
+	std::vector <glm::vec3> vertices(numVertices);
+
+	for (int i = 0; i < numVertices; i++) {
+		vertices[i].x = this->pVertices[i].x;
+		vertices[i].y = this->pVertices[i].y;
+		vertices[i].z = this->pVertices[i].z;
+
+		if (vertices[i].x < this->minX) this->minX = vertices[i].x;
+		if (vertices[i].x > this->maxX) this->maxX = vertices[i].x;
+		if (vertices[i].y < this->minY) this->minY = vertices[i].y;
+		if (vertices[i].y > this->maxY) this->maxY = vertices[i].y;
+		if (vertices[i].z < this->minZ) this->minZ = vertices[i].z;
+		if (vertices[i].z > this->maxZ) this->maxZ = vertices[i].z;
+	}
+	this->vecVertices = vertices;
 }
 
 void sModelDrawInfo::CalculateExtents(void)

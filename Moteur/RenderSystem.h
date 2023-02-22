@@ -5,6 +5,7 @@
 #include "TransformComponent.h"
 
 #include "AnimationManager.h"
+#include "cPlyFileLoader.h"
 #include "cVAOManager/cVAOManager.h"
 
 #include "Window.h"
@@ -66,6 +67,9 @@ private:
 
 	// Pointer to camera
 	Camera* camera;
+
+	// Ply file loader
+	cPlyFileLoader* plyFileLoader;
 
 	// Handler for all stuff VAO related
 	cVAOManager* vaoManager;

@@ -4,7 +4,10 @@
 // Will load the models and place them 
 // into the vertex and index buffers to be drawn
 
+#include <glm/vec3.hpp>
+
 #include <string>
+#include <vector>
 #include <map>
 
 // The vertex structure 
@@ -54,6 +57,10 @@ struct sModelDrawInfo
 	//  scale = 1.5/maxExtent --> 1.5 x 1.5 x 1.5
 	//	scale = 5.0/maxExtent --> 5 x 5 x 5
 	float maxExtent;
+
+	std::vector<glm::vec3> vecVertices;
+
+	void CopyVertices();
 
 	void CalculateExtents(void);
 };

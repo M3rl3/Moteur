@@ -4,8 +4,11 @@
 #include "TransformComponent.h"
 #include "MeshComponent.h"
 #include "AnimationComponent.h"
+#include "BoundingBoxComponent.h"
 
-#include "LoadModel.h"
+#include "DrawBoundingBox.h"
+
+//#include "LoadModel.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -45,6 +48,7 @@ RenderSystem::RenderSystem()
 
     // Initialize all the managers
     vaoManager = new cVAOManager();
+    plyFileLoader = new cPlyFileLoader();
     animationManager = new AnimationManager();
 
     // Initialize all the structs
@@ -370,16 +374,18 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
     ShaderComponent* shaderComponent = nullptr;
     MeshComponent* meshComponent = nullptr;
     AnimationComponent* animationComponent = nullptr;
+    BoundingBoxComponent* boundingBoxComponent = nullptr;
     
     // Iterate through all entities
     for (int i = 0; i < entities.size(); i++) {
         Entity* currentEntity = entities[i];
 
-        // get the specific instance for all components
+        // get the specific instances for all components
         transformComponent = currentEntity->GetComponentByType<TransformComponent>();
         shaderComponent = currentEntity->GetComponentByType<ShaderComponent>();
         meshComponent = currentEntity->GetComponentByType<MeshComponent>();
         animationComponent = currentEntity->GetComponentByType<AnimationComponent>();
+        boundingBoxComponent = currentEntity->GetComponentByType<BoundingBoxComponent>();
 
         // check if the component exists
         if (transformComponent != nullptr && shaderComponent != nullptr)
@@ -481,6 +487,14 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 std::cout << "Model " << meshName << " not found in VAO." << std::endl;
             }
 
+            if (boundingBoxComponent != nullptr) {
+                boundingBoxComponent->modelMatrix = model;
+
+                if (boundingBoxComponent->drawBBox) {
+                    draw_bbox(&modelInfo, shaderComponent->shaderID, boundingBoxComponent->modelMatrix);
+                }
+            }
+
             // Set window title
             std::stringstream ss;
             ss << " Camera: " << "(" << camera->position.x << ", " << camera->position.y << ", " << camera->position.z << ")";
@@ -515,7 +529,7 @@ void RenderSystem::Shutdown()
 // Loads model from ply file and gets it into the VAO
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
 {
-    LoadModel(fileName, plyModel);
+    int modelID = plyFileLoader->LoadModel(fileName, plyModel);
 
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
         std::cout << "Model " << modelName << " loaded successfully." << std::endl;

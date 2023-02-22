@@ -73,6 +73,12 @@
     <Filter Include="Systems">
       <UniqueIdentifier>{f333a885-d9df-4459-b1d5-736daf1a652a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PLY File Loader">
+      <UniqueIdentifier>{e9a24927-c7e2-4aab-96dc-28cb7f81252a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Draw BBox">
+      <UniqueIdentifier>{e6487e1f-7e86-41d5-9a06-9ed77c130ba8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cameraEye.txt">
@@ -102,9 +108,6 @@
       <Filter>Physics Particle</Filter>
     </ClCompile>
     <ClCompile Include="ParticleAccelerator.cpp">
-      <Filter>Physics Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawBoundingBox.cpp">
       <Filter>Physics Particle</Filter>
     </ClCompile>
     <ClCompile Include="LoadModel.cpp">
@@ -185,6 +188,12 @@
     <ClCompile Include="MotionSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="cPlyFileLoader.cpp">
+      <Filter>PLY File Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawBoundingBox.cpp">
+      <Filter>Draw BBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMeshInfo.h">
@@ -197,9 +206,6 @@
       <Filter>Physics Particle</Filter>
     </ClInclude>
     <ClInclude Include="ParticleAccelerator.h">
-      <Filter>Physics Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawBoundingBox.h">
       <Filter>Physics Particle</Filter>
     </ClInclude>
     <ClInclude Include="LoadModel.h">
@@ -318,6 +324,15 @@
     </ClInclude>
     <ClInclude Include="MotionSystem.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="cPlyFileLoader.h">
+      <Filter>PLY File Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawBoundingBox.h">
+      <Filter>Draw BBox</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBoxComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
