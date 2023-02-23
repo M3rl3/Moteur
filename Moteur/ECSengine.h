@@ -8,12 +8,14 @@
 #include "AnimationComponent.h"
 #include "VelocityComponent.h"
 #include "BoundingBoxComponent.h"
+#include "LitComponent.h"
 
 #include "EntityManager.h"
 #include "ShaderSystem.h"
 #include "RenderSystem.h"
 #include "MeshSystem.h"
 #include "MotionSystem.h"
+#include "LightSystem.h"
 
 #include "Window.h"
 

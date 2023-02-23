@@ -160,6 +160,9 @@
     <ClCompile Include="cBasicTextureManager\C24BitBMPpixel.cpp" />
     <ClCompile Include="cBasicTextureManager\cBasicTextureManager.cpp" />
     <ClCompile Include="cBasicTextureManager\CTextureFromBMP.cpp" />
+    <ClCompile Include="cLightManager\cLight.cpp" />
+    <ClCompile Include="cLightManager\cLightHelper.cpp" />
+    <ClCompile Include="cLightManager\cLightManager.cpp" />
     <ClCompile Include="cMeshInfo.cpp" />
     <ClCompile Include="cPlyFileLoader.cpp" />
     <ClCompile Include="cRenderReticle.cpp" />
@@ -169,6 +172,7 @@
     <ClCompile Include="DrawBoundingBox.cpp" />
     <ClCompile Include="ECSengine.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="LightSystem.cpp" />
     <ClCompile Include="MeshSystem.cpp" />
     <ClCompile Include="Moteur.cpp" />
     <ClCompile Include="glad.c" />
@@ -202,6 +206,9 @@
     <ClInclude Include="cBasicTextureManager\C24BitBMPpixel.h" />
     <ClInclude Include="cBasicTextureManager\cBasicTextureManager.h" />
     <ClInclude Include="cBasicTextureManager\CTextureFromBMP.h" />
+    <ClInclude Include="cLightManager\cLight.h" />
+    <ClInclude Include="cLightManager\cLightHelper.h" />
+    <ClInclude Include="cLightManager\cLightManager.h" />
     <ClInclude Include="cMeshInfo.h" />
     <ClInclude Include="cPlyFileLoader.h" />
     <ClInclude Include="cRenderReticle.h" />
@@ -210,6 +217,8 @@
     <ClInclude Include="DrawBoundingBox.h" />
     <ClInclude Include="ECSengine.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="LightSystem.h" />
+    <ClInclude Include="LitComponent.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="MeshSystem.h" />
     <ClInclude Include="Moteur.h" />
@@ -238,8 +247,8 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragmentShader.glsl" />
-    <None Include="shaders\vertexShader.glsl" />
+    <None Include="..\assets\shaders\fragmentShader.glsl" />
+    <None Include="..\assets\shaders\vertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

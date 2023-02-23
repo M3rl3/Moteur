@@ -399,7 +399,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             GLint modelInverseLocation = glGetUniformLocation(shaderComponent->shaderID, "ModelInverse");
 
             // Lighting
-            ManageLights(shaderComponent->shaderID);
+            // ManageLights(shaderComponent->shaderID);
 
             float ratio;
             int width, height;

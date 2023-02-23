@@ -11,8 +11,7 @@ public:
 	MeshComponent() : 
 		componentType("MeshComponent"),
 		isSkyBox(false),
-		isTerrain(false),
-		doNotLight(false)
+		isTerrain(false)
 	{};
 
 	// Destructor
@@ -26,9 +25,6 @@ public:
 
 	// Mesh is a terrain
 	bool isTerrain;
-
-	// Mesh is influenced by lighting
-	bool doNotLight;
 
 private:
 	// name of the component

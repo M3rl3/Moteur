@@ -79,6 +79,9 @@
     <Filter Include="Draw BBox">
       <UniqueIdentifier>{e6487e1f-7e86-41d5-9a06-9ed77c130ba8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Light Manager">
+      <UniqueIdentifier>{7196efec-5962-4706-84ee-ab2dd9092fd6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cameraEye.txt">
@@ -193,6 +196,18 @@
     </ClCompile>
     <ClCompile Include="DrawBoundingBox.cpp">
       <Filter>Draw BBox</Filter>
+    </ClCompile>
+    <ClCompile Include="cLightManager\cLight.cpp">
+      <Filter>Light Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cLightManager\cLightHelper.cpp">
+      <Filter>Light Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cLightManager\cLightManager.cpp">
+      <Filter>Light Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSystem.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -334,12 +349,27 @@
     <ClInclude Include="BoundingBoxComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="cLightManager\cLight.h">
+      <Filter>Light Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cLightManager\cLightHelper.h">
+      <Filter>Light Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cLightManager\cLightManager.h">
+      <Filter>Light Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="LitComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragmentShader.glsl">
+    <None Include="..\assets\shaders\fragmentShader.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shaders\vertexShader.glsl">
+    <None Include="..\assets\shaders\vertexShader.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -2,32 +2,37 @@
 
 #include <ECS/System.h>
 
-#include "Camera.h"
-#include "cShaderManager/cShaderManager.h"
+#include "cLightManager/cLightManager.h"
 
 // System that handles all things shader related
-class ShaderSystem : public System {
+class LightSystem : public System {
 public:
 	// Constructor
-	ShaderSystem();
+	LightSystem();
 	// Destructor
-	~ShaderSystem();
+	~LightSystem();
 
 	// Getter for shadermanager
-	cShaderManager* GetShaderManager();
+	cLightManager* GetLightManager();
+
+	// Add a light to the scene
+	cLight* AddLight();
 
 	// Update method of the system, called every tick
 	void Process(const std::vector<Entity*>& entities, float dt);
 
-	// Compile the shaders provided
-	void CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader);
+	// Load uniform locations
+	void LoadLightUniformLocations(unsigned int shaderID);
+
+	// Copy light info to the shader
+	void CopyLightInformationToShader(unsigned int shaderID);
 
 	// Gracefully closes everything down
 	void Shutdown();
 
 private:
 	// Pointer to the shader manager
-	cShaderManager* shaderManager;
+	cLightManager* lightManager;
 
 	// Compiled shader ID
 	unsigned int shaderID = 0;

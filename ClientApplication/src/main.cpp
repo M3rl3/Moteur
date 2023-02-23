@@ -145,6 +145,15 @@ void ECSEngine() {
     unsigned int textureID = 0;
     meshSystem->Load2DTexture(textureID, "man.bmp");
 
+    // Lighting
+    LightSystem* lightSystem = new LightSystem();
+    cLight* newLight = lightSystem->AddLight();
+
+    newLight->position = glm::vec4(0, 10, 0, 1);
+    newLight->diffuse = glm::vec4(0, 255, 0, 1);
+    newLight->param1 = glm::vec4(1, 0, 0, 1);
+    newLight->param2 = glm::vec4(0, 0, 0, 1);
+
     // If a velocity component exits
     MotionSystem* motionSystem = new MotionSystem();
 
@@ -171,6 +180,9 @@ void ECSEngine() {
         textureComponent->textureID = textureID;
         textureComponent->textures[0] = "man.bmp";
         textureComponent->textureRatios[0] = 1.f;
+
+        LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
+        litComponent->doNotLight = false;
 
         BoundingBoxComponent* boundingBoxComponent = engine->AddComponent<BoundingBoxComponent>(entityID);
         boundingBoxComponent->drawBBox = true;
@@ -202,12 +214,16 @@ void ECSEngine() {
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = true;
         textureComponent->rgbaColor = glm::vec4(100, 100, 100, 1);
+
+        LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
+        litComponent->doNotLight = false;
     }
 
     // Add all the systems
     engine->AddSystem(renderSystem);
     engine->AddSystem(meshSystem);
-    engine->AddSystem(shaderSystem);
+    engine->AddSystem(shaderSystem);    
+    engine->AddSystem(lightSystem);
     engine->AddSystem(motionSystem);
 
     // User defined update method (for user inputs)

@@ -43,16 +43,6 @@ void ShaderSystem::Process(const std::vector<Entity*>& entities, float dt) {
 
         if ( meshComponent != nullptr && shaderComponent != nullptr) {
 
-            GLint doNotLightLocation = glGetUniformLocation(shaderComponent->shaderID, "doNotLight");
-
-            // Check if object should be influenced by lighting
-            if (meshComponent->doNotLight) {
-                glUniform1f(doNotLightLocation, (GLfloat)GL_TRUE);
-            }
-            else {
-                glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
-            }
-
             GLint useIsTerrainMeshLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsTerrainMesh");
 
             // Check if object is a terrain mesh
