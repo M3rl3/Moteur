@@ -138,6 +138,8 @@ void main()
 		return;
 	}
 
+	// initialize the lights array 
+	// based on the number of lights coming in from "uniform NUMBEROFLIGHTS"
 	sLightsArray[NUMBEROFLIGHTS];
 
 	vec4 specColour = vec4(0.1f, 0.1f, 0.1f, 1.0f);
