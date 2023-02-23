@@ -1,6 +1,9 @@
 #pragma once
 
 #include "cLight.h"
+
+#include <glm/vec4.hpp>
+
 #include <vector>
 #include <string>
 
@@ -10,12 +13,15 @@ public:
 	cLightManager();
 	~cLightManager();
 
-	cLight* AddLight();
+	cLight* AddLight(glm::vec4 position);
 
 	void LoadLightUniformLocations(unsigned int shaderID);
 
 	void CopyLightInformationToShader(unsigned int shaderID);
 
-	unsigned int NUMBER_OF_LIGHTS = 0;
-	std::vector<cLight> vecTheLights;
+private:
+	unsigned int numLights = 0;
+	int numLightsUniformLocation = -1;
+
+	std::vector<cLight*> vecTheLights;
 };

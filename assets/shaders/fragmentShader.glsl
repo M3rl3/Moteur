@@ -63,15 +63,15 @@ const int PointLight = 0;
 const int SpotLight = 1;
 const int DirectionalLight = 2;
 
-const int NUMBEROFLIGHTS = 1;
-uniform sLight sLightsArray[NUMBEROFLIGHTS];
+uniform int NUMBEROFLIGHTS;
+uniform sLight sLightsArray[];
 
 vec4 calculateLightContrib( vec3 vertexMaterialColour, vec3 vertexNormal, 
                             vec3 vertexWorldPos, vec4 vertexSpecular );
 
 void main()
 {
-
+	
 	if (bIsSkyboxObject)
 	{
 		vec3 cubeMapColour = texture( skyboxTexture, normal.xyz ).rgb;
@@ -137,6 +137,8 @@ void main()
 		outputColor = vec4(matColour.rgb, alphaTransparency);
 		return;
 	}
+
+	sLightsArray[NUMBEROFLIGHTS];
 
 	vec4 specColour = vec4(0.1f, 0.1f, 0.1f, 1.0f);
 

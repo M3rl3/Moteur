@@ -147,12 +147,11 @@ void ECSEngine() {
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
-    cLight* newLight = lightSystem->AddLight();
+    cLight* newLight = lightSystem->AddLight(glm::vec4(0, 10, 0, 1));
 
-    newLight->position = glm::vec4(0, 10, 0, 1);
-    newLight->diffuse = glm::vec4(0, 255, 0, 1);
-    newLight->param1 = glm::vec4(1, 0, 0, 1);
-    newLight->param2 = glm::vec4(0, 0, 0, 1);
+    newLight->diffuse = glm::vec4(10, 10, 10, 1);
+    newLight->param1 = glm::vec4(0, 0, 0, 1);
+    newLight->param2 = glm::vec4(1, 0, 0, 1);
 
     // If a velocity component exits
     MotionSystem* motionSystem = new MotionSystem();
@@ -221,9 +220,9 @@ void ECSEngine() {
 
     // Add all the systems
     engine->AddSystem(renderSystem);
+    engine->AddSystem(lightSystem);
     engine->AddSystem(meshSystem);
     engine->AddSystem(shaderSystem);    
-    engine->AddSystem(lightSystem);
     engine->AddSystem(motionSystem);
 
     // User defined update method (for user inputs)

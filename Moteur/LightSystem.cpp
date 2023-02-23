@@ -17,9 +17,9 @@ cLightManager* LightSystem::GetLightManager() {
 	return lightManager;
 }
 
-cLight* LightSystem::AddLight()
+cLight* LightSystem::AddLight(glm::vec4 position)
 {
-	return lightManager->AddLight();
+	return lightManager->AddLight(position);
 }
 
 void LightSystem::CopyLightInformationToShader(unsigned int shaderID) {
@@ -45,6 +45,8 @@ void LightSystem::Process(const std::vector<Entity*>& entities, float dt) {
 		if (litComponent != nullptr && shaderComponent != nullptr) {
 
 			GLint doNotLightLocation = glGetUniformLocation(shaderComponent->shaderID, "doNotLight");
+
+			shaderID = shaderComponent->shaderID;
 
 			if (!litComponent->doNotLight) {
 				glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);

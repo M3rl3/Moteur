@@ -22,22 +22,27 @@ cLightManager::~cLightManager()
 	
 }
 
-cLight* cLightManager::AddLight() {
+cLight* cLightManager::AddLight(glm::vec4 position) {
 
-	cLight newLight;
+	cLight* newLight = new cLight();
+
+	newLight->position = position;
 	vecTheLights.push_back(newLight);
-	NUMBER_OF_LIGHTS = vecTheLights.size() - 1;
+	numLights = vecTheLights.size();
 
-	return &newLight;
+	return newLight;
 }
 
 void cLightManager::LoadLightUniformLocations(unsigned int shaderID)
 {
 	unsigned int lightNumber = 0;
-	for (std::vector<cLight>::iterator itLight = this->vecTheLights.begin();
-		 itLight != this->vecTheLights.end();
-		 itLight++ )
-	{
+
+	numLightsUniformLocation = glGetUniformLocation(shaderID, "NUMBEROFLIGHTS");
+
+	for (int i = 0; i < vecTheLights.size(); i++) {
+
+		cLight* currentLight = vecTheLights[i];
+
 		std::stringstream ssLightName;
 		ssLightName << "sLightsArray[" << lightNumber << "].";
 
@@ -50,51 +55,29 @@ void cLightManager::LoadLightUniformLocations(unsigned int shaderID)
 		std::string lightParam1 = ssLightName.str() + "param1";
 		std::string lightParam2 = ssLightName.str() + "param2";
 
-		itLight->position_UniformLocation = glGetUniformLocation(shaderID, lightPosition.c_str());
-		itLight->diffuse_UniformLocation = glGetUniformLocation(shaderID, lightDiffuse.c_str());
-		itLight->specular_UniformLocation = glGetUniformLocation(shaderID, lightSpecular.c_str());
-		itLight->atten_UniformLocation = glGetUniformLocation(shaderID, lightAtten.c_str());
-		itLight->direction_UniformLocation = glGetUniformLocation(shaderID, lightDirection.c_str());
-		itLight->param1_UniformLocation = glGetUniformLocation(shaderID, lightParam1.c_str());
-		itLight->param2_UniformLocation = glGetUniformLocation(shaderID, lightParam2.c_str());
+		currentLight->position_UniformLocation = glGetUniformLocation(shaderID, lightPosition.c_str());
+		currentLight->diffuse_UniformLocation = glGetUniformLocation(shaderID, lightDiffuse.c_str());
+		currentLight->specular_UniformLocation = glGetUniformLocation(shaderID, lightSpecular.c_str());
+		currentLight->atten_UniformLocation = glGetUniformLocation(shaderID, lightAtten.c_str());
+		currentLight->direction_UniformLocation = glGetUniformLocation(shaderID, lightDirection.c_str());
+		currentLight->param1_UniformLocation = glGetUniformLocation(shaderID, lightParam1.c_str());
+		currentLight->param2_UniformLocation = glGetUniformLocation(shaderID, lightParam2.c_str());
 
 		lightNumber++;
 	}
-
-	// Or you could do this:
-	/*this->vecTheLights[0].position_UniformLocation = glGetUniformLocation(shaderID, "theLights[0].position");
-	this->vecTheLights[0].diffuse_UniformLocation = glGetUniformLocation(shaderID, "theLights[0].diffuse");
-	this->vecTheLights[0].specular_UniformLocation = glGetUniformLocation(shaderID, "theLights[0].specular");
-	this->vecTheLights[0].atten_UniformLocation = glGetUniformLocation(shaderID, "theLights[0].atten");
-	this->vecTheLights[0].direction_UniformLocation = glGetUniformLocation(shaderID, "theLights[0].direction");
-	this->vecTheLights[0].param1_UniformLocation = glGetUniformLocation(shaderID, "theLights[0].param1");
-	this->vecTheLights[0].param2_UniformLocation = glGetUniformLocation(shaderID, "theLights[0].param2");
-
-	this->vecTheLights[1].position_UniformLocation = glGetUniformLocation(shaderID, "theLights[1].position");
-	this->vecTheLights[1].diffuse_UniformLocation = glGetUniformLocation(shaderID, "theLights[1].diffuse");
-	this->vecTheLights[1].specular_UniformLocation = glGetUniformLocation(shaderID, "theLights[1].specular");
-	this->vecTheLights[1].atten_UniformLocation = glGetUniformLocation(shaderID, "theLights[1].atten");
-	this->vecTheLights[1].direction_UniformLocation = glGetUniformLocation(shaderID, "theLights[1].direction");
-	this->vecTheLights[1].param1_UniformLocation = glGetUniformLocation(shaderID, "theLights[1].param1");
-	this->vecTheLights[1].param2_UniformLocation = glGetUniformLocation(shaderID, "theLights[1].param2");
-
-	this->vecTheLights[2].position_UniformLocation = glGetUniformLocation(shaderID, "theLights[2].position");
-	this->vecTheLights[2].diffuse_UniformLocation = glGetUniformLocation(shaderID, "theLights[2].diffuse");
-	this->vecTheLights[2].specular_UniformLocation = glGetUniformLocation(shaderID, "theLights[2].specular");
-	this->vecTheLights[2].atten_UniformLocation = glGetUniformLocation(shaderID, "theLights[2].atten");
-	this->vecTheLights[2].direction_UniformLocation = glGetUniformLocation(shaderID, "theLights[2].direction");
-	this->vecTheLights[2].param1_UniformLocation = glGetUniformLocation(shaderID, "theLights[2].param1");
-	this->vecTheLights[2].param2_UniformLocation = glGetUniformLocation(shaderID, "theLights[2].param2");*/
 
 	return;
 }
 
 void cLightManager::CopyLightInformationToShader(unsigned int shaderID)
 {
-	for (std::vector<cLight>::iterator itLight = this->vecTheLights.begin();
-		 itLight != this->vecTheLights.end();
-		 itLight++)
+	// set number of lights
+	glUniform1i(numLightsUniformLocation, numLights);
+
+	for (int i = 0; i < vecTheLights.size(); i++)
 	{
+		cLight* itLight = vecTheLights[i];
+
 		glUniform4f(itLight->position_UniformLocation, 
 					itLight->position.x, 
 					itLight->position.y, 
@@ -138,7 +121,7 @@ void cLightManager::CopyLightInformationToShader(unsigned int shaderID)
 					itLight->param2.w );
 
 
-	}// for (std::vector<cLight>::iterator itLight
+	}
 
 	return;
 }

@@ -2,6 +2,8 @@
 
 #include <ECS/System.h>
 
+#include <glm/vec4.hpp>
+
 #include "cLightManager/cLightManager.h"
 
 // System that handles all things shader related
@@ -16,7 +18,7 @@ public:
 	cLightManager* GetLightManager();
 
 	// Add a light to the scene
-	cLight* AddLight();
+	cLight* AddLight(glm::vec4 position);
 
 	// Update method of the system, called every tick
 	void Process(const std::vector<Entity*>& entities, float dt);

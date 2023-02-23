@@ -3,7 +3,7 @@
 cLight::cLight()
 {
 	this->position = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	this->diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	 // rgb = highlight colour, w = power
 	// Note that the Shader book uses this, but it's not in the shader
 	//	right now.
@@ -19,7 +19,7 @@ cLight::cLight()
 					// 2 = directional light	
 	this->param1 = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	// x = 0 for off, 1 for on
-	this->param2 = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	this->param2 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
 }
 
