@@ -377,6 +377,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
     
     // Iterate through all entities
     for (int i = 0; i < entities.size(); i++) {
+
         Entity* currentEntity = entities[i];
 
         // get the specific instances for all components

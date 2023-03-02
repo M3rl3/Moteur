@@ -22,6 +22,16 @@ cLight* LightSystem::AddLight(glm::vec4 position)
 	return lightManager->AddLight(position);
 }
 
+void LightSystem::GetAmbientLightAmount(float& amount)
+{
+	lightManager->GetAmbientLightAmount(amount);
+}
+
+void LightSystem::SetAmbientLightAmount(float& amount)
+{
+	lightManager->SetAmbientLightAmount(amount);
+}
+
 void LightSystem::CopyLightInformationToShader(unsigned int shaderID) {
 	lightManager->CopyLightInformationToShader(shaderID);
 }
@@ -48,15 +58,15 @@ void LightSystem::Process(const std::vector<Entity*>& entities, float dt) {
 
 			shaderID = shaderComponent->shaderID;
 
-			if (!litComponent->doNotLight) {
-				glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
-
-				LoadLightUniformLocations(shaderComponent->shaderID);
-				CopyLightInformationToShader(shaderComponent->shaderID);
-			}
-			else {
+			if (litComponent->doNotLight) {
 				glUniform1f(doNotLightLocation, (GLfloat)GL_TRUE);
 			}
+			else {
+				glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
+			}
+
+			LoadLightUniformLocations(shaderComponent->shaderID);
+			CopyLightInformationToShader(shaderComponent->shaderID);
 		}
 	}
 }

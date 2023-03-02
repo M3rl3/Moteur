@@ -66,6 +66,8 @@ const int DirectionalLight = 2;
 uniform int NUMBEROFLIGHTS;
 uniform sLight sLightsArray[];
 
+uniform float ambientLight;
+
 vec4 calculateLightContrib( vec3 vertexMaterialColour, vec3 vertexNormal, 
                             vec3 vertexWorldPos, vec4 vertexSpecular );
 
@@ -111,13 +113,13 @@ void main()
 	{
 		matColour = RGBAColour.rgb;
 	}
-	else if (bHasTexture)
+
+	if (bHasTexture)
 	{
 		vec3 textColour0 = texture( texture0, uv2.st ).rgb;		
 		vec3 textColour1 = texture( texture1, uv2.st ).rgb;	
 		vec3 textColour2 = texture( texture2, uv2.st ).rgb;	
 		vec3 textColour3 = texture( texture3, uv2.st ).rgb;
-		
 		
 		matColour = (textColour0.rgb * texRatio_0_3.x) 
 				  + (textColour1.rgb * texRatio_0_3.y) 
@@ -126,8 +128,6 @@ void main()
 
 		outputColor.rgb = matColour.rgb;
 		outputColor.a = 1.f;
-		return;
-
 	}
 
 	if (doNotLight)
@@ -144,7 +144,6 @@ void main()
 
 	vec4 specColour = vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
-	// Cause it's lit, get it?
 	vec4 litColour = calculateLightContrib( matColour.rgb, normal.xyz, 
 	                                        worldlocation.xyz, specColour );
 	
@@ -152,8 +151,10 @@ void main()
 	// then it's reading whatever the 4th value of the output is:
 	outputColor = vec4(litColour.rgb, alphaTransparency);
 
-	float amountOfAmbientLight = 0.005f;
+    float amountOfAmbientLight = ambientLight;
 	outputColor.rgb += (matColour.rgb * amountOfAmbientLight);
+
+	return;
 }
 
 vec4 calculateLightContrib( vec3 vertexMaterialColour, vec3 vertexNormal, 

@@ -114,7 +114,7 @@ void ECSKeysCheck() {
 void ECSEngine() {
 
     // Engine init
-    ECSengine* engine = new ECSengine();
+    ECSengine engine;
 
     // Init window and rendering systems
     renderSystem = new RenderSystem();
@@ -147,9 +147,16 @@ void ECSEngine() {
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
-    cLight* newLight = lightSystem->AddLight(glm::vec4(0, 10, 0, 1));
+    
+    float ambientLight = 0.025f;
+    lightSystem->SetAmbientLightAmount(ambientLight);
+
+    cLight* newLight = lightSystem->AddLight(glm::vec4(-20, 20, 0, 1));
 
     newLight->diffuse = glm::vec4(10, 10, 10, 1);
+    newLight->specular = glm::vec4(1.f);
+    newLight->atten = glm::vec4(0.5f, 0.01f, 0.0f, 1.f);
+    newLight->direction = glm::vec4(1.f);
     newLight->param1 = glm::vec4(0, 0, 0, 1);
     newLight->param2 = glm::vec4(1, 0, 0, 1);
 
@@ -160,36 +167,36 @@ void ECSEngine() {
 
     {   // Entity "steve"
     
-        unsigned int entityID = engine->CreateEntity();
+        unsigned int entityID = engine.CreateEntity();
 
-        TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
+        TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(0.f, 0.f, 5.f);
         transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
-        ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
+        ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
 
-        MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
+        MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
         meshComponent->plyModel = steve;
 
-        TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
-        textureComponent->useRGBAColor = false;
-        textureComponent->rgbaColor = glm::vec4(100, 0, 0, 1);
+        TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
+        textureComponent->useRGBAColor = true;
+        textureComponent->rgbaColor = glm::vec4(100, 100, 100, 1);
         textureComponent->textureID = textureID;
         textureComponent->textures[0] = "man.bmp";
         textureComponent->textureRatios[0] = 1.f;
 
-        LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
+        LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;
 
-        BoundingBoxComponent* boundingBoxComponent = engine->AddComponent<BoundingBoxComponent>(entityID);
+        BoundingBoxComponent* boundingBoxComponent = engine.AddComponent<BoundingBoxComponent>(entityID);
         boundingBoxComponent->drawBBox = true;
 
-        AnimationComponent* animationComponent = engine->AddComponent<AnimationComponent>(entityID);
+        AnimationComponent* animationComponent = engine.AddComponent<AnimationComponent>(entityID);
         animationComponent->animation.AnimationType = "TestAnimation";
 
-        VelocityCompoent* velocityComponent = engine->AddComponent<VelocityCompoent>(entityID);
+        VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->targeting = true;
         //velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
         velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
@@ -197,44 +204,44 @@ void ECSEngine() {
 
     {   // Entity "plain"
 
-        unsigned int entityID = engine->CreateEntity();
+        unsigned int entityID = engine.CreateEntity();
 
-        TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
+        TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(0.f);
         transformComponent->scale = glm::vec3(10.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
-        ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
+        ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
 
-        MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
+        MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
         meshComponent->plyModel = plain;
 
-        TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
+        TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = true;
-        textureComponent->rgbaColor = glm::vec4(100, 100, 100, 1);
+        textureComponent->rgbaColor = glm::vec4(25, 25, 25, 1);
 
-        LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
+        LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;
     }
 
     // Add all the systems
-    engine->AddSystem(renderSystem);
-    engine->AddSystem(lightSystem);
-    engine->AddSystem(meshSystem);
-    engine->AddSystem(shaderSystem);    
-    engine->AddSystem(motionSystem);
+    engine.AddSystem(renderSystem);
+    engine.AddSystem(lightSystem);
+    engine.AddSystem(meshSystem);
+    engine.AddSystem(shaderSystem);    
+    engine.AddSystem(motionSystem);
 
     // User defined update method (for user inputs)
-    engine->UpdateCallback(&Update);
+    engine.UpdateCallback(&Update);
 
     // The actual update method
     while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) {
-        engine->Update(0.25f);
+        engine.Update(0.25f);
     }
 
     // Gracefully close everything down
-    engine->Shutdown();
+    engine.Shutdown();
 }
 
 // The current game engine used

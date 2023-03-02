@@ -19,6 +19,10 @@ public:
 
 	// Add a light to the scene
 	cLight* AddLight(glm::vec4 position);
+	
+
+	void GetAmbientLightAmount(float& amount);
+	void SetAmbientLightAmount(float& amount);
 
 	// Update method of the system, called every tick
 	void Process(const std::vector<Entity*>& entities, float dt);

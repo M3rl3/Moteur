@@ -44,7 +44,7 @@ unsigned int ECSengine::CreateEntity()
 void ECSengine::AddSystem(System* system)
 {
 	std::vector<System*>::iterator itFind =
-		std::find(systems.begin(), systems.end(), system);	
+		std::find(systems.begin(), systems.end(), system);
 
 	if (itFind != systems.end())
 	{
