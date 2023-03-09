@@ -63,8 +63,8 @@ const int PointLight = 0;
 const int SpotLight = 1;
 const int DirectionalLight = 2;
 
-uniform int NUMBEROFLIGHTS;
-uniform sLight sLightsArray[];
+const int NUMBEROFLIGHTS = 1;
+uniform sLight sLightsArray[NUMBEROFLIGHTS];
 
 uniform float ambientLight;
 
@@ -140,7 +140,7 @@ void main()
 
 	// initialize the lights array 
 	// based on the number of lights coming in from "uniform NUMBEROFLIGHTS"
-	sLightsArray[NUMBEROFLIGHTS];
+	// sLightsArray[NUMBEROFLIGHTS];
 
 	vec4 specColour = vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
