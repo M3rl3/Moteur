@@ -120,7 +120,7 @@ void ECSEngine() {
     renderSystem = new RenderSystem();
     renderSystem->Initialize("ECSengine", 1366, 768, false);
 
-    renderSystem->SetCameraPosition(glm::vec3(0.f, 0.1f, -60.f));
+    renderSystem->SetCameraPosition(glm::vec3(0.f, 1.f, -60.f));
     renderSystem->SetCameraTarget(glm::vec3(1.f));
 
     // Shaders loaded here
