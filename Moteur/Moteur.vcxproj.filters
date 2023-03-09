@@ -209,6 +209,9 @@
     <ClCompile Include="LightSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cShaderManager\cShaderProgram.cpp">
+      <Filter>Shader Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMeshInfo.h">
@@ -363,6 +366,12 @@
     </ClInclude>
     <ClInclude Include="LightSystem.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="cShaderManager\cShader.h">
+      <Filter>Shader Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cShaderManager\cShaderProgram.h">
+      <Filter>Shader Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

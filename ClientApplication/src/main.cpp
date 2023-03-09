@@ -126,17 +126,18 @@ void ECSEngine() {
     // Shaders loaded here
     unsigned int shaderID = 0;
     const char* v_Shader = "../assets/shaders/vertexShader.glsl";
+    const char* g_Shader = "../assets/shaders/geometryShader_passthrough.glsl";
     const char* f_Shader = "../assets/shaders/fragmentShader.glsl";
 
     ShaderSystem* shaderSystem = new ShaderSystem();
-    shaderSystem->CreateShaderProgramFromFiles(shaderID, v_Shader, f_Shader);
+    shaderSystem->CreateShaderProgramFromFiles(shaderID, v_Shader, g_Shader, f_Shader);
 
     // Meshes loaded here
     sModelDrawInfo steve;
     renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
     
     sModelDrawInfo plain;
-    renderSystem->LoadMesh("../assets/meshes/plane_reoriented.ply", "plain", plain, shaderID);
+    renderSystem->LoadMesh("../assets/meshes/plane_rescaled.ply", "plain", plain, shaderID);
 
     // Textures loaded here
     MeshSystem* meshSystem = new MeshSystem();

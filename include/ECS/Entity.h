@@ -39,7 +39,7 @@ public:
 		return false;
 	}
 
-	// Adds a component and calls constructor on it
+	// Adds the component and calls constructor on it
 	template <class T>
 	T* AddComponent()
 	{
@@ -53,7 +53,7 @@ public:
 		return newComponent;
 	}
 
-	// Removes a components and erases it
+	// Removes the component and erases it
 	template <class T>
 	bool RemoveComponent()
 	{

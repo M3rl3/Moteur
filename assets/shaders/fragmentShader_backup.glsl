@@ -1,20 +1,18 @@
 // Fragment shader
 #version 420
 
-// Coming in from the geometry shader
-in vec4 fColour;
-in vec4 fNormal;
-in vec4 fWorldLocation;
-in vec4 fUV2;
-in vec4 fTangent;
-in vec4 fBiNormal;
-in vec4 fBoneID;
-in vec4 fBoneWeight;
+in vec3 colour;
+in vec3 normal;
+in vec3 worldlocation;
 
-// Out to the screen
+in vec4 uv2;
+in vec4 tangent;
+in vec4 biNormal;
+in vec4 boneID;
+in vec4 boneWeight;
+
 out vec4 outputColor;
 
-// Uniforms
 uniform vec4 RGBAColour;
 uniform bool useRGBAColour;
 
@@ -42,20 +40,11 @@ uniform vec4 texRatio_4_7;
 
 uniform samplerCube skyboxTexture;
 
-// If true, applies the skybox texture
+// When true, applies the skybox texture
 uniform bool bIsSkyboxObject;
 
-// If it is a terrain mesh
 uniform bool bIsTerrainMesh;
 
-// Frame Buffer
-uniform bool bIsFullScreenQuad;
-uniform sampler2D crosshair_texture;
-uniform sampler2D FBO_Texture;		// Color texture from the FBO
-uniform vec2 FBO_size;				// x = width, y = height
-uniform vec2 screen_size;			// x = width, y = height
-
-// Lighting
 struct sLight
 {
 	vec4 position;			
@@ -85,52 +74,25 @@ vec4 calculateLightContrib( vec3 vertexMaterialColour, vec3 vertexNormal,
 void main()
 {
 	
-	if (bIsFullScreenQuad) 
-	{
-		float screen_width = screen_size.x;
-		float screen_height = screen_size.y;
-		
-		vec2 screen_coordinates = vec2(gl_FragCoord.x / screen_width, gl_FragCoord.y / screen_height);
-
-		vec3 pixelColour = vec3(0.0f, 0.0f, 0.0f);
-		vec3 crosshairColor = vec3(0.0f, 0.0f, 0.0f);
-
-		pixelColour = texture(FBO_Texture, screen_coordinates ).rgb;
-		crosshairColor = texture(crosshair_texture, screen_coordinates).rgb;
-
-		outputColor.rgb = (pixelColour.rgb * 0.9f) +
-		 				  (crosshairColor.rgb * 0.25f);
-
-		// outputColor = vec4(mix(pixelColour, crosshairColor, 0.15f), 1.f) + vec4(0.135, 0.135, 0.135, 1);
-
-		// Set the alpha transparency based on the colour.
-		float RGBcolorSum = outputColor.r + outputColor.g + outputColor.b;
-		outputColor.a = max(((RGBcolorSum - 0.1f) / 3.f), 0.f);
-		
-		return;
- 	}
-
 	if (bIsSkyboxObject)
 	{
-		vec3 cubeMapColour = texture(skyboxTexture, fNormal.xyz).rgb;
+		vec3 cubeMapColour = texture( skyboxTexture, normal.xyz ).rgb;
 		outputColor.rgb = cubeMapColour.rgb;
 		outputColor.a = 1.0f;
-
-		// Apply the skybox texture and return without lighting
 		return;
 	}
 
 	if (bIsTerrainMesh)
 	{
-		if ( fWorldLocation.y < -25.0f )
+		if ( worldlocation.y < -25.0f )
 		{	// Water
 			outputColor.rgb = vec3(0.0f, 0.0f, 1.0f);
 		}
-		else if ( fWorldLocation.y < -15.0f )
+		else if ( worldlocation.y < -15.0f )
 		{	// Sand ( 89.8% red, 66.67% green and 43.92% )
 			outputColor.rgb = vec3(0.898f, 0.6667f, 0.4392f);
 		}
-		else if ( fWorldLocation.y < 30.0f )
+		else if ( worldlocation.y < 30.0f )
 		{	// Grass
 			outputColor.rgb = vec3(0.0f, 1.0f, 0.0f);
 		}
@@ -143,23 +105,21 @@ void main()
 		return;
 	}
 
-	vec3 matColour = vec3(0.f, 0.f, 0.f);
+	vec3 matColour = colour.rgb;
 
 	float alphaTransparency = RGBAColour.w;
 
-	// If a solid color is applied
 	if (useRGBAColour) 
 	{
 		matColour = RGBAColour.rgb;
 	}
 
-	// If a texture is applied
-	else if (bHasTexture)
+	if (bHasTexture)
 	{
-		vec3 textColour0 = texture( texture0, fUV2.st ).rgb;		
-		vec3 textColour1 = texture( texture1, fUV2.st ).rgb;	
-		vec3 textColour2 = texture( texture2, fUV2.st ).rgb;	
-		vec3 textColour3 = texture( texture3, fUV2.st ).rgb;
+		vec3 textColour0 = texture( texture0, uv2.st ).rgb;		
+		vec3 textColour1 = texture( texture1, uv2.st ).rgb;	
+		vec3 textColour2 = texture( texture2, uv2.st ).rgb;	
+		vec3 textColour3 = texture( texture3, uv2.st ).rgb;
 		
 		matColour = (textColour0.rgb * texRatio_0_3.x) 
 				  + (textColour1.rgb * texRatio_0_3.y) 
@@ -170,12 +130,6 @@ void main()
 		outputColor.a = 1.f;
 	}
 
-	// If neither a texture nor a solid color is applied
-	// Apply the colors coming in from the model file
-	else {
-		matColour = fColour.rgb;
-	}
-
 	if (doNotLight)
 	{
 		// Set the output colour and exit early
@@ -184,10 +138,14 @@ void main()
 		return;
 	}
 
+	// initialize the lights array 
+	// based on the number of lights coming in from "uniform NUMBEROFLIGHTS"
+	// sLightsArray[NUMBEROFLIGHTS];
+
 	vec4 specColour = vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
-	vec4 litColour = calculateLightContrib( matColour.rgb, fNormal.xyz, 
-	                                        fWorldLocation.xyz, specColour );
+	vec4 litColour = calculateLightContrib( matColour.rgb, normal.xyz, 
+	                                        worldlocation.xyz, specColour );
 	
 	// If my blend function is (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA) 
 	// then it's reading whatever the 4th value of the output is:

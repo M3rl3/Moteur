@@ -62,6 +62,10 @@ void ShaderSystem::Process(const std::vector<Entity*>& entities, float dt) {
             else {
                 glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_FALSE);
             }
+            
+            GLint bIsFullScreenQuadLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsFullScreenQuad");
+
+            glUniform1f(bIsFullScreenQuadLocation, (GLfloat)GL_FALSE);
         }
     }
 }
@@ -69,8 +73,8 @@ void ShaderSystem::Process(const std::vector<Entity*>& entities, float dt) {
 // Compile the shaders provided
 void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* fragShader)
 {
-	cShaderManager::cShader vertexShader;
-	cShaderManager::cShader fragmentShader;
+	cShader vertexShader;
+	cShader fragmentShader;
 
     // path to the shaders
     vertexShader.fileName = vertShader;
@@ -78,6 +82,34 @@ void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* ve
 
     // Check if the shaders compile
     if (!shaderManager->createProgramFromFile("ShadyProgram", vertexShader, fragmentShader)) {
+        std::cout << "Error: Shader program failed to compile." << std::endl;
+        std::cout << shaderManager->getLastError();
+        return;
+    }
+    else {
+        std::cout << "Shaders compiled." << std::endl;
+    }
+
+    //shaderManager->useShaderProgram("ShadyProgram");
+    id = shaderManager->getIDFromFriendlyName("ShadyProgram");
+    glUseProgram(id);
+
+    shaderID = id;
+}
+
+void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* vertShader, const char* geomShader, const char* fragShader)
+{
+    cShader vertexShader;
+    cShader geometryShader;
+    cShader fragmentShader;
+
+    // path to the shaders
+    vertexShader.fileName = vertShader;
+    geometryShader.fileName = geomShader;
+    fragmentShader.fileName = fragShader;
+
+    // Check if the shaders compile
+    if (!shaderManager->createProgramFromFile("ShadyProgram", vertexShader, geometryShader, fragmentShader)) {
         std::cout << "Error: Shader program failed to compile." << std::endl;
         std::cout << shaderManager->getLastError();
         return;

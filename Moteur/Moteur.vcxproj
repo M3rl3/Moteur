@@ -168,6 +168,7 @@
     <ClCompile Include="cRenderReticle.cpp" />
     <ClCompile Include="cShaderManager\cShader.cpp" />
     <ClCompile Include="cShaderManager\cShaderManager.cpp" />
+    <ClCompile Include="cShaderManager\cShaderProgram.cpp" />
     <ClCompile Include="cVAOManager\cVAOManager.cpp" />
     <ClCompile Include="DrawBoundingBox.cpp" />
     <ClCompile Include="ECSengine.cpp" />
@@ -212,7 +213,9 @@
     <ClInclude Include="cMeshInfo.h" />
     <ClInclude Include="cPlyFileLoader.h" />
     <ClInclude Include="cRenderReticle.h" />
+    <ClInclude Include="cShaderManager\cShader.h" />
     <ClInclude Include="cShaderManager\cShaderManager.h" />
+    <ClInclude Include="cShaderManager\cShaderProgram.h" />
     <ClInclude Include="cVAOManager\cVAOManager.h" />
     <ClInclude Include="DrawBoundingBox.h" />
     <ClInclude Include="ECSengine.h" />

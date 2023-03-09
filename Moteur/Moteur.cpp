@@ -555,8 +555,8 @@ namespace Moteur {
         //Shader Manager
         cShaderManager* shadyMan = new cShaderManager();
 
-        cShaderManager::cShader vertexShader;
-        cShaderManager::cShader fragmentShader;
+        cShader vertexShader;
+        cShader fragmentShader;
 
         vertexShader.fileName = vertShader;
         fragmentShader.fileName = fragShader;

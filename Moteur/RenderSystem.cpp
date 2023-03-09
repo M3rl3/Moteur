@@ -408,10 +408,12 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             ratio = width / (float)height;
             glViewport(0, 0, width, height);
 
-            glEnable(GL_DEPTH_TEST);
+            // Cull back facing triangles
             glCullFace(GL_BACK);
-            //glEnable(GL_CULL_FACE);
+            glEnable(GL_CULL_FACE);
 
+            // Depth test
+            glEnable(GL_DEPTH_TEST);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             //view = glm::lookAt(camera->position, camera->target, upVector);
