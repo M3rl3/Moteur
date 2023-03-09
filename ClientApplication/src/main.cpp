@@ -151,14 +151,17 @@ void ECSEngine() {
     float ambientLight = 0.025f;
     lightSystem->SetAmbientLightAmount(ambientLight);
 
+    // attenuation on all lights
+    const glm::vec4 constLightAtten = glm::vec4(0.1f, 0.25f, 1.0e-7f, 1.0f);
+
     cLight* newLight = lightSystem->AddLight(glm::vec4(-20, 20, 0, 1));
 
-    newLight->diffuse = glm::vec4(10, 10, 10, 1);
-    newLight->specular = glm::vec4(1.f);
-    newLight->atten = glm::vec4(0.5f, 0.01f, 0.0f, 1.f);
-    newLight->direction = glm::vec4(1.f);
-    newLight->param1 = glm::vec4(0, 0, 0, 1);
-    newLight->param2 = glm::vec4(1, 0, 0, 1);
+    newLight->diffuse = glm::vec4(1.f, 1.f, 1.f, 1.f);
+    newLight->specular = glm::vec4(1.f, 1.f, 1.f, 1.f);
+    newLight->direction = glm::vec4(1.f, 1.f, 1.f, 1.f);
+    newLight->atten = constLightAtten;
+    newLight->param1 = glm::vec4(0.f, 50.f, 50.f, 1.f);
+    newLight->param2 = glm::vec4(1.f, 0.f, 0.f, 1.f);
 
     // If a velocity component exits
     MotionSystem* motionSystem = new MotionSystem();
