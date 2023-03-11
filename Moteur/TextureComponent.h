@@ -13,7 +13,8 @@ public:
 		componentType("TextureComponent"),
 		textureID(NULL),
 		rgbaColor(glm::vec4(0.f)),
-		useRGBAColor(false)
+		useRGBAColor(false),
+		useTexture(false)
 	{
 		// Iterate through all textures and set them to null
 		for (int i = 0; i < 8; i++) {
@@ -41,6 +42,9 @@ public:
 
 	// Use the set rgbaColor
 	bool useRGBAColor;
+
+	// Use the set texture
+	bool useTexture;
 
 private:
 

@@ -37,7 +37,7 @@ sModelDrawInfo::sModelDrawInfo()
 	// this->CalculateExtents();
 
 	// copy the vertices into a vector of glm::vec3
-	// this->CopyVertices();
+	this->CopyVertices();
 
 	return;
 }

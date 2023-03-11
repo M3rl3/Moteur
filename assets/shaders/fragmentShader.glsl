@@ -26,7 +26,7 @@ uniform bool doNotLight;
 
 uniform vec4 eyeLocation;
 
-uniform bool bHasTexture;
+uniform bool useTexture;
 
 uniform sampler2D texture0;	
 uniform sampler2D texture1;	
@@ -154,7 +154,7 @@ void main()
 	}
 
 	// If a texture is applied
-	else if (bHasTexture)
+	else if (useTexture)
 	{
 		vec3 textColour0 = texture( texture0, fUV2.st ).rgb;		
 		vec3 textColour1 = texture( texture1, fUV2.st ).rgb;	
@@ -167,6 +167,7 @@ void main()
 				  + (textColour3.rgb * texRatio_0_3.w);
 
 		outputColor.rgb = matColour.rgb;
+		outputColor.r += 25.f;
 		outputColor.a = 1.f;
 	}
 

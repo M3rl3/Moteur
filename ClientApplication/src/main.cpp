@@ -138,13 +138,12 @@ void ECSEngine() {
     
     sModelDrawInfo plain;
     renderSystem->LoadMesh("../assets/meshes/plane_rescaled.ply", "plain", plain, shaderID);
-
+    
     // Textures loaded here
-    MeshSystem* meshSystem = new MeshSystem();
-    meshSystem->SetTexturePath("../assets/textures");
+    renderSystem->SetTexturePath("../assets/textures");
 
     unsigned int textureID = 0;
-    meshSystem->Load2DTexture(textureID, "man.bmp");
+    renderSystem->Load2DTexture(textureID, "man.bmp");
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
@@ -185,11 +184,12 @@ void ECSEngine() {
         meshComponent->plyModel = steve;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
-        textureComponent->useRGBAColor = true;
-        textureComponent->rgbaColor = glm::vec4(100, 100, 100, 1);
+        textureComponent->useTexture = false;
         textureComponent->textureID = textureID;
         textureComponent->textures[0] = "man.bmp";
         textureComponent->textureRatios[0] = 1.f;
+        textureComponent->useRGBAColor = true;
+        textureComponent->rgbaColor = glm::vec4(1.f, 25.f, 1.f, 1.f);
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;
@@ -199,6 +199,8 @@ void ECSEngine() {
 
         AnimationComponent* animationComponent = engine.AddComponent<AnimationComponent>(entityID);
         animationComponent->animation.AnimationType = "TestAnimation";
+        animationComponent->animation.IsPlaying = true;
+        animationComponent->animation.AnimationTime = 0.0f;
 
         VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->targeting = true;
@@ -232,9 +234,9 @@ void ECSEngine() {
     // Add all the systems
     engine.AddSystem(renderSystem);
     engine.AddSystem(lightSystem);
-    engine.AddSystem(meshSystem);
     engine.AddSystem(shaderSystem);    
     engine.AddSystem(motionSystem);
+    // engine.AddSystem(meshSystem);
 
     // User defined update method (for user inputs)
     engine.UpdateCallback(&Update);

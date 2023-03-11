@@ -251,6 +251,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\shaders\fragmentShader.glsl" />
+    <None Include="..\assets\shaders\geometryShader_passthrough.glsl" />
     <None Include="..\assets\shaders\vertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

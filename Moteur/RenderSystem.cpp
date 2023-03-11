@@ -5,6 +5,7 @@
 #include "MeshComponent.h"
 #include "AnimationComponent.h"
 #include "BoundingBoxComponent.h"
+#include "TextureComponent.h"
 
 #include "DrawBoundingBox.h"
 
@@ -48,6 +49,7 @@ RenderSystem::RenderSystem()
 
     // Initialize all the managers
     vaoManager = new cVAOManager();
+    textureManager = new cBasicTextureManager();
     plyFileLoader = new cPlyFileLoader();
     animationManager = new AnimationManager();
 
@@ -222,7 +224,6 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 
         targetLoc = targetLocation;
 
-        mouseClick = true;
         /*for (cMeshInfo* meshInfo : meshArray) {
             if (meshInfo->enabled) {
                 AnimationData testAnimation;
@@ -331,7 +332,7 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
 
     // GLFW and glsl upper and lower version
     const char* glsl_version = "#version 420";
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     // keyboard callback
@@ -358,9 +359,13 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     }
     glfwSwapInterval(1); //vsync
 
-    // Dont draw any back facing triangles
+    // Cull back facing triangles
     glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+
+    // Depth test
     glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 // Update method called every tick
@@ -368,12 +373,23 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
     memcpy(&(lastKeyPressedID[0]), &(keyPressedID[0]), 255);
 
+    glm::mat4x4 model, view, projection;
+
+    // Cull back facing triangles
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+
+    // Depth test
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     // Make a copy of all the entity components
     TransformComponent* transformComponent = nullptr;
     ShaderComponent* shaderComponent = nullptr;
     MeshComponent* meshComponent = nullptr;
     AnimationComponent* animationComponent = nullptr;
     BoundingBoxComponent* boundingBoxComponent = nullptr;
+    TextureComponent* textureComponent = nullptr;
     
     // Iterate through all entities
     for (int i = 0; i < entities.size(); i++) {
@@ -386,18 +402,18 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
         meshComponent = currentEntity->GetComponentByType<MeshComponent>();
         animationComponent = currentEntity->GetComponentByType<AnimationComponent>();
         boundingBoxComponent = currentEntity->GetComponentByType<BoundingBoxComponent>();
+        textureComponent = currentEntity->GetComponentByType<TextureComponent>();
 
         // check if the component exists
         if (transformComponent != nullptr && shaderComponent != nullptr)
         {
             //MVP
-            glm::mat4x4 model, view, projection;
             glm::vec3 upVector = glm::vec3(0.f, 1.f, 0.f);
 
             GLint modelLocaction = glGetUniformLocation(shaderComponent->shaderID, "Model");
             GLint viewLocation = glGetUniformLocation(shaderComponent->shaderID, "View");
             GLint projectionLocation = glGetUniformLocation(shaderComponent->shaderID, "Projection");
-            GLint modelInverseLocation = glGetUniformLocation(shaderComponent->shaderID, "ModelInverse");
+            GLint modelInverseLocation = glGetUniformLocation(shaderComponent->shaderID, "ModelInverse");         
 
             // Lighting
             // ManageLights(shaderComponent->shaderID);
@@ -408,16 +424,8 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             ratio = width / (float)height;
             glViewport(0, 0, width, height);
 
-            // Cull back facing triangles
-            glCullFace(GL_BACK);
-            glEnable(GL_CULL_FACE);
-
-            // Depth test
-            glEnable(GL_DEPTH_TEST);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            //view = glm::lookAt(camera->position, camera->target, upVector);
-            //projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
+            // view = glm::lookAt(camera->position, camera->target, upVector);
+            // projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
 
             // mouse support
             if (enableMouse) {
@@ -455,29 +463,80 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             glm::mat4 modelInverse = glm::inverse(glm::transpose(model));
             glUniformMatrix4fv(modelInverseLocation, 1, GL_FALSE, glm::value_ptr(modelInverse));
 
+            if (textureComponent != nullptr) {
+
+                GLint useTextureLocation = glGetUniformLocation(shaderComponent->shaderID, "useTexture");
+                GLint useRGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "useRGBAColour");
+                GLint RGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "RGBAColour");
+
+                // Check if it uses RGBA color or a texture
+                if (textureComponent->useRGBAColor) {
+
+                    glUniform1f(useRGBAColourLocation, (GLfloat)GL_TRUE);
+
+                    glm::vec4 color = textureComponent->rgbaColor;
+
+                    glUniform4f(RGBAColourLocation, color.r, color.g, color.b, color.w);
+                }
+                else {
+                    glUniform1f(useRGBAColourLocation, (GLfloat)GL_FALSE);
+                }
+
+                if (textureComponent->useTexture) {
+
+                    glUniform1f(useTextureLocation, (GLfloat)GL_TRUE);
+
+                    std::string texture = textureComponent->textures[0];
+
+                    // GLuint textureID = textureComponent->textureID;
+                    GLuint textureID = textureManager->getTextureIDFromName(texture);
+
+                    GLuint textureUnit = 0;
+                    glActiveTexture(textureUnit + GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, textureID);
+
+                    // set uniform locations
+                    GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "texture0");
+                    glUniform1i(textureLocation, textureUnit);
+
+                    GLint texRatio_0_3 = glGetUniformLocation(shaderComponent->shaderID, "texRatio_0_3");
+                    glUniform4f(texRatio_0_3,
+                        textureComponent->textureRatios[0],
+                        textureComponent->textureRatios[1],
+                        textureComponent->textureRatios[2],
+                        textureComponent->textureRatios[3]);
+                }
+                else {
+                    glUniform1f(useTextureLocation, (GLfloat)GL_FALSE);
+                }
+            }
+
+            GLint useFBObIsFullScreenQuadLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsFullScreenQuad");
+            glUniform1f(useFBObIsFullScreenQuadLocation, (GLfloat)GL_FALSE);
+
             // Manage animations
             if (animationComponent != nullptr) {
-                if (mouseClick) {
+                if (glfwGetMouseButton(window->theWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)  {
                     AnimationData testAnimation;
                     testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(transformComponent->position, 0.0f, EaseIn));
-                    testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLoc, 0.50f, EaseIn));
+                    testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLoc, 0.50f, EaseInOut));
                     testAnimation.Duration = 2.0f;
 
                     //animationComponent->animation = new Animation();
-                    animationComponent->animation.IsPlaying = true;
-                    animationComponent->animation.AnimationTime = 1.0f;
+                    /*animationComponent->animation.IsPlaying = true;
+                    animationComponent->animation.AnimationTime = 1.0f;*/
 
                     animationManager->Load("TestAnimation", testAnimation);
-                }
-                
+                }                
             }
-            std::string meshName = meshComponent->plyModel.meshName;
 
             // Polygon mode
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
             // Find the models vertices and indices
             sModelDrawInfo modelInfo;
+            std::string meshName = meshComponent->plyModel.meshName;
+
             if (vaoManager->FindDrawInfoByModelName(meshName, modelInfo)) {
 
                 // Bind and draw
@@ -496,19 +555,17 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                     draw_bbox(&modelInfo, shaderComponent->shaderID, boundingBoxComponent->modelMatrix);
                 }
             }
-
-            // Set window title
-            std::stringstream ss;
-            ss << " Camera: " << "(" << camera->position.x << ", " << camera->position.y << ", " << camera->position.z << ")";
-
-            glfwSetWindowTitle(window->theWindow, ss.str().c_str());
-
-            glfwSwapBuffers(window->theWindow);
-            glfwPollEvents();
-
-            mouseClick = false;
         }
     }
+
+    // Set window title
+    std::stringstream ss;
+    ss << " Camera: " << "(" << camera->position.x << ", " << camera->position.y << ", " << camera->position.z << ")";
+
+    glfwSetWindowTitle(window->theWindow, ss.str().c_str());
+
+    glfwSwapBuffers(window->theWindow);
+    glfwPollEvents();
 }
 
 // Gracefully closes everything down
@@ -540,6 +597,61 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
     }
     else {
         std::cout << "Could not load model " << modelName << " into VAO" << std::endl;
+        return false;
+    }
+}
+
+// Set the path where the textures are located
+void RenderSystem::SetTexturePath(const char* filePath)
+{
+    std::cout << "\nLoading Textures...";
+
+    textureManager->SetBasePath(filePath);
+}
+
+// Load a 2D texture
+bool RenderSystem::Load2DTexture(unsigned int& textureID, const char* filePath)
+{
+    // Check if the texture loaded
+    if (textureManager->Create2DTextureFromBMPFile(filePath))
+    {
+        textureID = textureManager->getTextureIDFromName(filePath);
+
+        std::cout << "\nLoaded " << filePath << " texture." << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "Error: failed to load " << filePath << " texture." << std::endl;
+        return false;
+    }
+}
+
+// Load a skybox texture
+bool RenderSystem::LoadCubeMapTexture(
+    unsigned int& textureID,
+    std::string cubeMapName,
+    std::string posX_fileName, std::string negX_fileName,
+    std::string posY_fileName, std::string negY_fileName,
+    std::string posZ_fileName, std::string negZ_fileName,
+    bool bIsSeamless, std::string& errorString)
+{
+    const char* skybox_name = cubeMapName.c_str();
+
+    // Check if the skybox loaded
+    if (textureManager->CreateCubeTextureFromBMPFiles(skybox_name,
+        posX_fileName, negX_fileName,
+        posY_fileName, negY_fileName,
+        posZ_fileName, negZ_fileName,
+        bIsSeamless, errorString))
+    {
+        textureID = textureManager->getTextureIDFromName(cubeMapName);
+        std::cout << "\nLoaded skybox textures: " << skybox_name << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "\nError: failed to load skybox because " << errorString;
         return false;
     }
 }
