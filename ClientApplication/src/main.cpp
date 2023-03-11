@@ -180,7 +180,7 @@ void ECSEngine() {
         true, errorString);
 
     unsigned int textureID1 = 0;
-    renderSystem->Load2DTexture(textureID1, "man.bmp");
+    renderSystem->Load2DTexture(textureID1, "Archer.bmp");
     
     unsigned int textureID2 = 0;
     renderSystem->Load2DTexture(textureID2, "seamless-green-grass-pattern.bmp");
@@ -232,7 +232,7 @@ void ECSEngine() {
         unsigned int entityID = engine.CreateEntity();
 
         TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
-        transformComponent->position = glm::vec3(0.f, 0.f, 5.f);
+        transformComponent->position = glm::vec3(0.f, 0.f, -30.f);
         transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
@@ -245,7 +245,7 @@ void ECSEngine() {
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
         textureComponent->textureID = textureID1;
-        textureComponent->textures[0] = "man.bmp";
+        textureComponent->textures[0] = "Archer.bmp";
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
