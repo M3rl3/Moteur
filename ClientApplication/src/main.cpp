@@ -140,7 +140,7 @@ void ECSEngine() {
     renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
     
     sModelDrawInfo plain;
-    renderSystem->LoadMesh("../assets/meshes/plane_rescaled.ply", "plain", plain, shaderID);
+    renderSystem->LoadMesh("../assets/meshes/west_town.ply", "plain", plain, shaderID);
     
     // Textures loaded here
     renderSystem->SetTexturePath("../assets/textures");
