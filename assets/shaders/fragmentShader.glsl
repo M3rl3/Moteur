@@ -143,7 +143,7 @@ void main()
 		return;
 	}
 
-	vec3 matColour;
+	vec3 matColour = fColour.rgb;
 
 	float alphaTransparency = 1.f;
 
@@ -178,6 +178,10 @@ void main()
 	{
 		matColour = fColour.rgb;
 		alphaTransparency = 1.f;
+
+//		outputColor.rgb = matColour * 0.25f;
+//		outputColor.a = fColour.a;
+//		return;
 	}
 
 	if (doNotLight)
@@ -201,6 +205,15 @@ void main()
 
 	if (useTexture) {
 		ambientLightAmount *= 40.f;
+	}
+
+	// Don't apply ambient light to this
+	if (!useRGBAColour && !useTexture) {
+		
+		ambientLightAmount = 0.005f;
+
+		outputColor.rgb = (matColour.rgb * ambientLightAmount);
+		return;
 	}
 
 	outputColor.rgb += (matColour.rgb * ambientLightAmount);

@@ -273,7 +273,7 @@ void ECSEngine() {
 
         TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(0.f);
-        transformComponent->scale = glm::vec3(1.f);
+        transformComponent->scale = glm::vec3(10.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
         ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
@@ -284,7 +284,7 @@ void ECSEngine() {
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = false;
-        textureComponent->rgbaColor = glm::vec4(20, 20, 20, 1);
+        textureComponent->rgbaColor = glm::vec4(1, 1, 1, 1);
         textureComponent->useTexture = false;
         textureComponent->textureID = textureID2;
         textureComponent->textures[0] = "seamless-green-grass-pattern.bmp";
