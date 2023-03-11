@@ -22,7 +22,7 @@ public:
 	
 
 	void GetAmbientLightAmount(float& amount);
-	void SetAmbientLightAmount(float& amount);
+	void SetAmbientLightAmount(float amount);
 
 	// Update method of the system, called every tick
 	void Process(const std::vector<Entity*>& entities, float dt);
@@ -42,4 +42,6 @@ private:
 
 	// Compiled shader ID
 	unsigned int shaderID = 0;
+
+	float ambientLight = 0.f;
 };

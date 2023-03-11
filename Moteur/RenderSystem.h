@@ -96,4 +96,6 @@ private:
 
 	// Handler for all stuff animation related
 	AnimationManager* animationManager;
+
+	float ambientLight;
 };

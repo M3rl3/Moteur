@@ -58,6 +58,8 @@ RenderSystem::RenderSystem()
 	camera = new Camera();
     cam = camera;
     animeMan = animationManager;
+
+    ambientLight = 1.f;
 }
 
 // Destructor
@@ -582,6 +584,12 @@ void RenderSystem::Shutdown()
 
     camera = nullptr;
     delete camera;
+
+    vaoManager = nullptr;
+    delete vaoManager;
+
+    textureManager = nullptr;
+    delete textureManager;
 
     exit(EXIT_SUCCESS);
 }

@@ -206,11 +206,11 @@
     <ClCompile Include="cLightManager\cLightManager.cpp">
       <Filter>Light Manager</Filter>
     </ClCompile>
-    <ClCompile Include="LightSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cShaderManager\cShaderProgram.cpp">
       <Filter>Shader Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

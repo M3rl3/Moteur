@@ -38,7 +38,7 @@ void cLightManager::GetAmbientLightAmount(float& amount)
 	amount = ambientLight;
 }
 
-void cLightManager::SetAmbientLightAmount(float& amount)
+void cLightManager::SetAmbientLightAmount(float amount)
 {
 	ambientLight = amount;
 }
@@ -47,8 +47,8 @@ void cLightManager::LoadLightUniformLocations(unsigned int shaderID)
 {
 	unsigned int lightNumber = 0;
 
-	numLightsUniformLocation = glGetUniformLocation(shaderID, "NUMBEROFLIGHTS");
-	ambientLightUniformLocation = glGetUniformLocation(shaderID, "ambientLight");
+	// numLightsUniformLocation = glGetUniformLocation(shaderID, "NUMBEROFLIGHTS");
+	// ambientLightUniformLocation = glGetUniformLocation(shaderID, "ambientLight");
 
 	for (int i = 0; i < vecTheLights.size(); i++) {
 
@@ -83,8 +83,8 @@ void cLightManager::LoadLightUniformLocations(unsigned int shaderID)
 void cLightManager::CopyLightInformationToShader(unsigned int shaderID)
 {
 	// set number of lights
-	glUniform1i(numLightsUniformLocation, numLights);
-	glUniform1f(ambientLightUniformLocation, ambientLight);
+	// glUniform1i(numLightsUniformLocation, numLights);
+	// glUniform1f(ambientLightUniformLocation, ambientLight);
 
 	for (int i = 0; i < vecTheLights.size(); i++)
 	{

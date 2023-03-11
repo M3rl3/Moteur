@@ -147,7 +147,8 @@ void ECSEngine() {
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
-    
+
+    // Ambient light
     float ambientLight = 0.025f;
     lightSystem->SetAmbientLightAmount(ambientLight);
 
@@ -184,12 +185,12 @@ void ECSEngine() {
         meshComponent->plyModel = steve;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
-        textureComponent->useTexture = false;
+        textureComponent->useTexture = true;
         textureComponent->textureID = textureID;
         textureComponent->textures[0] = "man.bmp";
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = true;
-        textureComponent->rgbaColor = glm::vec4(1.f, 25.f, 1.f, 1.f);
+        textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;
@@ -225,7 +226,7 @@ void ECSEngine() {
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = true;
-        textureComponent->rgbaColor = glm::vec4(25, 25, 25, 1);
+        textureComponent->rgbaColor = glm::vec4(20, 20, 20, 1);
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;

@@ -17,7 +17,7 @@ public:
 
 
 	void GetAmbientLightAmount(float& amount);
-	void SetAmbientLightAmount(float& amount);
+	void SetAmbientLightAmount(float amount);
 
 	void LoadLightUniformLocations(unsigned int shaderID);
 

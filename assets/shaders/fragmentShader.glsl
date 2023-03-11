@@ -143,18 +143,19 @@ void main()
 		return;
 	}
 
-	vec3 matColour = vec3(0.f, 0.f, 0.f);
+	vec3 matColour;
 
-	float alphaTransparency = RGBAColour.w;
+	float alphaTransparency = 1.f;
 
 	// If a solid color is applied
 	if (useRGBAColour) 
 	{
 		matColour = RGBAColour.rgb;
+		alphaTransparency = RGBAColour.a;
 	}
 
 	// If a texture is applied
-	else if (useTexture)
+	if (useTexture)
 	{
 		vec3 textColour0 = texture( texture0, fUV2.st ).rgb;		
 		vec3 textColour1 = texture( texture1, fUV2.st ).rgb;	
@@ -166,15 +167,17 @@ void main()
 				  + (textColour2.rgb * texRatio_0_3.z) 
 				  + (textColour3.rgb * texRatio_0_3.w);
 
-		outputColor.rgb = matColour.rgb;
-		outputColor.r += 25.f;
-		outputColor.a = 1.f;
+//		outputColor.rgb = matColour.rgb;
+//		outputColor.a = 1.f;
+//		return;
 	}
 
 	// If neither a texture nor a solid color is applied
 	// Apply the colors coming in from the model file
-	else {
+	if (!useRGBAColour && !useTexture)
+	{
 		matColour = fColour.rgb;
+		alphaTransparency = 1.f;
 	}
 
 	if (doNotLight)
@@ -194,8 +197,13 @@ void main()
 	// then it's reading whatever the 4th value of the output is:
 	outputColor = vec4(litColour.rgb, alphaTransparency);
 
-    float amountOfAmbientLight = ambientLight;
-	outputColor.rgb += (matColour.rgb * amountOfAmbientLight);
+	float ambientLightAmount = ambientLight;
+
+	if (useTexture) {
+		ambientLightAmount *= 40.f;
+	}
+
+	outputColor.rgb += (matColour.rgb * ambientLightAmount);
 
 	return;
 }
