@@ -488,11 +488,10 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                     glUniform1f(useTextureLocation, (GLfloat)GL_TRUE);
 
-                    std::string texture = textureComponent->textures[0];
+                    // std::string texture = textureComponent->textures[0];
+                    // GLuint textureID = textureManager->getTextureIDFromName(texture);
 
-                    // GLuint textureID = textureComponent->textureID;
-                    GLuint textureID = textureManager->getTextureIDFromName(texture);
-
+                    GLuint textureID = textureComponent->textureID;
                     GLuint textureUnit = 0;
                     glActiveTexture(textureUnit + GL_TEXTURE0);
                     glBindTexture(GL_TEXTURE_2D, textureID);
@@ -515,6 +514,30 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             GLint useFBObIsFullScreenQuadLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsFullScreenQuad");
             glUniform1f(useFBObIsFullScreenQuadLocation, (GLfloat)GL_FALSE);
+
+            GLint bIsSkyboxObjectLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsSkyboxObject");
+
+            // Check if object is a skybox mesh
+            if (meshComponent->isSkyBox) {
+
+                glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_TRUE);
+
+                // std::string cubeMapTextureName = textureComponent->textures[0];
+                // GLuint cubeMapTextureID = textureManager->getTextureIDFromName(cubeMapTextureName);
+
+                GLuint cubeMapTextureID = textureComponent->textureID;
+                GLuint textureUnit = 30;			// Texture unit go from 0 to 79
+                glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+                glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureID);
+                GLint skyboxTextureLocation = glGetUniformLocation(shaderComponent->shaderID, "skyboxTexture");
+                glUniform1i(skyboxTextureLocation, textureUnit);
+
+                transformComponent->position = camera->position;
+                transformComponent->scale = glm::vec3(7500.f);
+            }
+            else {
+                glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_FALSE);
+            }
 
             // Manage animations
             if (animationComponent != nullptr) {
@@ -644,17 +667,15 @@ bool RenderSystem::LoadCubeMapTexture(
     std::string posZ_fileName, std::string negZ_fileName,
     bool bIsSeamless, std::string& errorString)
 {
-    const char* skybox_name = cubeMapName.c_str();
-
     // Check if the skybox loaded
-    if (textureManager->CreateCubeTextureFromBMPFiles(skybox_name,
+    if (textureManager->CreateCubeTextureFromBMPFiles(cubeMapName,
         posX_fileName, negX_fileName,
         posY_fileName, negY_fileName,
         posZ_fileName, negZ_fileName,
         bIsSeamless, errorString))
     {
         textureID = textureManager->getTextureIDFromName(cubeMapName);
-        std::cout << "\nLoaded skybox textures: " << skybox_name << std::endl;
+        std::cout << "\nLoaded skybox textures: " << cubeMapName << std::endl;
         return true;
     }
     else

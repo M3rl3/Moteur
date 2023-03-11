@@ -53,15 +53,7 @@ void ShaderSystem::Process(const std::vector<Entity*>& entities, float dt) {
                 glUniform1f(useIsTerrainMeshLocation, (GLfloat)GL_FALSE);
             }
 
-            GLint bIsSkyboxObjectLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsSkyboxObject");
-
-            // Check if object is a skybox mesh
-            if (meshComponent->isSkyBox) {
-                glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_TRUE);
-            }
-            else {
-                glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_FALSE);
-            }
+            
             
             GLint bIsFullScreenQuadLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsFullScreenQuad");
 

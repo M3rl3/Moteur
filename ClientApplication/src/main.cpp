@@ -133,6 +133,9 @@ void ECSEngine() {
     shaderSystem->CreateShaderProgramFromFiles(shaderID, v_Shader, g_Shader, f_Shader);
 
     // Meshes loaded here
+    sModelDrawInfo skybox;
+    renderSystem->LoadMesh("../assets/meshes/skybox_sphere.ply", "skybox", skybox, shaderID);
+    
     sModelDrawInfo steve;
     renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
     
@@ -142,8 +145,45 @@ void ECSEngine() {
     // Textures loaded here
     renderSystem->SetTexturePath("../assets/textures");
 
-    unsigned int textureID = 0;
-    renderSystem->Load2DTexture(textureID, "man.bmp");
+    unsigned int textureID0 = 0;
+    
+    std::string errorString = "";
+
+    /*std::string skyboxName = "desert";
+    renderSystem->LoadCubeMapTexture(textureID0, skyboxName,
+        "desertrt.bmp", 
+        "desertlf.bmp", 
+        "desertup.bmp", 
+        "desertdn.bmp", 
+        "desertft.bmp", 
+        "desertbk.bmp", 
+        true, errorString);*/
+    
+    /*std::string skyboxName = "nightsky";
+    renderSystem->LoadCubeMapTexture(textureID0, skyboxName,
+        "SpaceBox_right1_posX.bmp",
+        "SpaceBox_left2_negX.bmp",
+        "SpaceBox_top3_posY.bmp",
+        "SpaceBox_bottom4_negY.bmp",
+        "SpaceBox_front5_posZ.bmp",
+        "SpaceBox_back6_negZ.bmp",
+        true, errorString);*/
+        
+    std::string skyboxName = "sunnyday";
+    renderSystem->LoadCubeMapTexture(textureID0, skyboxName,
+        "TropicalSunnyDayLeft2048.bmp",
+        "TropicalSunnyDayRight2048.bmp",
+        "TropicalSunnyDayDown2048.bmp",
+        "TropicalSunnyDayUp2048.bmp",
+        "TropicalSunnyDayFront2048.bmp",
+        "TropicalSunnyDayBack2048.bmp",
+        true, errorString);
+
+    unsigned int textureID1 = 0;
+    renderSystem->Load2DTexture(textureID1, "man.bmp");
+    
+    unsigned int textureID2 = 0;
+    renderSystem->Load2DTexture(textureID2, "seamless-green-grass-pattern.bmp");
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
@@ -164,10 +204,28 @@ void ECSEngine() {
     newLight->param1 = glm::vec4(0.f, 50.f, 50.f, 1.f);
     newLight->param2 = glm::vec4(1.f, 0.f, 0.f, 1.f);
 
-    // If a velocity component exits
+    // If a velocity component exists
     MotionSystem* motionSystem = new MotionSystem();
 
     // Scene
+
+    {   // Entity "skybox"
+
+        unsigned int entityID = engine.CreateEntity();
+
+        TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
+
+        ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
+        shaderComponent->shaderID = shaderID;
+
+        MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
+        meshComponent->plyModel = skybox;
+        meshComponent->isSkyBox = true;
+
+        TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
+        textureComponent->textureID = textureID0;
+        textureComponent->textures[0] = "desert";
+    }
 
     {   // Entity "steve"
     
@@ -186,10 +244,10 @@ void ECSEngine() {
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
-        textureComponent->textureID = textureID;
+        textureComponent->textureID = textureID1;
         textureComponent->textures[0] = "man.bmp";
         textureComponent->textureRatios[0] = 1.f;
-        textureComponent->useRGBAColor = true;
+        textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
@@ -203,10 +261,10 @@ void ECSEngine() {
         animationComponent->animation.IsPlaying = true;
         animationComponent->animation.AnimationTime = 0.0f;
 
-        VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
-        velocityComponent->targeting = true;
-        //velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
-        velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
+        //VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
+        //velocityComponent->targeting = false;
+        ////velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
+        //velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
     }
 
     {   // Entity "plain"
@@ -215,7 +273,7 @@ void ECSEngine() {
 
         TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(0.f);
-        transformComponent->scale = glm::vec3(10.f);
+        transformComponent->scale = glm::vec3(0.005f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
         ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
@@ -225,8 +283,12 @@ void ECSEngine() {
         meshComponent->plyModel = plain;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
-        textureComponent->useRGBAColor = true;
+        textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(20, 20, 20, 1);
+        textureComponent->useTexture = true;
+        textureComponent->textureID = textureID2;
+        textureComponent->textures[0] = "seamless-green-grass-pattern.bmp";
+        textureComponent->textureRatios[0] = 1.f;
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;
