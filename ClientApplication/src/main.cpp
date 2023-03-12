@@ -15,6 +15,7 @@
 #include "ShaderSystem.h"
 
 #include "Moteur.h"
+#include "../Moteur/cPNGTexture/cPNGTexture.h"
 
 #include "Scene.h"
 #include "Timer.h"
@@ -214,7 +215,7 @@ void ECSEngine() {
     renderSystem->LoadMesh("../assets/meshes/skybox_sphere.ply", "skybox", skybox, shaderID);
     
     sModelDrawInfo steve;
-    renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
+    renderSystem->LoadMesh("../assets/meshes/mc_steve.ply", "steve", steve, shaderID);
 
     sModelDrawInfo creepyMonster;
     renderSystem->LoadMesh("../assets/meshes/creepyMonster.ply", "creepyMonster", creepyMonster, shaderID);
@@ -240,6 +241,12 @@ void ECSEngine() {
         true, errorString);
 
     // 2D textures
+
+    // PNG Textures
+    unsigned int textureID = 0;
+    cPNGTexture texture0(textureID, "../assets/textures/man.png");
+
+    // BMP Textures
     unsigned int textureID1 = 0;
     renderSystem->Load2DTexture(textureID1, "Archer.bmp");
     
@@ -309,7 +316,7 @@ void ECSEngine() {
 
         transformComponent = engine.AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
-        transformComponent->scale = glm::vec3(1.f);
+        transformComponent->scale = glm::vec3(0.25f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
         transformComponent->SetType("Player");
 
@@ -321,7 +328,7 @@ void ECSEngine() {
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
-        textureComponent->textureID[0] = textureID1;
+        textureComponent->textureID[0] = textID;
         textureComponent->textures[0] = "Archer.bmp";
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;

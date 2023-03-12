@@ -166,6 +166,7 @@
     <ClCompile Include="cLightManager\cLightManager.cpp" />
     <ClCompile Include="cMeshInfo.cpp" />
     <ClCompile Include="cPlyFileLoader.cpp" />
+    <ClCompile Include="cPNGTexture\cPNGTexture.cpp" />
     <ClCompile Include="cRenderReticle.cpp" />
     <ClCompile Include="cShaderManager\cShader.cpp" />
     <ClCompile Include="cShaderManager\cShaderManager.cpp" />
@@ -192,6 +193,7 @@
     <ClCompile Include="ParticleAccelerator.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="ShaderSystem.cpp" />
+    <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="TextureComponent.h" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
@@ -215,6 +217,7 @@
     <ClInclude Include="cLightManager\cLightManager.h" />
     <ClInclude Include="cMeshInfo.h" />
     <ClInclude Include="cPlyFileLoader.h" />
+    <ClInclude Include="cPNGTexture\cPNGTexture.h" />
     <ClInclude Include="cRenderReticle.h" />
     <ClInclude Include="cShaderManager\cShader.h" />
     <ClInclude Include="cShaderManager\cShaderManager.h" />
