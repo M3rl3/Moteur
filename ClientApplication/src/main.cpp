@@ -328,8 +328,7 @@ void ECSEngine() {
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
-        textureComponent->textureID[0] = textID;
-        textureComponent->textures[0] = "Archer.bmp";
+        textureComponent->textureID[0] = textureID;
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
