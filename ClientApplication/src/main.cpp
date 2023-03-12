@@ -19,7 +19,19 @@
 
 #include <sstream>
 
+enum GameMode {
+    CAMERA,
+    PLAYER,
+    NONE
+};
+
+GameMode gameMode = CAMERA;
+
 RenderSystem* renderSystem;
+
+// Player's transform and velocity
+TransformComponent* transformComponent;
+VelocityCompoent* velocityComponent;
 
 void Update(float dt);
 
@@ -28,6 +40,8 @@ void ECSKeysCheck();
 
 void ECSEngine();
 void GoldenAgeEngine();
+
+
 
 // The main class
 int main(int argc, char** argv)
@@ -83,29 +97,79 @@ void MoteurKeysCheck(bool* keys) {
     {
         Moteur::Engine_GetCameraObject()->position.y += CAMERA_MOVE_SPEED;
     }
+
+
 }
 
 void ECSKeysCheck() {
-    constexpr float CAMERA_MOVE_SPEED = 1.f;
+    constexpr float MOVE_SPEED = 1.f;
 
-    if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
-        renderSystem->GetCamera()->position.z += CAMERA_MOVE_SPEED;
+    if (renderSystem->IsKeyPressed(GLFW_KEY_C)) {
+        gameMode = CAMERA;
     }
-    if (renderSystem->IsKeyHeldDown(GLFW_KEY_S)) {
-        renderSystem->GetCamera()->position.z -= CAMERA_MOVE_SPEED;
+    if (renderSystem->IsKeyPressed(GLFW_KEY_F)) {
+        gameMode = PLAYER;
     }
-    if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
-        renderSystem->GetCamera()->position.x += CAMERA_MOVE_SPEED;
+
+    switch (gameMode)
+    {
+    case CAMERA:
+
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
+            renderSystem->GetCamera()->position.z += MOVE_SPEED;
+        }
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_S)) {
+            renderSystem->GetCamera()->position.z -= MOVE_SPEED;
+        }
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
+            renderSystem->GetCamera()->position.x += MOVE_SPEED;
+        }
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
+            renderSystem->GetCamera()->position.x -= MOVE_SPEED;
+        }
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_Q)) {
+            renderSystem->GetCamera()->position.y += MOVE_SPEED;
+        }
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_E)) {
+            renderSystem->GetCamera()->position.y -= MOVE_SPEED;
+        }
+        break;
+
+    case PLAYER:
+
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
+            velocityComponent->velocity.z += MOVE_SPEED;
+        }
+        if (renderSystem->IsKeyReleased(GLFW_KEY_W)) {
+            velocityComponent->velocity = glm::vec3(0.f);
+        }
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_S)) {
+            velocityComponent->velocity.z -= MOVE_SPEED;
+        }
+        if (renderSystem->IsKeyReleased(GLFW_KEY_S)) {
+            velocityComponent->velocity = glm::vec3(0.f);
+        }
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
+            velocityComponent->velocity.x -= MOVE_SPEED;
+        }
+        if (renderSystem->IsKeyReleased(GLFW_KEY_D)) {
+            velocityComponent->velocity = glm::vec3(0.f);
+        }
+        if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
+            velocityComponent->velocity.x += MOVE_SPEED;
+        }
+        if (renderSystem->IsKeyReleased(GLFW_KEY_A)) {
+            velocityComponent->velocity = glm::vec3(0.f);
+        }
+        break;
+
+    case NONE:
+        // This should never come to pass
+        break;
+    default:
+        break;
     }
-    if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
-        renderSystem->GetCamera()->position.x -= CAMERA_MOVE_SPEED;
-    }
-    if (renderSystem->IsKeyHeldDown(GLFW_KEY_Q)) {
-        renderSystem->GetCamera()->position.y += CAMERA_MOVE_SPEED;
-    }
-    if (renderSystem->IsKeyHeldDown(GLFW_KEY_E)) {
-        renderSystem->GetCamera()->position.y -= CAMERA_MOVE_SPEED;
-    }
+
 }
 
 /// <summary>
@@ -261,9 +325,9 @@ void ECSEngine() {
         animationComponent->animation.IsPlaying = true;
         animationComponent->animation.AnimationTime = 0.0f;
 
-        //VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
+        velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         //velocityComponent->targeting = false;
-        ////velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
+        velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
         //velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
     }
 
