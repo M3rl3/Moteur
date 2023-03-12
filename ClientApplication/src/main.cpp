@@ -137,7 +137,7 @@ void ECSKeysCheck() {
 
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
             velocityComponent->velocity.z += MOVE_SPEED;
-            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(360.0f), 0.0f));
+            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(0.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_W)) {
             velocityComponent->velocity = glm::vec3(0.f);
