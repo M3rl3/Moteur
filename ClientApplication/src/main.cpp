@@ -34,7 +34,7 @@ AISystem* aiSystem;
 RenderSystem* renderSystem;
 
 // Player's transform and velocity
-TransformComponent* gTransformComponent;
+TransformComponent* transformComponent;
 VelocityCompoent* velocityComponent;
 
 void Update(float dt);
@@ -141,28 +141,28 @@ void ECSKeysCheck() {
 
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
             velocityComponent->velocity.z += MOVE_SPEED;
-            gTransformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(0.0f), 0.0f));
+            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(0.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_W)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_S)) {
             velocityComponent->velocity.z -= MOVE_SPEED;
-            gTransformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f), 0.0f));
+            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_S)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
             velocityComponent->velocity.x -= MOVE_SPEED;
-            gTransformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(-90.0f), 0.0f));
+            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(-90.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_D)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
             velocityComponent->velocity.x += MOVE_SPEED;
-            gTransformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
+            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_A)) {
             velocityComponent->velocity = glm::vec3(0.f);
@@ -177,8 +177,8 @@ void ECSKeysCheck() {
     }
 
     if (gameMode == PLAYER) {
-        renderSystem->GetCamera()->position = gTransformComponent->position - glm::vec3(0, -3, 10);
-        renderSystem->GetCamera()->target = gTransformComponent->position;
+        renderSystem->GetCamera()->position = transformComponent->position - glm::vec3(0, -3, 10);
+        renderSystem->GetCamera()->target = transformComponent->position;
     }
 }
 
@@ -307,10 +307,11 @@ void ECSEngine() {
     
         unsigned int entityID = engine.CreateEntity();
 
-        gTransformComponent = engine.AddComponent<TransformComponent>(entityID);
-        gTransformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
-        gTransformComponent->scale = glm::vec3(1.f);
-        gTransformComponent->rotation = glm::quat(glm::vec3(0.f));
+        transformComponent = engine.AddComponent<TransformComponent>(entityID);
+        transformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
+        transformComponent->scale = glm::vec3(1.f);
+        transformComponent->rotation = glm::quat(glm::vec3(0.f));
+        transformComponent->SetType("Player");
 
         ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
@@ -378,7 +379,8 @@ void ECSEngine() {
         aiComponent->radius = 3.0f;
         aiComponent->type = BehaviorType::PURSUE;
         aiComponent->transformComponent = transformComponent;
-        aiComponent->targetPosition = gTransformComponent->position;
+        aiComponent->speed = 1.0f;
+        //aiComponent->targetPosition = transformComponent->position;
 
 
         //VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);

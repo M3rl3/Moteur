@@ -17,7 +17,6 @@ public:
 
 	float radius;
 	float speed;
-	glm::vec3 targetPosition;
 	BehaviorType type;
 	TransformComponent* transformComponent;
 
