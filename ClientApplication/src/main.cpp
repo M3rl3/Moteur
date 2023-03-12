@@ -202,6 +202,9 @@ void ECSEngine() {
     
     sModelDrawInfo steve;
     renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
+
+    sModelDrawInfo creepyMonster;
+    renderSystem->LoadMesh("../assets/meshes/creepyMonster.ply", "creepyMonster", creepyMonster, shaderID);
     
     sModelDrawInfo plain;
     renderSystem->LoadMesh("../assets/meshes/west_town.ply", "plain", plain, shaderID);
@@ -248,6 +251,9 @@ void ECSEngine() {
     
     unsigned int textureID2 = 0;
     renderSystem->Load2DTexture(textureID2, "seamless-green-grass-pattern.bmp");
+
+    unsigned int textureID3 = 0;
+    renderSystem->Load2DTexture(textureID3, "full_low_body__BaseColor.bmp");
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
@@ -328,6 +334,46 @@ void ECSEngine() {
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         //velocityComponent->targeting = false;
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
+        //velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
+    }
+
+    {   // Entity "creepyMonster"
+
+        unsigned int entityID = engine.CreateEntity();
+
+        TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
+        transformComponent->position = glm::vec3(10.f, 0.f, -30.f);
+        transformComponent->scale = glm::vec3(1.f);
+        transformComponent->rotation = glm::quat(glm::vec3(0.f));
+
+        ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
+        shaderComponent->shaderID = shaderID;
+
+        MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
+        meshComponent->plyModel = creepyMonster;
+
+        TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
+        textureComponent->useTexture = true;
+        textureComponent->textureID = textureID3;
+        textureComponent->textures[0] = "full_low_body__BaseColor.bmp";
+        textureComponent->textureRatios[0] = 1.f;
+        textureComponent->useRGBAColor = false;
+        textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
+
+        LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
+        litComponent->doNotLight = false;
+
+        BoundingBoxComponent* boundingBoxComponent = engine.AddComponent<BoundingBoxComponent>(entityID);
+        boundingBoxComponent->drawBBox = true;
+
+        AnimationComponent* animationComponent = engine.AddComponent<AnimationComponent>(entityID);
+        animationComponent->animation.AnimationType = "TestAnimation";
+        animationComponent->animation.IsPlaying = true;
+        animationComponent->animation.AnimationTime = 0.0f;
+
+        //VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
+        //velocityComponent->targeting = false;
+        ////velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
         //velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
     }
 
