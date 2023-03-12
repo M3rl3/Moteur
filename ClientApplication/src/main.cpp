@@ -139,24 +139,28 @@ void ECSKeysCheck() {
 
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
             velocityComponent->velocity.z += MOVE_SPEED;
+            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(360.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_W)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_S)) {
             velocityComponent->velocity.z -= MOVE_SPEED;
+            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_S)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
             velocityComponent->velocity.x -= MOVE_SPEED;
+            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(-90.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_D)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
             velocityComponent->velocity.x += MOVE_SPEED;
+            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_A)) {
             velocityComponent->velocity = glm::vec3(0.f);
@@ -170,6 +174,10 @@ void ECSKeysCheck() {
         break;
     }
 
+    if (gameMode == PLAYER) {
+        renderSystem->GetCamera()->position = transformComponent->position - glm::vec3(0, -3, 10);
+        renderSystem->GetCamera()->target = transformComponent->position;
+    }
 }
 
 /// <summary>
@@ -184,7 +192,7 @@ void ECSEngine() {
     renderSystem = new RenderSystem();
     renderSystem->Initialize("ECSengine", 1366, 768, false);
 
-    renderSystem->SetCameraPosition(glm::vec3(0.f, 1.f, -60.f));
+    renderSystem->SetCameraPosition(glm::vec3(-30.f, 5.f, -50.f));
     renderSystem->SetCameraTarget(glm::vec3(1.f));
 
     // Shaders loaded here
@@ -295,8 +303,8 @@ void ECSEngine() {
     
         unsigned int entityID = engine.CreateEntity();
 
-        TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
-        transformComponent->position = glm::vec3(0.f, 0.f, -30.f);
+        transformComponent = engine.AddComponent<TransformComponent>(entityID);
+        transformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
         transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
