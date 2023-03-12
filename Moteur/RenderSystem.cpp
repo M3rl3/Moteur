@@ -635,7 +635,7 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
 // Set the path where the textures are located
 void RenderSystem::SetTexturePath(const char* filePath)
 {
-    std::cout << "\nLoading Textures...";
+    std::cout << "\nLoading Textures..." << std::endl;
 
     textureManager->SetBasePath(filePath);
 }
@@ -648,7 +648,7 @@ bool RenderSystem::Load2DTexture(unsigned int& textureID, const char* filePath)
     {
         textureID = textureManager->getTextureIDFromName(filePath);
 
-        std::cout << "\nLoaded " << filePath << " texture." << std::endl;
+        std::cout << "Loaded " << filePath << " texture." << std::endl;
         return true;
     }
     else
@@ -675,7 +675,7 @@ bool RenderSystem::LoadCubeMapTexture(
         bIsSeamless, errorString))
     {
         textureID = textureManager->getTextureIDFromName(cubeMapName);
-        std::cout << "\nLoaded skybox textures: " << cubeMapName << std::endl;
+        std::cout << "Loaded skybox textures: " << cubeMapName << std::endl;
         return true;
     }
     else

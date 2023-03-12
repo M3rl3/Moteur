@@ -220,30 +220,10 @@ void ECSEngine() {
     // Textures loaded here
     renderSystem->SetTexturePath("../assets/textures");
 
+    // Skybox textures
     unsigned int textureID0 = 0;
-    
     std::string errorString = "";
 
-    /*std::string skyboxName = "desert";
-    renderSystem->LoadCubeMapTexture(textureID0, skyboxName,
-        "desertrt.bmp", 
-        "desertlf.bmp", 
-        "desertup.bmp", 
-        "desertdn.bmp", 
-        "desertft.bmp", 
-        "desertbk.bmp", 
-        true, errorString);*/
-    
-    /*std::string skyboxName = "nightsky";
-    renderSystem->LoadCubeMapTexture(textureID0, skyboxName,
-        "SpaceBox_right1_posX.bmp",
-        "SpaceBox_left2_negX.bmp",
-        "SpaceBox_top3_posY.bmp",
-        "SpaceBox_bottom4_negY.bmp",
-        "SpaceBox_front5_posZ.bmp",
-        "SpaceBox_back6_negZ.bmp",
-        true, errorString);*/
-        
     std::string skyboxName = "sunnyday";
     renderSystem->LoadCubeMapTexture(textureID0, skyboxName,
         "TropicalSunnyDayLeft2048.bmp",
@@ -254,6 +234,7 @@ void ECSEngine() {
         "TropicalSunnyDayBack2048.bmp",
         true, errorString);
 
+    // 2D textures
     unsigned int textureID1 = 0;
     renderSystem->Load2DTexture(textureID1, "Archer.bmp");
     
