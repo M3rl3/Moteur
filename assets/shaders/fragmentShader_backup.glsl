@@ -151,7 +151,7 @@ void main()
 	// then it's reading whatever the 4th value of the output is:
 	outputColor = vec4(litColour.rgb, alphaTransparency);
 
-    float amountOfAmbientLight = ambientLight;
+    float amountOfAmbientLight = 0.025f;
 	outputColor.rgb += (matColour.rgb * amountOfAmbientLight);
 
 	return;

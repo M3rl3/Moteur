@@ -52,8 +52,6 @@ void ShaderSystem::Process(const std::vector<Entity*>& entities, float dt) {
             else {
                 glUniform1f(useIsTerrainMeshLocation, (GLfloat)GL_FALSE);
             }
-
-            
             
             GLint bIsFullScreenQuadLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsFullScreenQuad");
 

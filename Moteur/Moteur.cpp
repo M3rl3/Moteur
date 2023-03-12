@@ -1062,7 +1062,7 @@ namespace Moteur {
         //glUniform4f(PositionLocation, 0.f, 0.f, 0.f, 1.0f);
         glUniform4f(DiffuseLocation, 1.f, 1.f, 1.f, 1.f);
         glUniform4f(SpecularLocation, 1.f, 1.f, 1.f, 1.f);
-        glUniform4f(AttenLocation, 0.5f, 0.01f, 0.0f, 1.f);
+        glUniform4f(AttenLocation, 0.1f, 0.25f, 1.0e-7f, 1.0f);
         glUniform4f(DirectionLocation, 1.f, 1.f, 1.f, 1.f);
         glUniform4f(Param1Location, 0.f, 0.f, 0.f, 1.f); //x = Light Type
         glUniform4f(Param2Location, 1.f, 0.f, 0.f, 1.f); //x = Light on/off

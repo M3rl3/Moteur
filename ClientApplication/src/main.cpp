@@ -41,8 +41,6 @@ void ECSKeysCheck();
 void ECSEngine();
 void GoldenAgeEngine();
 
-
-
 // The main class
 int main(int argc, char** argv)
 {
@@ -321,9 +319,7 @@ void ECSEngine() {
         animationComponent->animation.AnimationTime = 0.0f;
 
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
-        //velocityComponent->targeting = false;
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
-        //velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
     }
 
     {   // Entity "creepyMonster"
@@ -429,8 +425,8 @@ void GoldenAgeEngine() {
     Moteur::Engine_SetCameraPosition(cameraEye);
 
     unsigned int shaderID;
-    const char* v_Shader = "../assets/shaders/vertexShader.glsl";
-    const char* f_Shader = "../assets/shaders/fragmentShader.glsl";
+    const char* v_Shader = "../assets/shaders/vertexShader_backup.glsl";
+    const char* f_Shader = "../assets/shaders/fragmentShader_backup.glsl";
 
     Moteur::Engine_CreateShaderProgramFromFiles(shaderID, v_Shader, f_Shader);
 
