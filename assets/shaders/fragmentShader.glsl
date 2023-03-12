@@ -218,7 +218,6 @@ void main()
 		ambientLightAmount *= 40.f;
 	}
 
-	// Don't apply ambient light to this
 	if (!useRGBAColour && !useTexture) {
 		
 		ambientLightAmount = 0.005f;

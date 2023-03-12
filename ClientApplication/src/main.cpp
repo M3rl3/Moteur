@@ -256,10 +256,10 @@ void ECSEngine() {
     renderSystem->Load2DTexture(textureID5, "full_low_body__AO.bmp");
 
     unsigned int textureID6 = 0;
-    renderSystem->Load2DTexture(textureID5, "full_low_body__Metallic.bmp");
+    renderSystem->Load2DTexture(textureID6, "full_low_body__Metallic.bmp");
 
     unsigned int textureID7 = 0;
-    renderSystem->Load2DTexture(textureID5, "full_low_body__Normal.bmp");
+    renderSystem->Load2DTexture(textureID7, "full_low_body__Normal.bmp");
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
@@ -300,7 +300,7 @@ void ECSEngine() {
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->textureID[0] = textureID0;
-        textureComponent->textures[0] = "desert";
+        textureComponent->textures[0] = "sunnyday";
     }
 
     {   // Entity "steve"
@@ -328,14 +328,6 @@ void ECSEngine() {
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;
-
-        BoundingBoxComponent* boundingBoxComponent = engine.AddComponent<BoundingBoxComponent>(entityID);
-        boundingBoxComponent->drawBBox = true;
-
-        AnimationComponent* animationComponent = engine.AddComponent<AnimationComponent>(entityID);
-        animationComponent->animation.AnimationType = "TestAnimation";
-        animationComponent->animation.IsPlaying = true;
-        animationComponent->animation.AnimationTime = 0.0f;
 
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
