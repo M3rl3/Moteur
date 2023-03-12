@@ -98,4 +98,5 @@ private:
 	AnimationManager* animationManager;
 
 	float ambientLight;
+
 };

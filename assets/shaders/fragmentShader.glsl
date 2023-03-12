@@ -28,17 +28,20 @@ uniform vec4 eyeLocation;
 
 uniform bool useTexture;
 
-uniform sampler2D texture0;	
-uniform sampler2D texture1;	
-uniform sampler2D texture2;	
-uniform sampler2D texture3;	
-uniform sampler2D texture4;	
-uniform sampler2D texture5;	
-uniform sampler2D texture6;	
-uniform sampler2D texture7;	
+uniform sampler2D textures[8];
 
-uniform vec4 texRatio_0_3;	
-uniform vec4 texRatio_4_7;
+uniform float textureRatios[8];
+
+//uniform sampler2D texture0;	
+//uniform sampler2D texture1;	
+//uniform sampler2D texture2;	
+//uniform sampler2D texture3;	
+//uniform sampler2D texture4;	
+//uniform sampler2D texture5;	
+//uniform sampler2D texture6;	
+//uniform sampler2D texture7;
+//uniform vec4 texRatio_0_3;	
+//uniform vec4 texRatio_4_7;
 
 uniform samplerCube skyboxTexture;
 
@@ -157,15 +160,23 @@ void main()
 	// If a texture is applied
 	if (useTexture)
 	{
-		vec3 textColour0 = texture( texture0, fUV2.st ).rgb;		
-		vec3 textColour1 = texture( texture1, fUV2.st ).rgb;	
-		vec3 textColour2 = texture( texture2, fUV2.st ).rgb;	
-		vec3 textColour3 = texture( texture3, fUV2.st ).rgb;
+		vec3 textColour0 = texture( textures[0], fUV2.st ).rgb;		
+		vec3 textColour1 = texture( textures[1], fUV2.st ).rgb;	
+		vec3 textColour2 = texture( textures[2], fUV2.st ).rgb;	
+		vec3 textColour3 = texture( textures[3], fUV2.st ).rgb;
+		vec3 textColour4 = texture( textures[4], fUV2.st ).rgb;
+		vec3 textColour5 = texture( textures[5], fUV2.st ).rgb;
+		vec3 textColour6 = texture( textures[6], fUV2.st ).rgb;
+		vec3 textColour7 = texture( textures[7], fUV2.st ).rgb;
 		
-		matColour = (textColour0.rgb * texRatio_0_3.x) 
-				  + (textColour1.rgb * texRatio_0_3.y) 
-				  + (textColour2.rgb * texRatio_0_3.z) 
-				  + (textColour3.rgb * texRatio_0_3.w);
+		matColour = (textColour0.rgb * textureRatios[0]) 
+				  + (textColour1.rgb * textureRatios[1]) 
+				  + (textColour2.rgb * textureRatios[2]) 
+				  + (textColour3.rgb * textureRatios[3])
+				  + (textColour4.rgb * textureRatios[4])
+				  + (textColour5.rgb * textureRatios[5])
+				  + (textColour6.rgb * textureRatios[6])
+				  + (textColour7.rgb * textureRatios[7]);
 
 //		outputColor.rgb = matColour.rgb;
 //		outputColor.a = 1.f;

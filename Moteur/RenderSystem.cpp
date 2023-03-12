@@ -488,24 +488,149 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                     glUniform1f(useTextureLocation, (GLfloat)GL_TRUE);
 
-                    // std::string texture = textureComponent->textures[0];
-                    // GLuint textureID = textureManager->getTextureIDFromName(texture);
+                    {   // texture0
 
-                    GLuint textureID = textureComponent->textureID;
-                    GLuint textureUnit = 0;
-                    glActiveTexture(textureUnit + GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, textureID);
+                        // std::string texture = textureComponent->textures[0];
+                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
 
-                    // set uniform locations
-                    GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "texture0");
-                    glUniform1i(textureLocation, textureUnit);
+                        GLuint textureID = textureComponent->textureID[0];
+                        GLuint textureUnit = 0;
+                        glActiveTexture(textureUnit + GL_TEXTURE0);
+                        glBindTexture(GL_TEXTURE_2D, textureID);
+                        
+                        // set uniform locations
+                        GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "textures[0]");
+                        glUniform1i(textureLocation, textureUnit);
+                        
+                        GLint textureRatioUL = glGetUniformLocation(shaderComponent->shaderID, "textureRatios[0]");
+                        glUniform1f(textureRatioUL, textureComponent->textureRatios[0]);
+                    }
+                    
+                    {   // texture1
 
-                    GLint texRatio_0_3 = glGetUniformLocation(shaderComponent->shaderID, "texRatio_0_3");
-                    glUniform4f(texRatio_0_3,
-                        textureComponent->textureRatios[0],
-                        textureComponent->textureRatios[1],
-                        textureComponent->textureRatios[2],
-                        textureComponent->textureRatios[3]);
+                        // std::string texture = textureComponent->textures[1];
+                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+
+                        GLuint textureID = textureComponent->textureID[1];
+                        GLuint textureUnit = 1;
+                        glActiveTexture(textureUnit + GL_TEXTURE1);
+                        glBindTexture(GL_TEXTURE_2D, textureID);
+                        
+                        // set uniform locations
+                        GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "textures[1]");
+                        glUniform1i(textureLocation, textureUnit);
+                        
+                        GLint textureRatioUL = glGetUniformLocation(shaderComponent->shaderID, "textureRatios[1]");
+                        glUniform1f(textureRatioUL, textureComponent->textureRatios[1]);
+                    }
+                    
+                    {   // texture2
+
+                        // std::string texture = textureComponent->textures[2];
+                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+
+                        GLuint textureID = textureComponent->textureID[2];
+                        GLuint textureUnit = 2;
+                        glActiveTexture(textureUnit + GL_TEXTURE2);
+                        glBindTexture(GL_TEXTURE_2D, textureID);
+                        
+                        // set uniform locations
+                        GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "textures[2]");
+                        glUniform1i(textureLocation, textureUnit);
+                        
+                        GLint textureRatioUL = glGetUniformLocation(shaderComponent->shaderID, "textureRatios[2]");
+                        glUniform1f(textureRatioUL, textureComponent->textureRatios[2]);
+                    }
+
+                    {   // texture3
+
+                        // std::string texture = textureComponent->textures[3];
+                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+
+                        GLuint textureID = textureComponent->textureID[3];
+                        GLuint textureUnit = 3;
+                        glActiveTexture(textureUnit + GL_TEXTURE3);
+                        glBindTexture(GL_TEXTURE_2D, textureID);
+                        
+                        // set uniform locations
+                        GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "textures[3]");
+                        glUniform1i(textureLocation, textureUnit);
+                        
+                        GLint textureRatioUL = glGetUniformLocation(shaderComponent->shaderID, "textureRatios[3]");
+                        glUniform1f(textureRatioUL, textureComponent->textureRatios[3]);
+                    }
+                    
+                    {   // texture4
+
+                        // std::string texture = textureComponent->textures[4];
+                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+
+                        GLuint textureID = textureComponent->textureID[4];
+                        GLuint textureUnit = 4;
+                        glActiveTexture(textureUnit + GL_TEXTURE4);
+                        glBindTexture(GL_TEXTURE_2D, textureID);
+                        
+                        // set uniform locations
+                        GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "textures[4]");
+                        glUniform1i(textureLocation, textureUnit);
+                        
+                        GLint textureRatioUL = glGetUniformLocation(shaderComponent->shaderID, "textureRatios[4]");
+                        glUniform1f(textureRatioUL, textureComponent->textureRatios[4]);
+                    }
+
+                    {   // texture5
+
+                        // std::string texture = textureComponent->textures[5];
+                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+
+                        GLuint textureID = textureComponent->textureID[5];
+                        GLuint textureUnit = 5;
+                        glActiveTexture(textureUnit + GL_TEXTURE5);
+                        glBindTexture(GL_TEXTURE_2D, textureID);
+                        
+                        // set uniform locations
+                        GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "textures[5]");
+                        glUniform1i(textureLocation, textureUnit);
+                        
+                        GLint textureRatioUL = glGetUniformLocation(shaderComponent->shaderID, "textureRatios[5]");
+                        glUniform1f(textureRatioUL, textureComponent->textureRatios[5]);
+                    }
+
+                    {   // texture6
+
+                        // std::string texture = textureComponent->textures[6];
+                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+
+                        GLuint textureID = textureComponent->textureID[6];
+                        GLuint textureUnit = 6;
+                        glActiveTexture(textureUnit + GL_TEXTURE6);
+                        glBindTexture(GL_TEXTURE_2D, textureID);
+                        
+                        // set uniform locations
+                        GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "textures[6]");
+                        glUniform1i(textureLocation, textureUnit);
+                        
+                        GLint textureRatioUL = glGetUniformLocation(shaderComponent->shaderID, "textureRatios[6]");
+                        glUniform1f(textureRatioUL, textureComponent->textureRatios[6]);
+                    }
+
+                    {   // texture7
+
+                        // std::string texture = textureComponent->textures[7];
+                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+
+                        GLuint textureID = textureComponent->textureID[7];
+                        GLuint textureUnit = 7;
+                        glActiveTexture(textureUnit + GL_TEXTURE7);
+                        glBindTexture(GL_TEXTURE_2D, textureID);
+                        
+                        // set uniform locations
+                        GLint textureLocation = glGetUniformLocation(shaderComponent->shaderID, "textures[7]");
+                        glUniform1i(textureLocation, textureUnit);
+                        
+                        GLint textureRatioUL = glGetUniformLocation(shaderComponent->shaderID, "textureRatios[7]");
+                        glUniform1f(textureRatioUL, textureComponent->textureRatios[7]);
+                    }   
                 }
                 else {
                     glUniform1f(useTextureLocation, (GLfloat)GL_FALSE);
@@ -525,7 +650,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 // std::string cubeMapTextureName = textureComponent->textures[0];
                 // GLuint cubeMapTextureID = textureManager->getTextureIDFromName(cubeMapTextureName);
 
-                GLuint cubeMapTextureID = textureComponent->textureID;
+                GLuint cubeMapTextureID = textureComponent->textureID[0];
                 GLuint textureUnit = 30;			// Texture unit go from 0 to 79
                 glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
                 glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureID);

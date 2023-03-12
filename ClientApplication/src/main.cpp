@@ -248,6 +248,18 @@ void ECSEngine() {
 
     unsigned int textureID3 = 0;
     renderSystem->Load2DTexture(textureID3, "full_low_body__BaseColor.bmp");
+    
+    unsigned int textureID4 = 0;
+    renderSystem->Load2DTexture(textureID4, "full_low_body__Roughness.bmp");
+
+    unsigned int textureID5 = 0;
+    renderSystem->Load2DTexture(textureID5, "full_low_body__AO.bmp");
+
+    unsigned int textureID6 = 0;
+    renderSystem->Load2DTexture(textureID5, "full_low_body__Metallic.bmp");
+
+    unsigned int textureID7 = 0;
+    renderSystem->Load2DTexture(textureID5, "full_low_body__Normal.bmp");
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
@@ -287,7 +299,7 @@ void ECSEngine() {
         meshComponent->isSkyBox = true;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
-        textureComponent->textureID = textureID0;
+        textureComponent->textureID[0] = textureID0;
         textureComponent->textures[0] = "desert";
     }
 
@@ -308,7 +320,7 @@ void ECSEngine() {
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
-        textureComponent->textureID = textureID1;
+        textureComponent->textureID[0] = textureID1;
         textureComponent->textures[0] = "Archer.bmp";
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
@@ -346,9 +358,16 @@ void ECSEngine() {
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
-        textureComponent->textureID = textureID3;
-        textureComponent->textures[0] = "full_low_body__BaseColor.bmp";
-        textureComponent->textureRatios[0] = 1.f;
+        textureComponent->textureID[0] = textureID3;
+        textureComponent->textureID[1] = textureID4;
+        textureComponent->textureID[2] = textureID5;
+        textureComponent->textureID[3] = textureID6;
+        textureComponent->textureID[4] = textureID7;
+        textureComponent->textureRatios[0] = 0.75f;
+        textureComponent->textureRatios[1] = 0.25f;
+        textureComponent->textureRatios[2] = 0.25f;
+        textureComponent->textureRatios[3] = 0.25f;
+        textureComponent->textureRatios[4] = 0.25f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
@@ -395,7 +414,7 @@ void ECSEngine() {
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1, 1, 1, 1);
         textureComponent->useTexture = false;
-        textureComponent->textureID = textureID2;
+        textureComponent->textureID[0] = textureID2;
         textureComponent->textures[0] = "seamless-green-grass-pattern.bmp";
         textureComponent->textureRatios[0] = 1.f;
 

@@ -11,16 +11,18 @@ public:
 	// Constructor
 	TextureComponent() :
 		componentType("TextureComponent"),
-		textureID(NULL),
 		rgbaColor(glm::vec4(0.f)),
 		useRGBAColor(false),
 		useTexture(false)
 	{
 		// Iterate through all textures and set them to null
-		for (int i = 0; i < 8; i++) {
+		for (unsigned int i = 0; i < 8; i++) {
+			textureID[i] = 0;
+		}
+		for (unsigned int i = 0; i < 8; i++) {
 			textures[i] = "";
 		}
-		for (int i = 0; i < 8; i++) {
+		for (unsigned int i = 0; i < 8; i++) {
 			textureRatios[i] = 0.f;
 		}
 	};
@@ -29,7 +31,7 @@ public:
 	~TextureComponent() {};
 
 	// ID number for the Texture
-	unsigned int textureID;
+	unsigned int textureID[8];
 
 	// The array of all textures related to the current entity
 	std::string textures[8];
