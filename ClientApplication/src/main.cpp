@@ -8,6 +8,8 @@
 
 #include "ECSengine.h"
 
+#include "AIComponent.h"
+#include "AISystem.h"
 #include "RenderSystem.h"
 #include "MeshSystem.h"
 #include "ShaderSystem.h"
@@ -27,10 +29,12 @@ enum GameMode {
 
 GameMode gameMode = CAMERA;
 
+AISystem* aiSystem;
+
 RenderSystem* renderSystem;
 
 // Player's transform and velocity
-TransformComponent* transformComponent;
+TransformComponent* gTransformComponent;
 VelocityCompoent* velocityComponent;
 
 void Update(float dt);
@@ -137,28 +141,28 @@ void ECSKeysCheck() {
 
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
             velocityComponent->velocity.z += MOVE_SPEED;
-            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(0.0f), 0.0f));
+            gTransformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(0.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_W)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_S)) {
             velocityComponent->velocity.z -= MOVE_SPEED;
-            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f), 0.0f));
+            gTransformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_S)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
             velocityComponent->velocity.x -= MOVE_SPEED;
-            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(-90.0f), 0.0f));
+            gTransformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(-90.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_D)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
             velocityComponent->velocity.x += MOVE_SPEED;
-            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
+            gTransformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
         }
         if (renderSystem->IsKeyReleased(GLFW_KEY_A)) {
             velocityComponent->velocity = glm::vec3(0.f);
@@ -173,8 +177,8 @@ void ECSKeysCheck() {
     }
 
     if (gameMode == PLAYER) {
-        renderSystem->GetCamera()->position = transformComponent->position - glm::vec3(0, -3, 10);
-        renderSystem->GetCamera()->target = transformComponent->position;
+        renderSystem->GetCamera()->position = gTransformComponent->position - glm::vec3(0, -3, 10);
+        renderSystem->GetCamera()->target = gTransformComponent->position;
     }
 }
 
@@ -192,6 +196,9 @@ void ECSEngine() {
 
     renderSystem->SetCameraPosition(glm::vec3(-30.f, 5.f, -50.f));
     renderSystem->SetCameraTarget(glm::vec3(1.f));
+
+    // AI System
+    aiSystem = new AISystem();
 
     // Shaders loaded here
     unsigned int shaderID = 0;
@@ -288,10 +295,10 @@ void ECSEngine() {
     
         unsigned int entityID = engine.CreateEntity();
 
-        transformComponent = engine.AddComponent<TransformComponent>(entityID);
-        transformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
-        transformComponent->scale = glm::vec3(1.f);
-        transformComponent->rotation = glm::quat(glm::vec3(0.f));
+        gTransformComponent = engine.AddComponent<TransformComponent>(entityID);
+        gTransformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
+        gTransformComponent->scale = glm::vec3(1.f);
+        gTransformComponent->rotation = glm::quat(glm::vec3(0.f));
 
         ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
@@ -356,6 +363,13 @@ void ECSEngine() {
         animationComponent->animation.IsPlaying = true;
         animationComponent->animation.AnimationTime = 0.0f;
 
+        AIComponent* aiComponent = engine.AddComponent<AIComponent>(entityID);
+        aiComponent->radius = 3.0f;
+        aiComponent->type = BehaviorType::PURSUE;
+        aiComponent->transformComponent = transformComponent;
+        aiComponent->targetPosition = gTransformComponent->position;
+
+
         //VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         //velocityComponent->targeting = false;
         ////velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
@@ -394,6 +408,7 @@ void ECSEngine() {
     engine.AddSystem(lightSystem);
     engine.AddSystem(shaderSystem);    
     engine.AddSystem(motionSystem);
+    engine.AddSystem(aiSystem);
     // engine.AddSystem(meshSystem);
 
     // User defined update method (for user inputs)
