@@ -155,6 +155,7 @@
     <Text Include="sceneDescription.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AISystem.cpp" />
     <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="Callbacks.cpp" />
     <ClCompile Include="cBasicTextureManager\C24BitBMPpixel.cpp" />
@@ -198,6 +199,8 @@
     <ClInclude Include="..\include\ECS\Component.h" />
     <ClInclude Include="..\include\ECS\Entity.h" />
     <ClInclude Include="..\include\ECS\System.h" />
+    <ClInclude Include="AIComponent.h" />
+    <ClInclude Include="AISystem.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AnimationManager.h" />
