@@ -2,6 +2,7 @@
 
 #include <stb_image/stb_image.h>
 
+// Constructor loads the texture and "returns" its ID
 cPNGTexture::cPNGTexture(unsigned int& textID, const std::string& path)
 	: textureID(0), filePath(path), localBuffer(nullptr), width(0), height(0), bpp(0)
 {
@@ -33,6 +34,7 @@ cPNGTexture::cPNGTexture(unsigned int& textID, const std::string& path)
 	textID = textureID;
 }
 
+// Destructor
 cPNGTexture::~cPNGTexture()
 {
 	GLuint deleteTextureList = glGenLists(1);
@@ -43,17 +45,19 @@ cPNGTexture::~cPNGTexture()
 	glCallList(deleteTextureList);
 }
 
-void cPNGTexture::Bind(unsigned int slot) const
+// Bind and set the active texture
+void cPNGTexture::Bind(unsigned int textureUnit) const
 {
 	GLuint bindTextureList = glGenLists(1);
 	glNewList(bindTextureList, GL_COMPILE);
-	glActiveTexture(GL_TEXTURE0 + slot);
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glEndList();
 
 	glCallList(bindTextureList);
 }
 
+// Unbind an already bound texture
 void cPNGTexture::Unbind() const
 {
 	GLuint unbindList = glGenLists(1);
