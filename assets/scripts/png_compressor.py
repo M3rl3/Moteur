@@ -3,9 +3,9 @@ import subprocess
 import sys
 
 num_colors = 100
-path = '../textures/'
-png_files = glob.glob('../textures/*.png')
-pvr_files = glob.glob('../textures/*.pvr')
+path = '../assets/textures/'
+png_files = glob.glob('../assets/textures/*.png')
+pvr_files = glob.glob('../assets/textures/*.pvr')
 
 # Check if files were already processed
 if len(png_files) == len(pvr_files):
