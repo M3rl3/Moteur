@@ -215,7 +215,7 @@ void ECSEngine() {
     renderSystem->LoadMesh("../assets/meshes/skybox_sphere.ply", "skybox", skybox, shaderID);
     
     sModelDrawInfo steve;
-    renderSystem->LoadMesh("../assets/meshes/mc_steve.ply", "steve", steve, shaderID);
+    renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
 
     sModelDrawInfo creepyMonster;
     renderSystem->LoadMesh("../assets/meshes/creepyMonster.ply", "creepyMonster", creepyMonster, shaderID);
@@ -316,7 +316,7 @@ void ECSEngine() {
 
         transformComponent = engine.AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
-        transformComponent->scale = glm::vec3(0.25f);
+        transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
         transformComponent->SetType("Player");
 
