@@ -54,5 +54,4 @@ The git repo for this project is [Moteur](https://github.com/M3rl3/Moteur) and w
 We created two engines and the second was designed using the ECS pattern while the first was not.
 #### Contributors
 1. Rameez Khatri
-2. Jihye Yoon (Left the team)
-3. Ademola Adedeji
+2. Ademola Adedeji
