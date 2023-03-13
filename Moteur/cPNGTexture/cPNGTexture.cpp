@@ -6,6 +6,10 @@
 cPNGTexture::cPNGTexture(unsigned int& textID, const std::string& path)
 	: textureID(0), filePath(path), localBuffer(nullptr), width(0), height(0), bpp(0)
 {
+
+	// flip the texture vertically
+	// since openGL expects the texture pixels to 
+	// start from the bottom left, and not from the top left
 	stbi_set_flip_vertically_on_load(1);
 	
 	// create a display list
