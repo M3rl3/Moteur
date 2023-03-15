@@ -152,9 +152,6 @@ bool cBasicTextureManager::CreateCubeTextureFromBMPFiles(
 		errorString += ("\n" + errorDetails + "\n");
 		return false;
 	}//if ( ! pTempTexture->CreateNewCubeTextureFromBMPFiles()
-
-	// Texture is loaded OK
-	//this->m_nextTextureUnitOffset++;
 	
 	this->m_map_TexNameToTexture[ cubeMapName ] = pTempTexture;
 
@@ -193,9 +190,6 @@ bool cBasicTextureManager::CreateCubeTextureFromPNGFiles(std::string cubeMapName
 		errorString += ("\n" + errorDetails + "\n");
 		return false;
 	}//if ( ! pTempTexture->CreateNewCubeTextureFromBMPFiles())
-
-	// Texture is loaded OK
-	//this->m_nextTextureUnitOffset++;
 
 	this->m_map_PNGTexNameToTexture[cubeMapName] = pTempTexture;
 

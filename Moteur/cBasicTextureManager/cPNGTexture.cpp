@@ -177,7 +177,6 @@ bool cPNGTexture::CreateNewCubeTextureFromPNGFiles(std::string cubeMapName,
 
 	// Assuming all images have the same dimensions
 
-
 	// Positive X image
 	glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X,
 		0, 

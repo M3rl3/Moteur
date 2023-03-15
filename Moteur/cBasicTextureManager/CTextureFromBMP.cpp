@@ -255,7 +255,6 @@ bool CTextureFromBMP::CreateNewCubeTextureFromBMPFiles( std::string cubeMapName,
 	this->ClearBMP();
 	if ( this->bWasThereAnOpenGLError(errorEnum, errorString,  errorDetails) ) { return false; }
 
-
 	// Negative X image...
 	if ( this->LoadBMP2( negX_fileName ) )
 	{
