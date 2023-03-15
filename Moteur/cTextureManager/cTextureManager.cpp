@@ -1,14 +1,14 @@
-#include "cBasicTextureManager.h"
+#include "cTextureManager.h"
 
 #include <sstream>
 
-void cBasicTextureManager::SetBasePath(std::string basepath)
+void cTextureManager::SetBasePath(std::string basepath)
 {
 	this->m_basePath = basepath;
 	return;
 }
 
-bool cBasicTextureManager::Create2DTextureFromPNGFile(std::string textureFileName, bool bGenerateMIPMap) 
+bool cTextureManager::Create2DTextureFromPNGFile(std::string textureFileName, bool bGenerateMIPMap) 
 {
 	std::string fileToLoadFullPath = this->m_basePath + "/" + textureFileName;
 
@@ -27,7 +27,7 @@ bool cBasicTextureManager::Create2DTextureFromPNGFile(std::string textureFileNam
 }
 
 
-bool cBasicTextureManager::Create2DTextureFromBMPFile( std::string textureFileName, bool bGenerateMIPMap )
+bool cTextureManager::Create2DTextureFromBMPFile( std::string textureFileName, bool bGenerateMIPMap )
 {
 	std::string fileToLoadFullPath = this->m_basePath + "/" + textureFileName;
 
@@ -50,7 +50,7 @@ bool cBasicTextureManager::Create2DTextureFromBMPFile( std::string textureFileNa
 }
 
 
-void cBasicTextureManager::m_appendErrorString( std::string nextErrorText )
+void cTextureManager::m_appendErrorString( std::string nextErrorText )
 {
 	std::stringstream ss;
 	ss << this->m_lastError << nextErrorText;
@@ -58,7 +58,7 @@ void cBasicTextureManager::m_appendErrorString( std::string nextErrorText )
 	return;
 }
 
-GLuint cBasicTextureManager::getTextureIDFromName( std::string textureFileName )
+GLuint cTextureManager::getTextureIDFromName( std::string textureFileName )
 {
 	std::map< std::string, CTextureFromBMP* >::iterator itTexture
 		= this->m_map_TexNameToTexture.find( textureFileName );
@@ -71,7 +71,7 @@ GLuint cBasicTextureManager::getTextureIDFromName( std::string textureFileName )
 	return itTexture->second->getTextureNumber();
 }
 
-GLuint cBasicTextureManager::getPNGTextureIDFromName(std::string textureFileName)
+GLuint cTextureManager::getPNGTextureIDFromName(std::string textureFileName)
 {
 	std::map< std::string, cPNGTexture* >::iterator itTexture
 		= this->m_map_PNGTexNameToTexture.find(textureFileName);
@@ -86,7 +86,7 @@ GLuint cBasicTextureManager::getPNGTextureIDFromName(std::string textureFileName
 }
 
 
-void cBasicTextureManager::m_appendErrorStringLine( std::string nextErrorTextLine )
+void cTextureManager::m_appendErrorStringLine( std::string nextErrorTextLine )
 {
 	std::stringstream ss;
 	ss << this->m_lastError << std::endl;
@@ -97,7 +97,7 @@ void cBasicTextureManager::m_appendErrorStringLine( std::string nextErrorTextLin
 
 
 // Picks a random texture from the textures loaded
-std::string cBasicTextureManager::PickRandomTexture(void)
+std::string cTextureManager::PickRandomTexture(void)
 {
 	if ( this->m_map_TexNameToTexture.empty() )
 	{
@@ -119,7 +119,7 @@ std::string cBasicTextureManager::PickRandomTexture(void)
 }
 
 
-bool cBasicTextureManager::CreateCubeTextureFromBMPFiles( 
+bool cTextureManager::CreateCubeTextureFromBMPFiles( 
                                     std::string cubeMapName, 
 		                            std::string posX_fileName, std::string negX_fileName, 
 		                            std::string posY_fileName, std::string negY_fileName, 
@@ -158,7 +158,7 @@ bool cBasicTextureManager::CreateCubeTextureFromBMPFiles(
 	return true;
 }
 
-bool cBasicTextureManager::CreateCubeTextureFromPNGFiles(std::string cubeMapName,
+bool cTextureManager::CreateCubeTextureFromPNGFiles(std::string cubeMapName,
 	std::string posX_fileName, std::string negX_fileName,
 	std::string posY_fileName, std::string negY_fileName,
 	std::string posZ_fileName, std::string negZ_fileName,

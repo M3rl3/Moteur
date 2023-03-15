@@ -11,7 +11,7 @@ MeshSystem::MeshSystem()
 {
 	systemName = "MeshSystem";
 	vaoManager = new cVAOManager();
-	textureManager = new cBasicTextureManager();
+	textureManager = new cTextureManager();
 }
 
 // Destructor

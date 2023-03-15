@@ -21,8 +21,6 @@
 
 #include <sstream>
 
-#include "../Moteur/cBasicTextureManager/cPNGTexture.h"
-
 enum GameMode {
     CAMERA,
     PLAYER,

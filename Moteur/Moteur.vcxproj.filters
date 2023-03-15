@@ -116,12 +116,6 @@
     <ClCompile Include="LoadModel.cpp">
       <Filter>Model Loader</Filter>
     </ClCompile>
-    <ClCompile Include="cBasicTextureManager\C24BitBMPpixel.cpp">
-      <Filter>Texture Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="cBasicTextureManager\CTextureFromBMP.cpp">
-      <Filter>Texture Manager</Filter>
-    </ClCompile>
     <ClCompile Include="cShaderManager\cShaderManager.cpp">
       <Filter>Shader Manager</Filter>
     </ClCompile>
@@ -215,10 +209,16 @@
     <ClCompile Include="stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cBasicTextureManager\cPNGTexture.cpp">
+    <ClCompile Include="cTextureManager\C24BitBMPpixel.cpp">
       <Filter>Texture Manager</Filter>
     </ClCompile>
-    <ClCompile Include="cBasicTextureManager\cBasicTextureManager.cpp">
+    <ClCompile Include="cTextureManager\cPNGTexture.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cTextureManager\CTextureFromBMP.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cTextureManager\cTextureManager.cpp">
       <Filter>Texture Manager</Filter>
     </ClCompile>
   </ItemGroup>
@@ -240,15 +240,6 @@
     </ClInclude>
     <ClInclude Include="OpenGL.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cBasicTextureManager\C24BitBMPpixel.h">
-      <Filter>Texture Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="cBasicTextureManager\cBasicTextureManager.h">
-      <Filter>Texture Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="cBasicTextureManager\CTextureFromBMP.h">
-      <Filter>Texture Manager</Filter>
     </ClInclude>
     <ClInclude Include="cShaderManager\cShaderManager.h">
       <Filter>Shader Manager</Filter>
@@ -388,7 +379,16 @@
     <ClInclude Include="AIComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="cBasicTextureManager\cPNGTexture.h">
+    <ClInclude Include="cTextureManager\C24BitBMPpixel.h">
+      <Filter>Texture Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cTextureManager\cPNGTexture.h">
+      <Filter>Texture Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cTextureManager\CTextureFromBMP.h">
+      <Filter>Texture Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cTextureManager\cTextureManager.h">
       <Filter>Texture Manager</Filter>
     </ClInclude>
   </ItemGroup>

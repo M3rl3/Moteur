@@ -158,10 +158,6 @@
     <ClCompile Include="AISystem.cpp" />
     <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="Callbacks.cpp" />
-    <ClCompile Include="cBasicTextureManager\C24BitBMPpixel.cpp" />
-    <ClCompile Include="cBasicTextureManager\cBasicTextureManager.cpp" />
-    <ClCompile Include="cBasicTextureManager\cPNGTexture.cpp" />
-    <ClCompile Include="cBasicTextureManager\CTextureFromBMP.cpp" />
     <ClCompile Include="cLightManager\cLight.cpp" />
     <ClCompile Include="cLightManager\cLightHelper.cpp" />
     <ClCompile Include="cLightManager\cLightManager.cpp" />
@@ -171,6 +167,10 @@
     <ClCompile Include="cShaderManager\cShader.cpp" />
     <ClCompile Include="cShaderManager\cShaderManager.cpp" />
     <ClCompile Include="cShaderManager\cShaderProgram.cpp" />
+    <ClCompile Include="cTextureManager\C24BitBMPpixel.cpp" />
+    <ClCompile Include="cTextureManager\cPNGTexture.cpp" />
+    <ClCompile Include="cTextureManager\CTextureFromBMP.cpp" />
+    <ClCompile Include="cTextureManager\cTextureManager.cpp" />
     <ClCompile Include="cVAOManager\cVAOManager.cpp" />
     <ClCompile Include="DrawBoundingBox.cpp" />
     <ClCompile Include="ECSengine.cpp" />
@@ -209,10 +209,6 @@
     <ClInclude Include="BoundingBoxComponent.h" />
     <ClInclude Include="Callbacks.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="cBasicTextureManager\C24BitBMPpixel.h" />
-    <ClInclude Include="cBasicTextureManager\cBasicTextureManager.h" />
-    <ClInclude Include="cBasicTextureManager\cPNGTexture.h" />
-    <ClInclude Include="cBasicTextureManager\CTextureFromBMP.h" />
     <ClInclude Include="cLightManager\cLight.h" />
     <ClInclude Include="cLightManager\cLightHelper.h" />
     <ClInclude Include="cLightManager\cLightManager.h" />
@@ -222,6 +218,10 @@
     <ClInclude Include="cShaderManager\cShader.h" />
     <ClInclude Include="cShaderManager\cShaderManager.h" />
     <ClInclude Include="cShaderManager\cShaderProgram.h" />
+    <ClInclude Include="cTextureManager\C24BitBMPpixel.h" />
+    <ClInclude Include="cTextureManager\cPNGTexture.h" />
+    <ClInclude Include="cTextureManager\CTextureFromBMP.h" />
+    <ClInclude Include="cTextureManager\cTextureManager.h" />
     <ClInclude Include="cVAOManager\cVAOManager.h" />
     <ClInclude Include="DrawBoundingBox.h" />
     <ClInclude Include="ECSengine.h" />

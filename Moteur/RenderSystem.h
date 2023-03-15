@@ -8,7 +8,7 @@
 #include "cPlyFileLoader.h"
 
 #include "cVAOManager/cVAOManager.h"
-#include "cBasicTextureManager/cBasicTextureManager.h"
+#include "cTextureManager/cTextureManager.h"
 
 #include "Window.h"
 #include "Camera.h"
@@ -108,7 +108,7 @@ private:
 	cVAOManager* vaoManager;
 
 	// Handler for all Texture related stuff
-	cBasicTextureManager* textureManager;
+	cTextureManager* textureManager;
 
 	// Handler for all stuff animation related
 	AnimationManager* animationManager;

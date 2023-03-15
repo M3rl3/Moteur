@@ -8,7 +8,7 @@
 #include "cPNGTexture.h"
 #include "../OpenGL.h"
 
-class cBasicTextureManager
+class cTextureManager
 {
 public:
 

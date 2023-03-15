@@ -13,7 +13,7 @@
 
 #include "cShaderManager/cShaderManager.h"
 #include "cVAOManager/cVAOManager.h"
-#include "cBasicTextureManager/cBasicTextureManager.h"
+#include "cTextureManager/cTextureManager.h"
 #include "cRenderReticle.h"
 
 #include "ParticleAccelerator.h"
@@ -44,7 +44,7 @@ namespace Moteur {
     cVAOManager* VAOMan;
 
     // Manager for all things texture related
-    cBasicTextureManager* TextureMan;
+    cTextureManager* TextureMan;
 
     // Physics particle
     ParticleAccelerator partAcc;
@@ -633,7 +633,7 @@ namespace Moteur {
         std::cout << "\nLoading Textures";
 
         std::string errorString = "";
-        TextureMan = new cBasicTextureManager();
+        TextureMan = new cTextureManager();
 
         TextureMan->SetBasePath(filePath);
     }

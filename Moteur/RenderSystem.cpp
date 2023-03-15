@@ -50,7 +50,7 @@ RenderSystem::RenderSystem()
 
     // Initialize all the managers
     vaoManager = new cVAOManager();
-    textureManager = new cBasicTextureManager();
+    textureManager = new cTextureManager();
     plyFileLoader = new cPlyFileLoader();
     animationManager = new AnimationManager();
 

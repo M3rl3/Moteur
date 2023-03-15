@@ -3,7 +3,7 @@
 #include <ECS/System.h>
 
 #include "cVAOManager/cVAOManager.h"
-#include "cBasicTextureManager/cBasicTextureManager.h"
+#include "cTextureManager/cTextureManager.h"
 
 #include "LoadModel.h"
 
@@ -53,5 +53,5 @@ private:
 	cVAOManager* vaoManager;
 
 	// pointer to the texture manager object
-	cBasicTextureManager* textureManager;
+	cTextureManager* textureManager;
 };
