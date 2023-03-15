@@ -10,6 +10,7 @@ public:
 	// Constructor
 	MeshComponent() : 
 		componentType("MeshComponent"),
+		isWireframe(false),
 		isSkyBox(false),
 		isTerrain(false)
 	{};
@@ -19,6 +20,9 @@ public:
 
 	// The mesh object containing vertices and indices
 	sModelDrawInfo plyModel;
+
+	// Mesh is to be drawn in wireframe mode
+	bool isWireframe;
 
 	// Mesh is a skybox sphere
 	bool isSkyBox;

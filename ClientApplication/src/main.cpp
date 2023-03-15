@@ -101,8 +101,6 @@ void MoteurKeysCheck(bool* keys) {
     {
         Moteur::Engine_GetCameraObject()->position.y += CAMERA_MOVE_SPEED;
     }
-
-
 }
 
 void ECSKeysCheck() {
@@ -126,10 +124,10 @@ void ECSKeysCheck() {
             renderSystem->GetCamera()->position.z -= MOVE_SPEED;
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
-            renderSystem->GetCamera()->position.x += MOVE_SPEED;
+            renderSystem->GetCamera()->position.x -= MOVE_SPEED;
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
-            renderSystem->GetCamera()->position.x -= MOVE_SPEED;
+            renderSystem->GetCamera()->position.x += MOVE_SPEED;
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_Q)) {
             renderSystem->GetCamera()->position.y += MOVE_SPEED;
@@ -185,7 +183,7 @@ void ECSKeysCheck() {
 }
 
 /// <summary>
-/// The new engine initialization. Still WIP
+/// The new engine initialization.
 /// </summary>
 void ECSEngine() {
 
@@ -309,6 +307,7 @@ void ECSEngine() {
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
         meshComponent->plyModel = skybox;
+        meshComponent->isWireframe = false;
         meshComponent->isSkyBox = true;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
@@ -331,6 +330,7 @@ void ECSEngine() {
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
         meshComponent->plyModel = steve;
+        meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
@@ -363,6 +363,7 @@ void ECSEngine() {
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
         meshComponent->plyModel = creepyMonster;
+        meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
@@ -379,7 +380,6 @@ void ECSEngine() {
         aiComponent->type = BehaviorType::PURSUE;
         aiComponent->transformComponent = transformComponent;
         aiComponent->speed = 1.0f;
-        //aiComponent->targetPosition = transformComponent->position;
     }
 
     {   // Entity "plain"
@@ -396,6 +396,7 @@ void ECSEngine() {
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
         meshComponent->plyModel = plain;
+        meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = false;
@@ -414,7 +415,6 @@ void ECSEngine() {
     engine.AddSystem(shaderSystem);    
     engine.AddSystem(motionSystem);
     engine.AddSystem(aiSystem);
-    // engine.AddSystem(meshSystem);
 
     // User defined update method (for user inputs)
     engine.UpdateCallback(&Update);

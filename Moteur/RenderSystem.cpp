@@ -118,6 +118,15 @@ void RenderSystem::ProcessInput(GLFWwindow* window, int key, int scancode, int a
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
+    if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
+        enableMouse = !enableMouse;
+    }
+    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
 
     if (key > 0 && key < 255) {
         if (action == GLFW_PRESS) {
@@ -162,6 +171,7 @@ void MouseCallBack(GLFWwindow* window, double xposition, double yposition) {
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
     if (enableMouse) {
         cam->target = glm::normalize(front);
     }
@@ -343,10 +353,11 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     // mouse, mouse button and, scroll callback
     glfwSetCursorPosCallback(window->theWindow, MouseCallBack);
     glfwSetScrollCallback(window->theWindow, ScrollCallBack);
-    glfwSetMouseButtonCallback(window->theWindow, MouseButtonCallback);
+    // glfwSetMouseButtonCallback(window->theWindow, MouseButtonCallback);
 
     // capture mouse input
-    glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    //glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Error callback
     glfwSetErrorCallback(ErrorCallback);
@@ -680,8 +691,15 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 }                
             }
 
-            // Polygon mode
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            // Check if model is to be drawn in wireframe mode
+            if (meshComponent->isWireframe)
+            {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
+            else
+            {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
 
             // Find the models vertices and indices
             sModelDrawInfo modelInfo;
