@@ -82,9 +82,6 @@
     <Filter Include="Light Manager">
       <UniqueIdentifier>{7196efec-5962-4706-84ee-ab2dd9092fd6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PNG Texture">
-      <UniqueIdentifier>{ebfbcaa1-3414-4888-ba0b-6a52885c1587}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cameraEye.txt">
@@ -120,9 +117,6 @@
       <Filter>Model Loader</Filter>
     </ClCompile>
     <ClCompile Include="cBasicTextureManager\C24BitBMPpixel.cpp">
-      <Filter>Texture Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="cBasicTextureManager\cBasicTextureManager.cpp">
       <Filter>Texture Manager</Filter>
     </ClCompile>
     <ClCompile Include="cBasicTextureManager\CTextureFromBMP.cpp">
@@ -221,8 +215,11 @@
     <ClCompile Include="stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cPNGTexture\cPNGTexture.cpp">
-      <Filter>PNG Texture</Filter>
+    <ClCompile Include="cBasicTextureManager\cPNGTexture.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cBasicTextureManager\cBasicTextureManager.cpp">
+      <Filter>Texture Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,8 +388,8 @@
     <ClInclude Include="AIComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="cPNGTexture\cPNGTexture.h">
-      <Filter>PNG Texture</Filter>
+    <ClInclude Include="cBasicTextureManager\cPNGTexture.h">
+      <Filter>Texture Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

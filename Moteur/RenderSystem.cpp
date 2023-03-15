@@ -334,8 +334,8 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
 
     // GLFW and glsl upper and lower version
     const char* glsl_version = "#version 420";
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 
     // keyboard callback
     glfwSetKeyCallback(window->theWindow, ProcessInput);
@@ -765,8 +765,8 @@ void RenderSystem::SetTexturePath(const char* filePath)
     textureManager->SetBasePath(filePath);
 }
 
-// Load a 2D texture
-bool RenderSystem::Load2DTexture(unsigned int& textureID, const char* filePath)
+// Load a BMP 2D texture
+bool RenderSystem::Load2DTextureBMP(unsigned int& textureID, const char* filePath)
 {
     // Check if the texture loaded
     if (textureManager->Create2DTextureFromBMPFile(filePath))
@@ -783,8 +783,26 @@ bool RenderSystem::Load2DTexture(unsigned int& textureID, const char* filePath)
     }
 }
 
-// Load a skybox texture
-bool RenderSystem::LoadCubeMapTexture(
+// Load a PNG 2D texture
+bool RenderSystem::Load2DTexturePNG(unsigned int& textureID, const char* filePath)
+{
+    // Check if the texture loaded
+    if (textureManager->Create2DTextureFromPNGFile(filePath))
+    {
+        textureID = textureManager->getPNGTextureIDFromName(filePath);
+
+        std::cout << "Loaded " << filePath << " texture." << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "Error: failed to load " << filePath << " texture." << std::endl;
+        return false;
+    }
+}
+
+// Load a BMP skybox texture
+bool RenderSystem::LoadCubeMapTextureBMP(
     unsigned int& textureID,
     std::string cubeMapName,
     std::string posX_fileName, std::string negX_fileName,
@@ -800,6 +818,33 @@ bool RenderSystem::LoadCubeMapTexture(
         bIsSeamless, errorString))
     {
         textureID = textureManager->getTextureIDFromName(cubeMapName);
+        std::cout << "Loaded skybox textures: " << cubeMapName << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "\nError: failed to load skybox because " << errorString;
+        return false;
+    }
+}
+
+// Load a PNG skybox texture
+bool RenderSystem::LoadCubeMapTexturePNG(
+    unsigned int& textureID,
+    std::string cubeMapName,
+    std::string posX_fileName, std::string negX_fileName,
+    std::string posY_fileName, std::string negY_fileName,
+    std::string posZ_fileName, std::string negZ_fileName,
+    bool bIsSeamless, std::string& errorString)
+{
+    // Check if the skybox loaded
+    if (textureManager->CreateCubeTextureFromPNGFiles(cubeMapName,
+        posX_fileName, negX_fileName,
+        posY_fileName, negY_fileName,
+        posZ_fileName, negZ_fileName,
+        bIsSeamless, errorString))
+    {
+        textureID = textureManager->getPNGTextureIDFromName(cubeMapName);
         std::cout << "Loaded skybox textures: " << cubeMapName << std::endl;
         return true;
     }

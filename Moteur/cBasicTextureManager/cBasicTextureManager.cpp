@@ -8,6 +8,24 @@ void cBasicTextureManager::SetBasePath(std::string basepath)
 	return;
 }
 
+bool cBasicTextureManager::Create2DTextureFromPNGFile(std::string textureFileName, bool bGenerateMIPMap) 
+{
+	std::string fileToLoadFullPath = this->m_basePath + "/" + textureFileName;
+
+	cPNGTexture* pTempTexture = new cPNGTexture();
+	if (!pTempTexture->Create2DTextureFromPNGFile(textureFileName, fileToLoadFullPath, /*textureUnit,*/ bGenerateMIPMap))
+	{
+		this->m_appendErrorString("Can't load ");
+		this->m_appendErrorString(fileToLoadFullPath);
+		this->m_appendErrorString("\n");
+		return false;
+	}
+
+	this->m_map_PNGTexNameToTexture[textureFileName] = pTempTexture;
+
+	return true;
+}
+
 
 bool cBasicTextureManager::Create2DTextureFromBMPFile( std::string textureFileName, bool bGenerateMIPMap )
 {
@@ -51,6 +69,20 @@ GLuint cBasicTextureManager::getTextureIDFromName( std::string textureFileName )
 	}
 	// Reutrn texture number (from OpenGL genTexture)
 	return itTexture->second->getTextureNumber();
+}
+
+GLuint cBasicTextureManager::getPNGTextureIDFromName(std::string textureFileName)
+{
+	std::map< std::string, cPNGTexture* >::iterator itTexture
+		= this->m_map_PNGTexNameToTexture.find(textureFileName);
+	// Found it?
+	if (itTexture == this->m_map_PNGTexNameToTexture.end())
+	{
+		return 0;
+	}
+
+	// Reutrn texture number (from OpenGL genTexture)
+	return itTexture->second->GetTextureID();
 }
 
 
@@ -117,7 +149,7 @@ bool cBasicTextureManager::CreateCubeTextureFromBMPFiles(
 		this->m_appendErrorString( errorString );
 		this->m_appendErrorString( "\n" );
 		this->m_appendErrorString( errorDetails );
-		errorString += ("\n" + errorDetails);
+		errorString += ("\n" + errorDetails + "\n");
 		return false;
 	}//if ( ! pTempTexture->CreateNewCubeTextureFromBMPFiles()
 
@@ -129,3 +161,43 @@ bool cBasicTextureManager::CreateCubeTextureFromBMPFiles(
 	return true;
 }
 
+bool cBasicTextureManager::CreateCubeTextureFromPNGFiles(std::string cubeMapName,
+	std::string posX_fileName, std::string negX_fileName,
+	std::string posY_fileName, std::string negY_fileName,
+	std::string posZ_fileName, std::string negZ_fileName,
+	bool bIsSeamless, std::string& errorString)
+{
+	std::string posX_fileName_FullPath = this->m_basePath + "/" + posX_fileName;
+	std::string negX_fileName_FullPath = this->m_basePath + "/" + negX_fileName;
+	std::string posY_fileName_FullPath = this->m_basePath + "/" + posY_fileName;
+	std::string negY_fileName_FullPath = this->m_basePath + "/" + negY_fileName;
+	std::string posZ_fileName_FullPath = this->m_basePath + "/" + posZ_fileName;
+	std::string negZ_fileName_FullPath = this->m_basePath + "/" + negZ_fileName;
+
+	GLenum errorEnum;
+	std::string errorDetails;
+	cPNGTexture* pTempTexture = new cPNGTexture();
+	if (!pTempTexture->CreateNewCubeTextureFromPNGFiles(
+		cubeMapName,
+		posX_fileName_FullPath, negX_fileName_FullPath,
+		posY_fileName_FullPath, negY_fileName_FullPath,
+		posZ_fileName_FullPath, negZ_fileName_FullPath,
+		bIsSeamless, errorEnum, errorString, errorDetails))
+	{
+		this->m_appendErrorString("Can't load ");
+		this->m_appendErrorString(cubeMapName);
+		this->m_appendErrorString(" because:\n");
+		this->m_appendErrorString(errorString);
+		this->m_appendErrorString("\n");
+		this->m_appendErrorString(errorDetails);
+		errorString += ("\n" + errorDetails + "\n");
+		return false;
+	}//if ( ! pTempTexture->CreateNewCubeTextureFromBMPFiles())
+
+	// Texture is loaded OK
+	//this->m_nextTextureUnitOffset++;
+
+	this->m_map_PNGTexNameToTexture[cubeMapName] = pTempTexture;
+
+	return true;
+}

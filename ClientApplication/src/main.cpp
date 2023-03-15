@@ -15,12 +15,13 @@
 #include "ShaderSystem.h"
 
 #include "Moteur.h"
-#include "../Moteur/cPNGTexture/cPNGTexture.h"
 
 #include "Scene.h"
 #include "Timer.h"
 
 #include <sstream>
+
+#include "../Moteur/cBasicTextureManager/cPNGTexture.h"
 
 enum GameMode {
     CAMERA,
@@ -227,46 +228,63 @@ void ECSEngine() {
     renderSystem->SetTexturePath("../assets/textures");
 
     // Skybox textures
-    unsigned int textureID0 = 0;
-    std::string errorString = "";
 
-    std::string skyboxName = "sunnyday";
-    renderSystem->LoadCubeMapTexture(textureID0, skyboxName,
+    // BMP
+    unsigned int skyboxTextureID0 = 0;
+    std::string errorString0 = "";
+
+    std::string skyboxNameBMP = "sunnyday";
+    renderSystem->LoadCubeMapTextureBMP(skyboxTextureID0, skyboxNameBMP,
         "TropicalSunnyDayLeft2048.bmp",
         "TropicalSunnyDayRight2048.bmp",
         "TropicalSunnyDayDown2048.bmp",
         "TropicalSunnyDayUp2048.bmp",
         "TropicalSunnyDayFront2048.bmp",
         "TropicalSunnyDayBack2048.bmp",
-        true, errorString);
+        true, errorString0);
+
+
+    // PNG
+    unsigned int skyboxTextureID1 = 0;
+    std::string errorString1 = "";
+
+    std::string skyboxNamePNG = "desert";
+    renderSystem->LoadCubeMapTexturePNG(skyboxTextureID1, skyboxNamePNG,
+        "desertlf.png",
+        "desertrt.png",
+        "desertdn.png",
+        "desertup.png",
+        "desertft.png",
+        "desertbk.png",
+        true, errorString1);
 
     // 2D textures
 
     // PNG Textures
     unsigned int textureID = 0;
-    cPNGTexture texture0(textureID, "../assets/textures/man.png");
+    renderSystem->Load2DTexturePNG(textureID, "man.png");
 
     // BMP Textures
     unsigned int textureID1 = 0;
-    renderSystem->Load2DTexture(textureID1, "Archer.bmp");
+    renderSystem->Load2DTextureBMP(textureID1, "Archer.bmp");
     
     unsigned int textureID2 = 0;
-    renderSystem->Load2DTexture(textureID2, "seamless-green-grass-pattern.bmp");
+    renderSystem->Load2DTextureBMP(textureID2, "seamless-green-grass-pattern.bmp");
 
     unsigned int textureID3 = 0;
-    renderSystem->Load2DTexture(textureID3, "full_low_body__BaseColor.bmp");
+    renderSystem->Load2DTextureBMP(textureID3, "full_low_body__BaseColor.bmp");
     
     unsigned int textureID4 = 0;
-    renderSystem->Load2DTexture(textureID4, "full_low_body__Roughness.bmp");
+    renderSystem->Load2DTextureBMP(textureID4, "full_low_body__Roughness.bmp");
 
     unsigned int textureID5 = 0;
-    renderSystem->Load2DTexture(textureID5, "full_low_body__AO.bmp");
+    renderSystem->Load2DTextureBMP(textureID5, "full_low_body__AO.bmp");
 
     unsigned int textureID6 = 0;
-    renderSystem->Load2DTexture(textureID6, "full_low_body__Metallic.bmp");
+    renderSystem->Load2DTextureBMP(textureID6, "full_low_body__Metallic.bmp");
 
     unsigned int textureID7 = 0;
-    renderSystem->Load2DTexture(textureID7, "full_low_body__Normal.bmp");
+    renderSystem->Load2DTextureBMP(textureID7, "full_low_body__Normal.bmp");
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
@@ -306,8 +324,8 @@ void ECSEngine() {
         meshComponent->isSkyBox = true;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
-        textureComponent->textureID[0] = textureID0;
-        textureComponent->textures[0] = "sunnyday";
+        textureComponent->textureID[0] = skyboxTextureID1;
+        textureComponent->textures[0] = skyboxNamePNG;
     }
 
     {   // Entity "steve"
@@ -332,6 +350,9 @@ void ECSEngine() {
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
+
+        BoundingBoxComponent* boundingBoxComponent = engine.AddComponent<BoundingBoxComponent>(entityID);
+        boundingBoxComponent->drawBBox = true;
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;
@@ -372,9 +393,6 @@ void ECSEngine() {
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;
-
-        BoundingBoxComponent* boundingBoxComponent = engine.AddComponent<BoundingBoxComponent>(entityID);
-        boundingBoxComponent->drawBBox = true;
 
         AnimationComponent* animationComponent = engine.AddComponent<AnimationComponent>(entityID);
         animationComponent->animation.AnimationType = "TestAnimation";

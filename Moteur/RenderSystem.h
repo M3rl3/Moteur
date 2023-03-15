@@ -34,11 +34,23 @@ public:
 	// Set the path where the textures are located
 	void SetTexturePath(const char* filePath);
 
-	// Load a 2D texture
-	bool Load2DTexture(unsigned int& textureID, const char* filePath);
+	// Load a BMP 2D texture
+	bool Load2DTextureBMP(unsigned int& textureID, const char* filePath);
 
-	// Load a skybox texture
-	bool LoadCubeMapTexture(
+	// Load a PNG 2D texture
+	bool Load2DTexturePNG(unsigned int& textureID, const char* filePath);
+
+	// Load a BMP skybox texture
+	bool LoadCubeMapTextureBMP(
+		unsigned int& textureID,
+		std::string cubeMapName,
+		std::string posX_fileName, std::string negX_fileName,
+		std::string posY_fileName, std::string negY_fileName,
+		std::string posZ_fileName, std::string negZ_fileName,
+		bool bIsSeamless, std::string& errorString);
+	
+	// Load a PNG skybox texture
+	bool LoadCubeMapTexturePNG(
 		unsigned int& textureID,
 		std::string cubeMapName,
 		std::string posX_fileName, std::string negX_fileName,
