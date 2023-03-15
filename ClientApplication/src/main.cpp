@@ -394,23 +394,12 @@ void ECSEngine() {
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->doNotLight = false;
 
-        AnimationComponent* animationComponent = engine.AddComponent<AnimationComponent>(entityID);
-        animationComponent->animation.AnimationType = "TestAnimation";
-        animationComponent->animation.IsPlaying = true;
-        animationComponent->animation.AnimationTime = 0.0f;
-
         AIComponent* aiComponent = engine.AddComponent<AIComponent>(entityID);
         aiComponent->radius = 3.0f;
         aiComponent->type = BehaviorType::PURSUE;
         aiComponent->transformComponent = transformComponent;
         aiComponent->speed = 1.0f;
         //aiComponent->targetPosition = transformComponent->position;
-
-
-        //VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
-        //velocityComponent->targeting = false;
-        ////velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
-        //velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
     }
 
     {   // Entity "plain"
