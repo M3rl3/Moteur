@@ -178,7 +178,10 @@ void ECSKeysCheck() {
 
     if (gameMode == PLAYER) {
         renderSystem->GetCamera()->position = transformComponent->position - glm::vec3(0, -3, 10);
-        renderSystem->GetCamera()->target = transformComponent->position;
+
+        if (!renderSystem->GetMouseStatus()) {
+            renderSystem->GetCamera()->target = transformComponent->position;
+        }
     }
 }
 

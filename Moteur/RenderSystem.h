@@ -85,7 +85,11 @@ public:
 
 	// Keyboard Callback
 	static void ProcessInput(GLFWwindow* window, int key, int scancode, int action, int mods);
-	
+	static void ProcessMouseMovement(GLFWwindow* window, double xposition, double yposition);
+
+	// Get mouse enbled status
+	bool GetMouseStatus();
+
 private:
 
 	// name of the system
@@ -109,6 +113,6 @@ private:
 	// Handler for all stuff animation related
 	AnimationManager* animationManager;
 
+	// Amount of ambient light
 	float ambientLight;
-
 };

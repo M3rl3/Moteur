@@ -30,6 +30,7 @@ bool firstMouse = true;
 float lastX = 800.f / 2.f;
 float lastY = 600.f / 2.f;
 
+// If mouse is enabled
 bool enableMouse = false;
 bool mouseClick = false;
 
@@ -60,6 +61,7 @@ RenderSystem::RenderSystem()
     animeMan = animationManager;
 
     ambientLight = 1.f;
+    enableMouse = false;
 }
 
 // Destructor
@@ -139,7 +141,7 @@ void RenderSystem::ProcessInput(GLFWwindow* window, int key, int scancode, int a
 }
 
 // Callback for panning camera with the mouse
-void MouseCallBack(GLFWwindow* window, double xposition, double yposition) {
+void RenderSystem::ProcessMouseMovement(GLFWwindow* window, double xposition, double yposition) {
 
     if (firstMouse) {
         lastX = xposition;
@@ -351,7 +353,7 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     glfwSetKeyCallback(window->theWindow, ProcessInput);
 
     // mouse, mouse button and, scroll callback
-    glfwSetCursorPosCallback(window->theWindow, MouseCallBack);
+    glfwSetCursorPosCallback(window->theWindow, ProcessMouseMovement);
     glfwSetScrollCallback(window->theWindow, ScrollCallBack);
     // glfwSetMouseButtonCallback(window->theWindow, MouseButtonCallback);
 
@@ -758,6 +760,10 @@ void RenderSystem::Shutdown()
     delete textureManager;
 
     exit(EXIT_SUCCESS);
+}
+
+bool RenderSystem::GetMouseStatus() {
+    return enableMouse;
 }
 
 // Loads model from ply file and gets it into the VAO
