@@ -31,7 +31,6 @@ bool cTextureManager::Create2DTextureFromBMPFile( std::string textureFileName, b
 {
 	std::string fileToLoadFullPath = this->m_basePath + "/" + textureFileName;
 
-
 	CTextureFromBMP* pTempTexture = new CTextureFromBMP();
 	if ( ! pTempTexture->CreateNewTextureFromBMPFile2( textureFileName, fileToLoadFullPath, /*textureUnit,*/ bGenerateMIPMap ) )
 	{

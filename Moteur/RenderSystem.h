@@ -27,18 +27,30 @@ public:
 
 	// Initializes GLFW and the window
 	void Initialize(const char* title, const int width, const int height, bool fullScreen);
+	
+	// Set the path where the meshes are located
+	void SetMeshPath(std::string filePath);
 
 	// Loads model from ply file and gets it into the VAO
 	bool LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID);
 
+	// Loads model from ply file and gets it into the VAO
+	bool LoadMesh(std::string fileName, std::string modelName, unsigned int shaderID);
+
 	// Set the path where the textures are located
-	void SetTexturePath(const char* filePath);
+	void SetTexturePath(std::string filePath);
 
 	// Load a BMP 2D texture
 	bool Load2DTextureBMP(unsigned int& textureID, const char* filePath);
 
+	// Load a BMP 2D texture
+	bool Load2DTextureBMP(const char* filePath);
+
 	// Load a PNG 2D texture
 	bool Load2DTexturePNG(unsigned int& textureID, const char* filePath);
+
+	// Load a PNG 2D texture
+	bool Load2DTexturePNG(const char* filePath);
 
 	// Load a BMP skybox texture
 	bool LoadCubeMapTextureBMP(

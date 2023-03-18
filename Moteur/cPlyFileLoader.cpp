@@ -1,6 +1,6 @@
 #include "cPlyFileLoader.h"
 
-cPlyFileLoader::cPlyFileLoader() {
+cPlyFileLoader::cPlyFileLoader() : basePath("") {
 
 }
 
@@ -13,12 +13,19 @@ sModelDrawInfo* cPlyFileLoader::GetPlyModelByID(unsigned int id) {
     return plyModels[id];
 }
 
+void cPlyFileLoader::SetBasePath(std::string path)
+{
+    basePath = path;
+}
+
 int cPlyFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
 
     vertexLayout* modelArray = NULL;
     triangleLayout* triangleArray = NULL;
 
-    std::ifstream plyFile(fileName);
+    std::string fileToLoadFullPath = this->basePath + "/" + fileName;
+
+    std::ifstream plyFile(fileToLoadFullPath);
     if (!plyFile.is_open()) {
         std::cout << "Could not load file." << std::endl;
         return -1;

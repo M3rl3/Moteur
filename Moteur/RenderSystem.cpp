@@ -503,10 +503,23 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                     {   // texture0
 
-                        // std::string texture = textureComponent->textures[0];
-                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+                        std::string texture = textureComponent->textures[0];
+                        GLuint textureID = 0;
 
-                        GLuint textureID = textureComponent->textureID[0];
+                        // if the texture name exists
+                        if (texture != "") {
+                            if (textureComponent->textureFormat == TextureFormat::BMP) {
+                                textureID = textureManager->getTextureIDFromName(texture);
+                            }
+                            else if (textureComponent->textureFormat == TextureFormat::PNG) {
+                                textureID = textureManager->getPNGTextureIDFromName(texture);
+                            }
+                        }
+                        // otherwise, use the assigned textureID
+                        else {
+                            textureID = textureComponent->textureID[0];
+                        }
+
                         GLuint textureUnit = 0;
                         glActiveTexture(textureUnit + GL_TEXTURE0);
                         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -521,10 +534,21 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                     
                     {   // texture1
 
-                        // std::string texture = textureComponent->textures[1];
-                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+                        std::string texture = textureComponent->textures[1];
+                        GLuint textureID = 0;
 
-                        GLuint textureID = textureComponent->textureID[1];
+                        if (texture != "") {
+                            if (textureComponent->textureFormat == TextureFormat::BMP) {
+                                textureID = textureManager->getTextureIDFromName(texture);
+                            }
+                            else if (textureComponent->textureFormat == TextureFormat::PNG) {
+                                textureID = textureManager->getPNGTextureIDFromName(texture);
+                            }
+                        }
+                        else {
+                            textureID = textureComponent->textureID[1];
+                        }
+
                         GLuint textureUnit = 1;
                         glActiveTexture(textureUnit + GL_TEXTURE1);
                         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -539,10 +563,21 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                     
                     {   // texture2
 
-                        // std::string texture = textureComponent->textures[2];
-                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+                        std::string texture = textureComponent->textures[2];
+                        GLuint textureID = 0;
 
-                        GLuint textureID = textureComponent->textureID[2];
+                        if (texture != "") {
+                            if (textureComponent->textureFormat == TextureFormat::BMP) {
+                                textureID = textureManager->getTextureIDFromName(texture);
+                            }
+                            else if (textureComponent->textureFormat == TextureFormat::PNG) {
+                                textureID = textureManager->getPNGTextureIDFromName(texture);
+                            }
+                        }
+                        else {
+                            textureID = textureComponent->textureID[2];
+                        }
+
                         GLuint textureUnit = 2;
                         glActiveTexture(textureUnit + GL_TEXTURE2);
                         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -557,10 +592,21 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                     {   // texture3
 
-                        // std::string texture = textureComponent->textures[3];
-                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+                        std::string texture = textureComponent->textures[3];
+                        GLuint textureID = 0;
 
-                        GLuint textureID = textureComponent->textureID[3];
+                        if (texture != "") {
+                            if (textureComponent->textureFormat == TextureFormat::BMP) {
+                                textureID = textureManager->getTextureIDFromName(texture);
+                            }
+                            else if (textureComponent->textureFormat == TextureFormat::PNG) {
+                                textureID = textureManager->getPNGTextureIDFromName(texture);
+                            }
+                        }
+                        else {
+                            textureID = textureComponent->textureID[3];
+                        }
+
                         GLuint textureUnit = 3;
                         glActiveTexture(textureUnit + GL_TEXTURE3);
                         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -575,10 +621,21 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                     
                     {   // texture4
 
-                        // std::string texture = textureComponent->textures[4];
-                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+                        std::string texture = textureComponent->textures[4];
+                        GLuint textureID = 0;
 
-                        GLuint textureID = textureComponent->textureID[4];
+                        if (texture != "") {
+                            if (textureComponent->textureFormat == TextureFormat::BMP) {
+                                textureID = textureManager->getTextureIDFromName(texture);
+                            }
+                            else if (textureComponent->textureFormat == TextureFormat::PNG) {
+                                textureID = textureManager->getPNGTextureIDFromName(texture);
+                            }
+                        }
+                        else {
+                            textureID = textureComponent->textureID[4];
+                        }
+
                         GLuint textureUnit = 4;
                         glActiveTexture(textureUnit + GL_TEXTURE4);
                         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -593,10 +650,21 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                     {   // texture5
 
-                        // std::string texture = textureComponent->textures[5];
-                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+                        std::string texture = textureComponent->textures[5];
+                        GLuint textureID = 0;
 
-                        GLuint textureID = textureComponent->textureID[5];
+                        if (texture != "") {
+                            if (textureComponent->textureFormat == TextureFormat::BMP) {
+                                textureID = textureManager->getTextureIDFromName(texture);
+                            }
+                            else if (textureComponent->textureFormat == TextureFormat::PNG) {
+                                textureID = textureManager->getPNGTextureIDFromName(texture);
+                            }
+                        }
+                        else {
+                            textureID = textureComponent->textureID[5];
+                        }
+
                         GLuint textureUnit = 5;
                         glActiveTexture(textureUnit + GL_TEXTURE5);
                         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -611,10 +679,21 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                     {   // texture6
 
-                        // std::string texture = textureComponent->textures[6];
-                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+                        std::string texture = textureComponent->textures[6];
+                        GLuint textureID = 0;
 
-                        GLuint textureID = textureComponent->textureID[6];
+                        if (texture != "") {
+                            if (textureComponent->textureFormat == TextureFormat::BMP) {
+                                textureID = textureManager->getTextureIDFromName(texture);
+                            }
+                            else if (textureComponent->textureFormat == TextureFormat::PNG) {
+                                textureID = textureManager->getPNGTextureIDFromName(texture);
+                            }
+                        }
+                        else {
+                            textureID = textureComponent->textureID[6];
+                        }
+
                         GLuint textureUnit = 6;
                         glActiveTexture(textureUnit + GL_TEXTURE6);
                         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -629,10 +708,21 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                     {   // texture7
 
-                        // std::string texture = textureComponent->textures[7];
-                        // GLuint textureID = textureManager->getTextureIDFromName(texture);
+                        std::string texture = textureComponent->textures[7];
+                        GLuint textureID = 0;
 
-                        GLuint textureID = textureComponent->textureID[7];
+                        if (texture != "") {
+                            if (textureComponent->textureFormat == TextureFormat::BMP) {
+                                textureID = textureManager->getTextureIDFromName(texture);
+                            }
+                            else if (textureComponent->textureFormat == TextureFormat::PNG) {
+                                textureID = textureManager->getPNGTextureIDFromName(texture);
+                            }
+                        }
+                        else {
+                            textureID = textureComponent->textureID[7];
+                        }
+
                         GLuint textureUnit = 7;
                         glActiveTexture(textureUnit + GL_TEXTURE7);
                         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -660,10 +750,23 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                 glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_TRUE);
 
-                // std::string cubeMapTextureName = textureComponent->textures[0];
-                // GLuint cubeMapTextureID = textureManager->getTextureIDFromName(cubeMapTextureName);
+                std::string cubeMapTextureName = textureComponent->textures[0];
+                GLuint cubeMapTextureID = 0;
 
-                GLuint cubeMapTextureID = textureComponent->textureID[0];
+                // if the texture name exists
+                if (cubeMapTextureName != "") {
+                    if (textureComponent->textureFormat == TextureFormat::BMP) {
+                        cubeMapTextureID = textureManager->getTextureIDFromName(cubeMapTextureName);
+                    }
+                    else {
+                        cubeMapTextureID = textureManager->getPNGTextureIDFromName(cubeMapTextureName);
+                    }
+                }
+                // otherwise, use the assigned textureID
+                else {
+                    cubeMapTextureID = textureComponent->textureID[0];
+                }
+
                 GLuint textureUnit = 30;			// Texture unit go from 0 to 79
                 glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
                 glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureID);
@@ -705,7 +808,14 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             // Find the models vertices and indices
             sModelDrawInfo modelInfo;
-            std::string meshName = meshComponent->plyModel.meshName;
+            std::string meshName;
+
+            if (meshComponent->meshName != "") {
+                meshName = meshComponent->meshName;
+            }
+            else {
+                meshName = meshComponent->plyModel.meshName;
+            }
 
             if (vaoManager->FindDrawInfoByModelName(meshName, modelInfo)) {
 
@@ -766,6 +876,14 @@ bool RenderSystem::GetMouseStatus() {
     return enableMouse;
 }
 
+// Set the path where the meshes are located
+void RenderSystem::SetMeshPath(std::string filePath)
+{
+    std::cout << "\nLoading meshes..." << std::endl;
+
+    plyFileLoader->SetBasePath(filePath);
+}
+
 // Loads model from ply file and gets it into the VAO
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
 {
@@ -781,10 +899,25 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
     }
 }
 
-// Set the path where the textures are located
-void RenderSystem::SetTexturePath(const char* filePath)
+bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, unsigned int shaderID)
 {
-    std::cout << "\nLoading Textures..." << std::endl;
+    sModelDrawInfo plyModel;
+    plyFileLoader->LoadModel(fileName, plyModel);
+    
+    if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
+        std::cout << "Model " << modelName << " loaded successfully." << std::endl;
+        return true;
+    }
+    else {
+        std::cout << "Could not load model " << modelName << " into VAO" << std::endl;
+        return false;
+    }
+}
+
+// Set the path where the textures are located
+void RenderSystem::SetTexturePath(std::string filePath)
+{
+    std::cout << "\nLoading textures..." << std::endl;
 
     textureManager->SetBasePath(filePath);
 }
@@ -807,6 +940,22 @@ bool RenderSystem::Load2DTextureBMP(unsigned int& textureID, const char* filePat
     }
 }
 
+// Load a BMP 2D texture
+bool RenderSystem::Load2DTextureBMP(const char* filePath)
+{
+    // Check if the texture loaded
+    if (textureManager->Create2DTextureFromBMPFile(filePath))
+    {
+        std::cout << "Loaded " << filePath << " texture." << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "Error: failed to load " << filePath << " texture." << std::endl;
+        return false;
+    }
+}
+
 // Load a PNG 2D texture
 bool RenderSystem::Load2DTexturePNG(unsigned int& textureID, const char* filePath)
 {
@@ -815,6 +964,22 @@ bool RenderSystem::Load2DTexturePNG(unsigned int& textureID, const char* filePat
     {
         textureID = textureManager->getPNGTextureIDFromName(filePath);
 
+        std::cout << "Loaded " << filePath << " texture." << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "Error: failed to load " << filePath << " texture." << std::endl;
+        return false;
+    }
+}
+
+// Load a PNG 2D texture
+bool RenderSystem::Load2DTexturePNG(const char* filePath)
+{
+    // Check if the texture loaded
+    if (textureManager->Create2DTextureFromPNGFile(filePath))
+    {
         std::cout << "Loaded " << filePath << " texture." << std::endl;
         return true;
     }

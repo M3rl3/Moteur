@@ -10,6 +10,7 @@ public:
 	// Constructor
 	MeshComponent() : 
 		componentType("MeshComponent"),
+		meshName(""),
 		isWireframe(false),
 		isSkyBox(false),
 		isTerrain(false)
@@ -18,8 +19,11 @@ public:
 	// Destructor
 	~MeshComponent() {};
 
-	// The mesh object containing vertices and indices
+	// struct holding mesh name and vertex information
 	sModelDrawInfo plyModel;
+
+	// name of the mesh
+	std::string meshName;
 
 	// Mesh is to be drawn in wireframe mode
 	bool isWireframe;

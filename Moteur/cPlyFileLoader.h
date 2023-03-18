@@ -28,8 +28,13 @@ public:
     ~cPlyFileLoader();
 
     sModelDrawInfo* GetPlyModelByID(unsigned int id);
+
+    void SetBasePath(std::string basePath);
+
     int LoadModel(std::string fileName, sModelDrawInfo& plyModel);
 
 private:
     std::vector<sModelDrawInfo*> plyModels;
+
+    std::string basePath;
 };

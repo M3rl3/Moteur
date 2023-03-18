@@ -211,17 +211,12 @@ void ECSEngine() {
     shaderSystem->CreateShaderProgramFromFiles(shaderID, v_Shader, g_Shader, f_Shader);
 
     // Meshes loaded here
-    sModelDrawInfo skybox;
-    renderSystem->LoadMesh("../assets/meshes/skybox_sphere.ply", "skybox", skybox, shaderID);
-    
-    sModelDrawInfo steve;
-    renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
+    renderSystem->SetMeshPath("../assets/meshes");
 
-    sModelDrawInfo creepyMonster;
-    renderSystem->LoadMesh("../assets/meshes/creepyMonster.ply", "creepyMonster", creepyMonster, shaderID);
-    
-    sModelDrawInfo plain;
-    renderSystem->LoadMesh("../assets/meshes/west_town.ply", "plain", plain, shaderID);
+    renderSystem->LoadMesh("skybox_sphere.ply", "skybox", shaderID);
+    renderSystem->LoadMesh("steve.ply", "steve", shaderID);
+    renderSystem->LoadMesh("creepyMonster.ply", "creepyMonster", shaderID);
+    renderSystem->LoadMesh("west_town.ply", "plain", shaderID);
     
     // Textures loaded here
     renderSystem->SetTexturePath("../assets/textures");
@@ -261,17 +256,12 @@ void ECSEngine() {
 
     // PNG Textures
     unsigned int textureID = 0;
-    renderSystem->Load2DTexturePNG(textureID, "man.png");
+    renderSystem->Load2DTexturePNG("man.png");
 
     // BMP Textures
-    unsigned int textureID1 = 0;
-    renderSystem->Load2DTextureBMP(textureID1, "Archer.bmp");
-    
-    unsigned int textureID2 = 0;
-    renderSystem->Load2DTextureBMP(textureID2, "seamless-green-grass-pattern.bmp");
-
-    unsigned int textureID3 = 0;
-    renderSystem->Load2DTextureBMP(textureID3, "full_low_body__BaseColor.bmp");
+    renderSystem->Load2DTextureBMP("Archer.bmp");
+    renderSystem->Load2DTextureBMP("seamless-green-grass-pattern.bmp");
+    renderSystem->Load2DTextureBMP("full_low_body__BaseColor.bmp");
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
@@ -307,13 +297,13 @@ void ECSEngine() {
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
-        meshComponent->plyModel = skybox;
+        meshComponent->meshName = "skybox";
         meshComponent->isWireframe = false;
         meshComponent->isSkyBox = true;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
-        textureComponent->textureID[0] = skyboxTextureID1;
-        textureComponent->textures[0] = skyboxNamePNG;
+        textureComponent->textureFormat = TextureFormat::PNG;
+        textureComponent->textures[0] = "desert";
     }
 
     {   // Entity "steve"
@@ -324,18 +314,18 @@ void ECSEngine() {
         transformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
         transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
-        transformComponent->SetType("Player");
 
         ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
-        meshComponent->plyModel = steve;
+        meshComponent->meshName = "steve";
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
-        textureComponent->textureID[0] = textureID;
+        textureComponent->textureFormat = TextureFormat::PNG;
+        textureComponent->textures[0] = "man.png";
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
@@ -363,12 +353,13 @@ void ECSEngine() {
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
-        meshComponent->plyModel = creepyMonster;
+        meshComponent->meshName = "creepyMonster";
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
-        textureComponent->textureID[0] = textureID3;
+        textureComponent->textureFormat = TextureFormat::BMP;
+        textureComponent->textures[0] = "full_low_body__BaseColor.bmp";
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
@@ -396,14 +387,15 @@ void ECSEngine() {
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
-        meshComponent->plyModel = plain;
+        meshComponent->meshName = "plain";
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1, 1, 1, 1);
         textureComponent->useTexture = false;
-        textureComponent->textureID[0] = textureID2;
+        textureComponent->textureFormat = TextureFormat::BMP;
+        textureComponent->textures[0] = "seamless-green-grass-pattern.bmp";
         textureComponent->textureRatios[0] = 1.f;
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
@@ -413,7 +405,7 @@ void ECSEngine() {
     // Add all the systems
     engine.AddSystem(renderSystem);
     engine.AddSystem(lightSystem);
-    engine.AddSystem(shaderSystem);    
+    engine.AddSystem(shaderSystem);
     engine.AddSystem(motionSystem);
     engine.AddSystem(aiSystem);
 

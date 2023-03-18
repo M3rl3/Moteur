@@ -4,6 +4,11 @@
 
 #include <glm/vec4.hpp>
 
+enum TextureFormat {
+	BMP,
+	PNG
+};
+
 // Struct holding texture information
 struct TextureComponent : Component{
 public:
@@ -11,13 +16,14 @@ public:
 	// Constructor
 	TextureComponent() :
 		componentType("TextureComponent"),
+		textureFormat(BMP),
 		rgbaColor(glm::vec4(0.f)),
 		useRGBAColor(false),
 		useTexture(false)
 	{
 		// Iterate through all textures and set them to null
 		for (unsigned int i = 0; i < 8; i++) {
-			textureID[i] = 0;
+			textureID[i] = -1;
 		}
 		for (unsigned int i = 0; i < 8; i++) {
 			textures[i] = "";
@@ -29,6 +35,9 @@ public:
 
 	// Destructor
 	~TextureComponent() {};
+
+	// File format of the texture
+	TextureFormat textureFormat;
 
 	// ID number for the Texture
 	unsigned int textureID[8];
