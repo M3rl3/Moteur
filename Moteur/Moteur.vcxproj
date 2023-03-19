@@ -158,6 +158,7 @@
     <ClCompile Include="AISystem.cpp" />
     <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="Callbacks.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="cLightManager\cLight.cpp" />
     <ClCompile Include="cLightManager\cLightHelper.cpp" />
     <ClCompile Include="cLightManager\cLightManager.cpp" />

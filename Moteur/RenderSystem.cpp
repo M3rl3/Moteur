@@ -388,15 +388,37 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
     memcpy(&(lastKeyPressedID[0]), &(keyPressedID[0]), 255);
 
-    glm::mat4x4 model, view, projection;
-
     // Cull back facing triangles
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);
 
     // Depth test
     glEnable(GL_DEPTH_TEST);
+
+    // Clear the color and depth buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    float ratio;
+    int width, height;
+    glfwGetFramebufferSize(window->theWindow, &width, &height);
+    ratio = width / (float)height;
+    glViewport(0, 0, width, height);
+
+    // mouse support
+    if (enableMouse) {
+        camera->view = glm::lookAt(camera->position, camera->position + camera->target, camera->upVector);
+        camera->projection = glm::perspective(glm::radians(fov), ratio, 0.1f, 10000.f);
+    }
+    else {
+        // If camera has a rotation instead of a lookat
+        // camera->view = glm::inverse(glm::translate(glm::mat4(1.f), camera->position) * glm::mat4(camera->rotation));
+
+        camera->view = glm::lookAt(camera->position, camera->target, camera->upVector);
+        camera->projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
+    }
+
+    // Size of the viewport
+    glm::vec4 viewport = glm::vec4(0, 0, width, height);
 
     // Make a copy of all the entity components
     TransformComponent* transformComponent = nullptr;
@@ -423,44 +445,20 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
         if (transformComponent != nullptr && shaderComponent != nullptr)
         {
             //MVP
-            glm::vec3 upVector = glm::vec3(0.f, 1.f, 0.f);
-
             GLint modelLocaction = glGetUniformLocation(shaderComponent->shaderID, "Model");
             GLint viewLocation = glGetUniformLocation(shaderComponent->shaderID, "View");
             GLint projectionLocation = glGetUniformLocation(shaderComponent->shaderID, "Projection");
-            GLint modelInverseLocation = glGetUniformLocation(shaderComponent->shaderID, "ModelInverse");         
+            GLint modelInverseLocation = glGetUniformLocation(shaderComponent->shaderID, "ModelInverse");      
 
             // Lighting
             // ManageLights(shaderComponent->shaderID);
 
-            float ratio;
-            int width, height;
-            glfwGetFramebufferSize(window->theWindow, &width, &height);
-            ratio = width / (float)height;
-            glViewport(0, 0, width, height);
-
-            // view = glm::lookAt(camera->position, camera->target, upVector);
-            // projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
-
-            // mouse support
-            if (enableMouse) {
-                view = glm::lookAt(camera->position, camera->position + camera->target, upVector);
-                projection = glm::perspective(glm::radians(fov), ratio, 0.1f, 10000.f);
-            }
-            else {
-                view = glm::lookAt(camera->position, camera->target, upVector);
-                projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
-            }
-
-            // Size of the viewport
-            glm::vec4 viewport = glm::vec4(0, 0, width, height);
-
-            // Where the camera is at
+            // camera position
             GLint eyeLocationLocation = glGetUniformLocation(shaderComponent->shaderID, "eyeLocation");
             glUniform4f(eyeLocationLocation, camera->position.x, camera->position.y, camera->position.z, 1.f);
 
             // Set the model matrix based on transformations applied
-            model = glm::mat4x4(1.f);
+            glm::mat4x4 model = glm::mat4x4(1.f);
 
             glm::mat4 translationMatrix = glm::translate(glm::mat4(1.f), transformComponent->position);
             glm::mat4 scaling = glm::scale(glm::mat4(1.f), transformComponent->scale);
@@ -472,8 +470,8 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             // Uniform location in the shader
             glUniformMatrix4fv(modelLocaction, 1, GL_FALSE, glm::value_ptr(model));
-            glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
-            glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+            glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(camera->view));
+            glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(camera->projection));
 
             glm::mat4 modelInverse = glm::inverse(glm::transpose(model));
             glUniformMatrix4fv(modelInverseLocation, 1, GL_FALSE, glm::value_ptr(modelInverse));

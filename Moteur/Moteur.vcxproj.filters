@@ -82,6 +82,9 @@
     <Filter Include="Light Manager">
       <UniqueIdentifier>{7196efec-5962-4706-84ee-ab2dd9092fd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{630eadd5-ce98-45cd-81d1-297028e72c58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cameraEye.txt">
@@ -221,6 +224,9 @@
     <ClCompile Include="cTextureManager\cTextureManager.cpp">
       <Filter>Texture Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMeshInfo.h">
@@ -291,9 +297,6 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>98.Timer</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Header Files</Filter>
@@ -390,6 +393,9 @@
     </ClInclude>
     <ClInclude Include="cTextureManager\cTextureManager.h">
       <Filter>Texture Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

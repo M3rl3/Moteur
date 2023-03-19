@@ -116,22 +116,22 @@ void ECSKeysCheck() {
     case CAMERA:
 
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
-            renderSystem->GetCamera()->position.z += MOVE_SPEED;
+            renderSystem->GetCamera()->MoveForward();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_S)) {
-            renderSystem->GetCamera()->position.z -= MOVE_SPEED;
+            renderSystem->GetCamera()->MoveBackward();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
-            renderSystem->GetCamera()->position.x -= MOVE_SPEED;
+            renderSystem->GetCamera()->StrafeRight();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
-            renderSystem->GetCamera()->position.x += MOVE_SPEED;
+            renderSystem->GetCamera()->StrafeLeft();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_Q)) {
-            renderSystem->GetCamera()->position.y += MOVE_SPEED;
+            renderSystem->GetCamera()->MoveUp();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_E)) {
-            renderSystem->GetCamera()->position.y -= MOVE_SPEED;
+            renderSystem->GetCamera()->MoveDown();
         }
         break;
 
@@ -196,7 +196,7 @@ void ECSEngine() {
     renderSystem->Initialize("ECSengine", 1366, 768, false);
 
     renderSystem->SetCameraPosition(glm::vec3(-30.f, 5.f, -50.f));
-    renderSystem->SetCameraTarget(glm::vec3(1.f));
+    renderSystem->SetCameraTarget(glm::vec3(0.f, 0.f, 1.f));
 
     // AI System
     aiSystem = new AISystem();
@@ -236,7 +236,6 @@ void ECSEngine() {
         "TropicalSunnyDayFront2048.bmp",
         "TropicalSunnyDayBack2048.bmp",
         true, errorString0);
-
 
     // PNG
     unsigned int skyboxTextureID1 = 0;
