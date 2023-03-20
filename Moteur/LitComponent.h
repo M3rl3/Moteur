@@ -9,14 +9,14 @@ public:
 	// Constructor
 	LitComponent() :
 		componentType("LitComponent"),
-		doNotLight(true)
+		isLit(true)
 	{};
 
 	// Destructor
 	~LitComponent() {};
 
 	// if the object is to be influenced by lighting
-	bool doNotLight;
+	bool isLit;
 
 private:
 	// name of the component

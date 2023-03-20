@@ -56,15 +56,15 @@ void LightSystem::Process(const std::vector<Entity*>& entities, float dt) {
 
 		if (litComponent != nullptr && shaderComponent != nullptr) {
 
-			GLint doNotLightLocation = glGetUniformLocation(shaderComponent->shaderID, "doNotLight");
+			GLint isLitLocation = glGetUniformLocation(shaderComponent->shaderID, "isLit");
 
 			shaderID = shaderComponent->shaderID;
 
-			if (litComponent->doNotLight) {
-				glUniform1f(doNotLightLocation, (GLfloat)GL_TRUE);
+			if (litComponent->isLit) {
+				glUniform1f(isLitLocation, (GLfloat)GL_TRUE);
 			}
 			else {
-				glUniform1f(doNotLightLocation, (GLfloat)GL_FALSE);
+				glUniform1f(isLitLocation, (GLfloat)GL_FALSE);
 			}
 
 			GLint ambientLightLocation = glGetUniformLocation(shaderID, "ambientLight");

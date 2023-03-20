@@ -266,13 +266,13 @@ void ECSEngine() {
     LightSystem* lightSystem = new LightSystem();
 
     // Ambient light
-    float ambientLight = 0.025f;
+    float ambientLight = 0.5f;
     lightSystem->SetAmbientLightAmount(ambientLight);
 
     // attenuation on all lights
-    const glm::vec4 constLightAtten = glm::vec4(0.1f, 0.25f, 1.0e-7f, 1.0f);
+    const glm::vec4 constLightAtten = glm::vec4(0.1f, 2.5e-5f, 2.5e-5f, 1.0f);
 
-    cLight* newLight = lightSystem->AddLight(glm::vec4(-20, 20, 0, 1));
+    cLight* newLight = lightSystem->AddLight(glm::vec4(0, 50, 0, 1));
 
     newLight->diffuse = glm::vec4(1.f, 1.f, 1.f, 1.f);
     newLight->specular = glm::vec4(1.f, 1.f, 1.f, 1.f);
@@ -333,7 +333,7 @@ void ECSEngine() {
         boundingBoxComponent->drawBBox = true;
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
-        litComponent->doNotLight = false;
+        litComponent->isLit = true;
 
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
@@ -364,7 +364,7 @@ void ECSEngine() {
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
-        litComponent->doNotLight = false;
+        litComponent->isLit = true;
 
         AIComponent* aiComponent = engine.AddComponent<AIComponent>(entityID);
         aiComponent->radius = 3.0f;
@@ -391,14 +391,14 @@ void ECSEngine() {
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = false;
-        textureComponent->rgbaColor = glm::vec4(1, 1, 1, 1);
+        textureComponent->rgbaColor = glm::vec4(0.35f, 0.35f, 0.35f, 1.f);
         textureComponent->useTexture = false;
         textureComponent->textureFormat = TextureFormat::BMP;
         textureComponent->textures[0] = "seamless-green-grass-pattern.bmp";
         textureComponent->textureRatios[0] = 1.f;
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
-        litComponent->doNotLight = false;
+        litComponent->isLit = true;
     }
 
     // Add all the systems
