@@ -1,5 +1,7 @@
 #include "RenderSystem.h"
 
+#include "../Global.h"
+
 #include "../Components/ShaderComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/MeshComponent.h"

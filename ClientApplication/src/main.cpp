@@ -9,10 +9,23 @@
 #include "ECSengine/ECSengine.h"
 
 #include "Components/AIComponent.h"
-#include "Systems/AISystem.h"
+#include "Components/TransformComponent.h"
+#include "Components/MeshComponent.h"
+#include "Components/ShaderComponent.h"
+#include "Components/TextureComponent.h"
+#include "Components/AnimationComponent.h"
+#include "Components/VelocityComponent.h"
+#include "Components/BoundingBoxComponent.h"
+#include "Components/LitComponent.h"
+#include "Components/SoundComponent.h"
+
+#include "Systems/ShaderSystem.h"
 #include "Systems/RenderSystem.h"
 #include "Systems/MeshSystem.h"
-#include "Systems/ShaderSystem.h"
+#include "Systems/MotionSystem.h"
+#include "Systems/LightSystem.h"
+#include "Systems/SoundSystem.h"
+#include "Systems/AISystem.h"
 
 #include "OldEngine/Moteur.h"
 
@@ -262,6 +275,18 @@ void ECSEngine() {
     renderSystem->Load2DTextureBMP("seamless-green-grass-pattern.bmp");
     renderSystem->Load2DTextureBMP("full_low_body__BaseColor.bmp");
 
+    // Sounds
+    SoundSystem* soundSystem = new SoundSystem();
+
+    // Flags
+    constexpr int flags = FMOD_DEFAULT | FMOD_3D | FMOD_LOOP_NORMAL;
+
+    // Sounds loaded here
+    soundSystem->SetSoundPath("../assets/sounds/sfx");
+
+    soundSystem->LoadSound("engine.wav", flags);
+    soundSystem->LoadSound("chicken.wav", flags);
+
     // Lighting
     LightSystem* lightSystem = new LightSystem();
 
@@ -335,6 +360,12 @@ void ECSEngine() {
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->isLit = true;
 
+        SoundComponent* soundComponent = engine.AddComponent<SoundComponent>(entityID);
+        soundComponent->isPlaying = true;
+        soundComponent->maxDistance = 1.f;
+        soundComponent->soundVolume = 5.f;
+        soundComponent->soundName = "engine.wav";
+
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
     }
@@ -365,6 +396,12 @@ void ECSEngine() {
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->isLit = true;
+
+        SoundComponent* soundComponent = engine.AddComponent<SoundComponent>(entityID);
+        soundComponent->isPlaying = true;
+        soundComponent->maxDistance = 1.f;
+        soundComponent->soundVolume = 5.f;
+        soundComponent->soundName = "chicken.wav";
 
         AIComponent* aiComponent = engine.AddComponent<AIComponent>(entityID);
         aiComponent->radius = 3.0f;
@@ -406,6 +443,7 @@ void ECSEngine() {
     engine.AddSystem(lightSystem);
     engine.AddSystem(shaderSystem);
     engine.AddSystem(motionSystem);
+    engine.AddSystem(soundSystem);
     engine.AddSystem(aiSystem);
 
     // User defined update method (for user inputs)

@@ -1,21 +1,7 @@
 #include <ECS/System.h>
 #include <vector>
 
-#include "../Components/TransformComponent.h"
-#include "../Components/MeshComponent.h"
-#include "../Components/ShaderComponent.h"
-#include "../Components/TextureComponent.h"
-#include "../Components/AnimationComponent.h"
-#include "../Components/VelocityComponent.h"
-#include "../Components/BoundingBoxComponent.h"
-#include "../Components/LitComponent.h"
-
 #include "../EntityManager/EntityManager.h"
-#include "../Systems/ShaderSystem.h"
-#include "../Systems/RenderSystem.h"
-#include "../Systems/MeshSystem.h"
-#include "../Systems/MotionSystem.h"
-#include "../Systems/LightSystem.h"
 
 #include "../Window/Window.h"
 
