@@ -117,6 +117,8 @@ void SoundSystem::Process(const std::vector<Entity*>& entities, float dt) {
 		// check if the instances actually exist
 		if (soundComponent != nullptr && transformComponent != nullptr) {
 
+			// Do this once for every entity
+			// Prevent the sound from playing an infinite amount of times
 			if (soundComponent->isPlaying && soundComponent->doOnce) {
 				if (!soundManager->PlaySounds(soundComponent->soundName,
 					transformComponent->position,
@@ -128,7 +130,12 @@ void SoundSystem::Process(const std::vector<Entity*>& entities, float dt) {
 
 				soundComponent->doOnce = false;
 			}
-			else if (soundComponent->isPlaying) {
+
+			// Set whether the sound should play or not
+			soundComponent->attachedSound->isPlaying(&soundComponent->isPlaying);
+
+			// If playing
+			if (soundComponent->isPlaying) {
 				// Update the positions of all the attached sounds
 				soundManager->UpdateSoundPosition(soundComponent->attachedSound, transformComponent->position);
 
@@ -136,6 +143,7 @@ void SoundSystem::Process(const std::vector<Entity*>& entities, float dt) {
 				soundManager->UpdateVolume(soundComponent->attachedSound, soundComponent->soundVolume);
 			}
 			else {
+				// Move on
 				continue;
 			}
 		}	
