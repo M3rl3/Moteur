@@ -1,6 +1,6 @@
 #include "BGObject.h"
-#include "Moteur.h"
-#include "cMeshInfo.h"
+#include "OldEngine/Moteur.h"
+#include "OldMeshClass/cMeshInfo.h"
 
 #include <sstream>
 

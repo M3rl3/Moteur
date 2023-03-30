@@ -4,7 +4,8 @@
 #include <string>
 #include "glm\vec3.hpp"
 #include "glm\vec4.hpp"
-#include <Animation.h>
+
+#include <cAnimationManager/Animation.h>
 
 // The mesh class
 class cMeshInfo;

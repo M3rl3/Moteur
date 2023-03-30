@@ -6,18 +6,18 @@
 #define ECS_ENGINE    
 #endif // !ECS_ENGINE
 
-#include "ECSengine.h"
+#include "ECSengine/ECSengine.h"
 
-#include "AIComponent.h"
-#include "AISystem.h"
-#include "RenderSystem.h"
-#include "MeshSystem.h"
-#include "ShaderSystem.h"
+#include "Components/AIComponent.h"
+#include "Systems/AISystem.h"
+#include "Systems/RenderSystem.h"
+#include "Systems/MeshSystem.h"
+#include "Systems/ShaderSystem.h"
 
-#include "Moteur.h"
+#include "OldEngine/Moteur.h"
 
 #include "Scene.h"
-#include "Timer.h"
+#include "Timer/Timer.h"
 
 #include <sstream>
 
