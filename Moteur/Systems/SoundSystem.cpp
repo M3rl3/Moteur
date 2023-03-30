@@ -43,14 +43,28 @@ void SoundSystem::SetSoundPath(std::string filePath)
 }
 
 // Method for loading sounds from sound files (mp3/wav)
-void SoundSystem::LoadSound(const std::string& path, const std::string& sound_name, const int mode)
+bool SoundSystem::LoadSound(const std::string& path, const std::string& sound_name, const int mode)
 {
-	soundManager->LoadSounds(sound_name, path, mode);
+	if (soundManager->LoadSounds(sound_name, path, mode)) {
+		std::cout << "Model " << sound_name << " loaded successfully." << std::endl;
+		return true;
+	}
+	else {
+		std::cout << "Could not load sound " << sound_name << " into FMOD." << std::endl;
+		return false;
+	}
 }
 
-void SoundSystem::LoadSound(const std::string& sound_name, const int mode)
+bool SoundSystem::LoadSound(const std::string& sound_name, const int mode)
 {
-	soundManager->LoadSounds(sound_name, mode);
+	if (soundManager->LoadSounds(sound_name, mode)) {
+		std::cout << "Sound " << sound_name << " loaded successfully." << std::endl;
+		return true;
+	}
+	else {
+		std::cout << "Could not load sound " << sound_name << " into FMOD." << std::endl;
+		return false;
+	}
 }
 
 // Method for playing sounds in a 3D environment

@@ -26,10 +26,10 @@ public:
 	void SetSoundPath(std::string filePath);
 
 	// Method for loading sounds from sound files (mp3/wav)
-	void LoadSound(const std::string& path, const std::string& sound_name, const int mode);
+	bool LoadSound(const std::string& path, const std::string& sound_name, const int mode);
 	
 	// Method for loading sounds from sound files (mp3/wav)
-	void LoadSound(const std::string& sound_name, const int mode);
+	bool LoadSound(const std::string& sound_name, const int mode);
 
 	// Method for playing sounds in a 3D environment
 	void PlaySound(const std::string& sound_name, glm::vec3 position, float max_distance, FMOD::Channel** channel);
