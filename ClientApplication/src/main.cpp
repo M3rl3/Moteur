@@ -57,10 +57,12 @@ GameMode gameMode = CAMERA;
 AISystem* aiSystem;
 
 RenderSystem* renderSystem;
+PhysicsSystem* physicsSystem;
 
-// Player's transform and velocity
+// Player attributes
 TransformComponent* transformComponent;
-VelocityCompoent* velocityComponent;
+VelocityComponent* velocityComponent;
+RigidBodyComponent* rigidBodyComponent;
 
 void Update(float dt);
 
@@ -288,7 +290,7 @@ void ECSEngine() {
     renderSystem->Load2DTextureBMP("full_low_body__BaseColor.bmp");
 
     // Physics
-    PhysicsSystem* physicsSystem = new PhysicsSystem();
+    physicsSystem = new PhysicsSystem();
     physicsSystem->SetGravity(glm::vec3(0.f, -9.8f, 0.f));
 
     // Sounds
@@ -302,10 +304,6 @@ void ECSEngine() {
 
     soundSystem->LoadSound("deep_stone_lullaby.mp3", flags);
     soundSystem->LoadSound("chicken.wav", flags);
-
-    // Client database
-    sql.Connect(DATABASE_NAME.c_str());
-    
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
@@ -328,6 +326,9 @@ void ECSEngine() {
 
     // If a velocity component exists
     MotionSystem* motionSystem = new MotionSystem();
+
+    // Client database
+    sql.Connect(DATABASE_NAME.c_str());
 
     // Scene
 
@@ -386,14 +387,15 @@ void ECSEngine() {
         soundComponent->soundVolume = 5.f;
         soundComponent->soundName = "deep_stone_lullaby.mp3";
 
-        RigidBodyComponent* rigidBodyComponent = engine.AddComponent<RigidBodyComponent>(entityID);
+        rigidBodyComponent = engine.AddComponent<RigidBodyComponent>(entityID);
         rigidBodyComponent->bodyShape = new physics::CylinderShape(transformComponent->scale);
         rigidBodyComponent->rigidBodyDesc.isStatic = false;
         rigidBodyComponent->rigidBodyDesc.mass = 1.f;
         rigidBodyComponent->isInfluenced = true;
 
-        velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
+        velocityComponent = engine.AddComponent<VelocityComponent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
+        velocityComponent->useVelocity = false;
 
         // Test set high score
         sql.SetHighScore(entityID, 70);

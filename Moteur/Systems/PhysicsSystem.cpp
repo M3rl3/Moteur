@@ -5,6 +5,7 @@
 
 #include "../Components/RigidBodyComponent.h"
 #include "../Components/TransformComponent.h"
+#include "../Components/VelocityComponent.h"
 
 // Constructor
 PhysicsSystem::PhysicsSystem()
@@ -50,6 +51,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
     // Make a copy of all the entity components
     RigidBodyComponent* rigidBodyComponent = nullptr;
     TransformComponent* transformComponent = nullptr;
+    VelocityComponent* velocityComponent = nullptr;
 
     // Iterate through all entities
     for (int i = 0; i < entities.size(); i++) {
@@ -59,6 +61,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
         // get the specific instances for all components
         rigidBodyComponent = currentEntity->GetComponentByType<RigidBodyComponent>();
         transformComponent = currentEntity->GetComponentByType<TransformComponent>();
+        velocityComponent = currentEntity->GetComponentByType<VelocityComponent>();
 
         // Check if the required components exist
         if (rigidBodyComponent != nullptr && transformComponent != nullptr) {
@@ -93,6 +96,10 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
                 rigidBody->GetRotation(transformComponent->rotation);
 
                 transformComponent->position = position;
+
+                if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
+                    rigidBody->ApplyForce(velocityComponent->velocity);
+                }
             }
             else {
                 // Move on
