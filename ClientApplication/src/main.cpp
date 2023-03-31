@@ -284,7 +284,7 @@ void ECSEngine() {
     // Sounds loaded here
     soundSystem->SetSoundPath("../assets/sounds/sfx");
 
-    soundSystem->LoadSound("engine.wav", flags);
+    soundSystem->LoadSound("deep_stone_lullaby.mp3", flags);
     soundSystem->LoadSound("chicken.wav", flags);
 
     // Lighting
@@ -364,7 +364,7 @@ void ECSEngine() {
         soundComponent->isPlaying = true;
         soundComponent->maxDistance = 1.f;
         soundComponent->soundVolume = 5.f;
-        soundComponent->soundName = "engine.wav";
+        soundComponent->soundName = "deep_stone_lullaby.mp3";
 
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
