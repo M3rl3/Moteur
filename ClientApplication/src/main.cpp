@@ -295,6 +295,7 @@ void ECSEngine() {
 
     // Client database
     sql.Connect(DATABASE_NAME.c_str());
+    
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
@@ -377,6 +378,9 @@ void ECSEngine() {
 
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
+
+        // Test set high score
+        sql.SetHighScore(entityID, 10);
     }
 
     {   // Entity "creepyMonster"

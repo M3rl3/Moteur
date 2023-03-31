@@ -41,3 +41,14 @@ void DBHelper::Connect(const char* dbName)
 		return;
 	}
 }
+
+void DBHelper::SetHighScore(int playerId, int score)
+{
+	sqlite3_stmt* stmt;
+	std::string query = "INSERT OR REPLACE INTO player(id, high_score) VALUES(?, ?)";
+	sqlite3_prepare_v2(mDB, query.c_str(), -1, &stmt, NULL);
+	sqlite3_bind_int(stmt, 1, playerId);
+	sqlite3_bind_int(stmt, 2, score);
+	sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+}
