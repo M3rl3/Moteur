@@ -27,6 +27,8 @@
 #include "Systems/SoundSystem.h"
 #include "Systems/AISystem.h"
 
+#include "DBHelper.h"
+
 #include "OldEngine/Moteur.h"
 
 #include "Scene.h"
@@ -34,11 +36,15 @@
 
 #include <sstream>
 
+const std::string DATABASE_NAME = "oguns_dice.db";
+
 enum GameMode {
     CAMERA,
     PLAYER,
     NONE
 };
+
+DBHelper sql;
 
 GameMode gameMode = CAMERA;
 
@@ -286,6 +292,9 @@ void ECSEngine() {
 
     soundSystem->LoadSound("deep_stone_lullaby.mp3", flags);
     soundSystem->LoadSound("chicken.wav", flags);
+
+    // Client database
+    sql.Connect(DATABASE_NAME.c_str());
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();

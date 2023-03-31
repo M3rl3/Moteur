@@ -13,6 +13,9 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{ea4b105b-e1ee-4845-b9da-91f53416a68e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{6bfec675-2863-49b6-ada3-52281d0a8985}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Scene.cpp">
@@ -30,6 +33,12 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="src\sqlite3.c">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DBHelper.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Scene.h">
@@ -44,5 +53,14 @@
     <ClInclude Include="src\Factory.h">
       <Filter>Factory</Filter>
     </ClInclude>
+    <ClInclude Include="src\DBHelper.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sqlite3.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\oguns_dice.db" />
   </ItemGroup>
 </Project>
