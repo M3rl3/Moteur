@@ -25,6 +25,23 @@ The core engine for Ogun's Dice
 
     b. Run the installer, after completed, copy this path `C:\Imagination Technologies\PowerVR_Graphics\PowerVR_Tools\PVRTexTool\CLI\Windows_x86_641` to your environment variable
 
+### Setup Boost and Thrift
+1. Install Boost version `boost_1_59_0`, run the setup file and allow it to install in default directory
+2. Create a folder in drive `c:`, name it `Thrift`
+3. Download `Thrift 0.9.1`, extract the zip file to your drive `c:\Thrift`.
+
+### Configure Boost
+1. Include => All Configurations - All Platforms: "C:\local\boost_1_59_0"
+2. Lib => All Configurations - x64: "C:\local\boost_1_59_0\lib64-msvc-14.0" (Note this is for `x64`)
+3. Linker input for Debug mode => All Platforms: "libboost_thread-vc140-mt-gd-1_59.lib"
+4. Linker input for Release mode => All Platforms: "libboost_thread-vc140-mt-1_59.lib"
+
+### Configure Thrift
+1. Include => All Configurations - All Platforms: "C:\Thrift\thrift-0.9.1\src"
+2. Lib => All Configurations - All Platforms: "C:\Thrift\thrift-0.9.1\lib\$(IntDir)"
+3. Linker input => All Configurations - All Platforms: "libthrift.lib"
+
+
 ### Python script location
 The python script is located in `..\assets\scripts\png_compressor.py`
 
