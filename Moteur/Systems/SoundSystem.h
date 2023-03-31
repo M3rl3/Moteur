@@ -50,5 +50,6 @@ public:
 	cSoundManager* GetSoundManager();
 
 private:
+	// Instance of the sound manager
 	cSoundManager* soundManager;
 };

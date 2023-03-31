@@ -71,20 +71,24 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)include;</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine;$(SolutionDir)/include/bullet;$(SolutionDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)lib;</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)PhysicsEngine/src;</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)include;</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine;$(SolutionDir)/include/bullet;$(SolutionDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)lib;</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)PhysicsEngine/src;</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)include;</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine;$(SolutionDir)/include/bullet;$(SolutionDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)lib;</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)PhysicsEngine/src;</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)include;</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine;$(SolutionDir)/include/bullet;$(SolutionDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)lib;</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)PhysicsEngine/src;</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -193,6 +197,7 @@
     <ClCompile Include="Systems\LightSystem.cpp" />
     <ClCompile Include="Systems\MeshSystem.cpp" />
     <ClCompile Include="Systems\MotionSystem.cpp" />
+    <ClCompile Include="Systems\PhysicsSystem.cpp" />
     <ClCompile Include="Systems\RenderSystem.cpp" />
     <ClCompile Include="Systems\ShaderSystem.cpp" />
     <ClCompile Include="Systems\SoundSystem.cpp" />
@@ -215,6 +220,7 @@
     <ClInclude Include="Components\BoundingBoxComponent.h" />
     <ClInclude Include="Components\LitComponent.h" />
     <ClInclude Include="Components\MeshComponent.h" />
+    <ClInclude Include="Components\RigidBodyComponent.h" />
     <ClInclude Include="Components\ShaderComponent.h" />
     <ClInclude Include="Components\TextureComponent.h" />
     <ClInclude Include="Components\TransformComponent.h" />
@@ -250,6 +256,7 @@
     <ClInclude Include="Systems\LightSystem.h" />
     <ClInclude Include="Systems\MeshSystem.h" />
     <ClInclude Include="Systems\MotionSystem.h" />
+    <ClInclude Include="Systems\PhysicsSystem.h" />
     <ClInclude Include="Systems\RenderSystem.h" />
     <ClInclude Include="Systems\ShaderSystem.h" />
     <ClInclude Include="Systems\SoundSystem.h" />
@@ -260,6 +267,11 @@
     <None Include="..\assets\shaders\fragmentShader.glsl" />
     <None Include="..\assets\shaders\geometryShader_passthrough.glsl" />
     <None Include="..\assets\shaders\vertexShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PhysicsEngine\PhysicsEngine.vcxproj">
+      <Project>{47154464-c209-489a-b79a-1e110f35745e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

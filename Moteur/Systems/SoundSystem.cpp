@@ -9,6 +9,7 @@
 
 // Constructor
 SoundSystem::SoundSystem() {
+	// Initialize the sound manager
 	soundManager = new cSoundManager();
 }
 
@@ -111,8 +112,8 @@ void SoundSystem::Process(const std::vector<Entity*>& entities, float dt) {
 		Entity* currentEntity = entities[i];
 
 		// get the specific instances for all components
-		transformComponent = currentEntity->GetComponentByType<TransformComponent>();
 		soundComponent = currentEntity->GetComponentByType<SoundComponent>();
+		transformComponent = currentEntity->GetComponentByType<TransformComponent>();
 
 		// check if the instances actually exist
 		if (soundComponent != nullptr && transformComponent != nullptr) {

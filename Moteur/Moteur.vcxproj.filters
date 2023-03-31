@@ -182,6 +182,9 @@
     <ClCompile Include="Global.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\PhysicsSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenGL.h">
@@ -350,6 +353,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Systems\SoundSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\RigidBodyComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\PhysicsSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

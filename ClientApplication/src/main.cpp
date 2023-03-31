@@ -18,14 +18,20 @@
 #include "Components/BoundingBoxComponent.h"
 #include "Components/LitComponent.h"
 #include "Components/SoundComponent.h"
+#include "Components/RigidBodyComponent.h"
 
 #include "Systems/ShaderSystem.h"
 #include "Systems/RenderSystem.h"
+#include "Systems/PhysicsSystem.h"
 #include "Systems/MeshSystem.h"
 #include "Systems/MotionSystem.h"
 #include "Systems/LightSystem.h"
 #include "Systems/SoundSystem.h"
 #include "Systems/AISystem.h"
+
+#include "../PhysicsEngine/interfaces/CylinderShape.h"
+#include "../PhysicsEngine/interfaces/PlaneShape.h"
+#include "../PhysicsEngine/interfaces/RigidBodyDesc.h"
 
 #include "DBHelper.h"
 
@@ -281,6 +287,10 @@ void ECSEngine() {
     renderSystem->Load2DTextureBMP("seamless-green-grass-pattern.bmp");
     renderSystem->Load2DTextureBMP("full_low_body__BaseColor.bmp");
 
+    // Physics
+    PhysicsSystem* physicsSystem = new PhysicsSystem();
+    physicsSystem->SetGravity(glm::vec3(0.f, -9.8f, 0.f));
+
     // Sounds
     SoundSystem* soundSystem = new SoundSystem();
 
@@ -345,7 +355,7 @@ void ECSEngine() {
         unsigned int entityID = engine.CreateEntity();
 
         transformComponent = engine.AddComponent<TransformComponent>(entityID);
-        transformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
+        transformComponent->position = glm::vec3(-18.f, 10.f, -34.f);
         transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
@@ -376,6 +386,12 @@ void ECSEngine() {
         soundComponent->soundVolume = 5.f;
         soundComponent->soundName = "deep_stone_lullaby.mp3";
 
+        RigidBodyComponent* rigidBodyComponent = engine.AddComponent<RigidBodyComponent>(entityID);
+        rigidBodyComponent->bodyShape = new physics::CylinderShape(transformComponent->scale);
+        rigidBodyComponent->rigidBodyDesc.isStatic = false;
+        rigidBodyComponent->rigidBodyDesc.mass = 1.f;
+        rigidBodyComponent->isInfluenced = true;
+
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
 
@@ -392,7 +408,7 @@ void ECSEngine() {
         unsigned int entityID = engine.CreateEntity();
 
         TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
-        transformComponent->position = glm::vec3(10.f, 0.f, -30.f);
+        transformComponent->position = glm::vec3(10.f, 50.f, -30.f);
         transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
@@ -411,13 +427,19 @@ void ECSEngine() {
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
+        RigidBodyComponent* rigidBodyComponent = engine.AddComponent<RigidBodyComponent>(entityID);
+        rigidBodyComponent->bodyShape = new physics::CylinderShape(transformComponent->scale);
+        rigidBodyComponent->rigidBodyDesc.isStatic = true;
+        rigidBodyComponent->rigidBodyDesc.mass = 1.f;
+        rigidBodyComponent->isInfluenced = true;
+
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->isLit = true;
 
         SoundComponent* soundComponent = engine.AddComponent<SoundComponent>(entityID);
         soundComponent->isPlaying = true;
-        soundComponent->maxDistance = 1.f;
-        soundComponent->soundVolume = 5.f;
+        soundComponent->maxDistance = 0.25f;
+        soundComponent->soundVolume = 1.f;
         soundComponent->soundName = "chicken.wav";
 
         AIComponent* aiComponent = engine.AddComponent<AIComponent>(entityID);
@@ -448,8 +470,14 @@ void ECSEngine() {
         textureComponent->rgbaColor = glm::vec4(0.35f, 0.35f, 0.35f, 1.f);
         textureComponent->useTexture = false;
         textureComponent->textureFormat = TextureFormat::BMP;
-        textureComponent->textures[0] = "seamless-green-grass-pattern.bmp";
+        textureComponent->textures[0] = "";
         textureComponent->textureRatios[0] = 1.f;
+
+        RigidBodyComponent* rigidBodyComponent = engine.AddComponent<RigidBodyComponent>(entityID);
+        rigidBodyComponent->bodyShape = new physics::PlaneShape(1.0f, glm::vec3(0.f, 1.f, 0.f));
+        rigidBodyComponent->rigidBodyDesc.isStatic = true;
+        rigidBodyComponent->rigidBodyDesc.mass = 0.f;
+        rigidBodyComponent->isInfluenced = true;
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
         litComponent->isLit = true;
@@ -457,6 +485,7 @@ void ECSEngine() {
 
     // Add all the systems
     engine.AddSystem(renderSystem);
+    engine.AddSystem(physicsSystem);
     engine.AddSystem(lightSystem);
     engine.AddSystem(shaderSystem);
     engine.AddSystem(motionSystem);
@@ -467,7 +496,8 @@ void ECSEngine() {
     engine.UpdateCallback(&Update);
 
     // The actual update method
-    while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) {
+    while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) 
+    {
         engine.Update(0.25f);
     }
 

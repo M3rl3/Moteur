@@ -1,10 +1,11 @@
-#include <ECS/Component.h>
+#pragma once
 
+#include <ECS/Component.h>
 #include <FMOD/fmod.hpp>
 
 #include <string>
 
-// Component holding all sounds playing from entities
+// Component holding all the sounds playing from entities
 struct SoundComponent : Component {
 public:
 	// Constructor
@@ -24,13 +25,13 @@ public:
 	// Sound attached to the entity
 	FMOD::Channel* attachedSound;
 
-	// Sound attached to the entity
+	// Name of the sound attached to the entity
 	std::string soundName;
 
 	// Sound volume
 	float soundVolume;
 
-	// sound attenuation
+	// Sound attenuation
 	float maxDistance;
 
 	// Is the sound playing?
