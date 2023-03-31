@@ -380,7 +380,11 @@ void ECSEngine() {
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
 
         // Test set high score
-        sql.SetHighScore(entityID, 10);
+        sql.SetHighScore(entityID, 70);
+
+        // Test get high score
+        int score = sql.GetHighScore(entityID);
+        printf("The high score is: %d\n", score);
     }
 
     {   // Entity "creepyMonster"

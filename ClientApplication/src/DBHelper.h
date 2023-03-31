@@ -25,6 +25,13 @@ public:
 	/// <param name="score">high score</param>
 	void SetHighScore(int playerId, int score);
 
+	/// <summary>
+	/// Returns the high score of the provided playerId
+	/// </summary>
+	/// <param name="playerId">The player id</param>
+	/// <returns>The score</returns>
+	int GetHighScore(int playerId);
+
 private:
 	sqlite3* mDB;
 	bool mIsConnected;

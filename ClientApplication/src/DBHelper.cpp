@@ -52,3 +52,20 @@ void DBHelper::SetHighScore(int playerId, int score)
 	sqlite3_step(stmt);
 	sqlite3_finalize(stmt);
 }
+
+int DBHelper::GetHighScore(int playerId)
+{
+	sqlite3_stmt* stmt;
+	std::string query = "SELECT high_score FROM player WHERE id = ?";
+	sqlite3_prepare_v2(mDB, query.c_str(), -1, &stmt, NULL);
+	sqlite3_bind_int(stmt, 1, playerId);
+	int score = -1;
+
+	if (sqlite3_step(stmt) == SQLITE_ROW) {
+		score = sqlite3_column_int(stmt, 0);
+	}
+
+	sqlite3_finalize(stmt);
+
+	return score;
+}
