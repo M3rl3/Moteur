@@ -13,20 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="File Stream">
-      <UniqueIdentifier>{cf8f02d3-033f-4a90-9bbc-e50c0db86556}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mesh Class">
-      <UniqueIdentifier>{1d4e0112-f469-41e5-8be9-757781c4c35a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render Crosshair">
-      <UniqueIdentifier>{1830ed35-3a47-498e-b8c0-cb4031a422ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Physics Particle">
       <UniqueIdentifier>{400a8d03-9ab1-43a0-bbd2-d4a2352f1736}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model Loader">
-      <UniqueIdentifier>{4c5aadf6-6cae-467a-bdd5-2799cdf7bd25}</UniqueIdentifier>
     </Filter>
     <Filter Include="Texture Manager">
       <UniqueIdentifier>{b4b69265-188c-45e1-b810-96d070745dae}</UniqueIdentifier>
@@ -43,38 +31,8 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{a24da5ad-6d87-4bac-8d64-fc365e6b4f9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Callback Functions">
-      <UniqueIdentifier>{96fb319b-629d-403f-aba2-98c11d023351}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Animation Manager">
-      <UniqueIdentifier>{77b30e7b-0c92-4909-8b17-de4eb08c706f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.JsonParser">
-      <UniqueIdentifier>{1c7fe62e-d066-4c32-bae1-65489bafab8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98.Timer">
-      <UniqueIdentifier>{d192cada-c1c5-4192-9b60-ea49a47698b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components">
-      <UniqueIdentifier>{81a740d8-2ed2-4d04-ab05-61be324b8219}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ECS">
       <UniqueIdentifier>{c9668d2b-9bd7-4467-b086-1a312f33999b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Moteur">
-      <UniqueIdentifier>{9e84d755-659a-4fdc-be9f-e0265ae71c2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ECSengine">
-      <UniqueIdentifier>{e2e153c3-cc00-408d-a6dc-39f7b2dbbd6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entity Manager">
-      <UniqueIdentifier>{8e1b3982-9b55-4841-8308-25abeee7f61f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems">
-      <UniqueIdentifier>{f333a885-d9df-4459-b1d5-736daf1a652a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PLY File Loader">
-      <UniqueIdentifier>{e9a24927-c7e2-4aab-96dc-28cb7f81252a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Draw BBox">
       <UniqueIdentifier>{e6487e1f-7e86-41d5-9a06-9ed77c130ba8}</UniqueIdentifier>
@@ -82,20 +40,8 @@
     <Filter Include="Light Manager">
       <UniqueIdentifier>{7196efec-5962-4706-84ee-ab2dd9092fd6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PNG Texture">
-      <UniqueIdentifier>{ebfbcaa1-3414-4888-ba0b-6a52885c1587}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cameraEye.txt">
-      <Filter>File Stream</Filter>
-    </Text>
-    <Text Include="sceneDescription.txt">
-      <Filter>File Stream</Filter>
-    </Text>
-    <Text Include="readFile.txt">
-      <Filter>File Stream</Filter>
-    </Text>
     <Text Include="imgui\LICENSE.txt">
       <Filter>Dear ImGui</Filter>
     </Text>
@@ -103,30 +49,6 @@
   <ItemGroup>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cMeshInfo.cpp">
-      <Filter>Mesh Class</Filter>
-    </ClCompile>
-    <ClCompile Include="cRenderReticle.cpp">
-      <Filter>Render Crosshair</Filter>
-    </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>Physics Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleAccelerator.cpp">
-      <Filter>Physics Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadModel.cpp">
-      <Filter>Model Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="cBasicTextureManager\C24BitBMPpixel.cpp">
-      <Filter>Texture Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="cBasicTextureManager\cBasicTextureManager.cpp">
-      <Filter>Texture Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="cBasicTextureManager\CTextureFromBMP.cpp">
-      <Filter>Texture Manager</Filter>
     </ClCompile>
     <ClCompile Include="cShaderManager\cShaderManager.cpp">
       <Filter>Shader Manager</Filter>
@@ -158,48 +80,6 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>Dear ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Callbacks.cpp">
-      <Filter>Callback Functions</Filter>
-    </ClCompile>
-    <ClCompile Include="JsonParser.cpp">
-      <Filter>99.JsonParser</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationManager.cpp">
-      <Filter>Animation Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>98.Timer</Filter>
-    </ClCompile>
-    <ClCompile Include="Moteur.cpp">
-      <Filter>Moteur</Filter>
-    </ClCompile>
-    <ClCompile Include="ECSengine.cpp">
-      <Filter>ECSengine</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityManager.cpp">
-      <Filter>Entity Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureComponent.h">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="MotionSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="cPlyFileLoader.cpp">
-      <Filter>PLY File Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawBoundingBox.cpp">
-      <Filter>Draw BBox</Filter>
-    </ClCompile>
     <ClCompile Include="cLightManager\cLight.cpp">
       <Filter>Light Manager</Filter>
     </ClCompile>
@@ -212,46 +92,100 @@
     <ClCompile Include="cShaderManager\cShaderProgram.cpp">
       <Filter>Shader Manager</Filter>
     </ClCompile>
-    <ClCompile Include="LightSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="AISystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cPNGTexture\cPNGTexture.cpp">
-      <Filter>PNG Texture</Filter>
+    <ClCompile Include="cTextureManager\C24BitBMPpixel.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cTextureManager\cPNGTexture.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cTextureManager\CTextureFromBMP.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cTextureManager\cTextureManager.cpp">
+      <Filter>Texture Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cAnimationManager\AnimationManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cPLyFileLoader\cPlyFileLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawBoundingBox\DrawBoundingBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ECSengine\ECSengine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager\EntityManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonParser\JsonParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OldEngine\Moteur.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\AISystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\LightSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\MeshSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\MotionSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\RenderSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ShaderSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cRenderReticle\cRenderReticle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OldModelLoader\LoadModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OldMeshClass\cMeshInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPhysics\Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPhysics\ParticleAccelerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cSoundManager\cSoundManager.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cSoundManager\cSoundManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\SoundComponent.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\SoundSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Global.h">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cMeshInfo.h">
-      <Filter>Mesh Class</Filter>
-    </ClInclude>
-    <ClInclude Include="cRenderReticle.h">
-      <Filter>Render Crosshair</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>Physics Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleAccelerator.h">
-      <Filter>Physics Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadModel.h">
-      <Filter>Model Loader</Filter>
-    </ClInclude>
     <ClInclude Include="OpenGL.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cBasicTextureManager\C24BitBMPpixel.h">
-      <Filter>Texture Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="cBasicTextureManager\cBasicTextureManager.h">
-      <Filter>Texture Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="cBasicTextureManager\CTextureFromBMP.h">
-      <Filter>Texture Manager</Filter>
     </ClInclude>
     <ClInclude Include="cShaderManager\cShaderManager.h">
       <Filter>Shader Manager</Filter>
@@ -286,30 +220,6 @@
     <ClInclude Include="imgui\imstb_truetype.h">
       <Filter>Dear ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Callbacks.h">
-      <Filter>Callback Functions</Filter>
-    </ClInclude>
-    <ClInclude Include="GlobalStuff.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="JsonParser.h">
-      <Filter>99.JsonParser</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Animation Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationManager.h">
-      <Filter>Animation Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>98.Timer</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\ECS\Component.h">
       <Filter>ECS</Filter>
     </ClInclude>
@@ -318,51 +228,6 @@
     </ClInclude>
     <ClInclude Include="..\include\ECS\System.h">
       <Filter>ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Moteur.h">
-      <Filter>Moteur</Filter>
-    </ClInclude>
-    <ClInclude Include="ECSengine.h">
-      <Filter>ECSengine</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityManager.h">
-      <Filter>Entity Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="VelocityComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="MotionSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="cPlyFileLoader.h">
-      <Filter>PLY File Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawBoundingBox.h">
-      <Filter>Draw BBox</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingBoxComponent.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="cLightManager\cLight.h">
       <Filter>Light Manager</Filter>
@@ -373,26 +238,119 @@
     <ClInclude Include="cLightManager\cLightManager.h">
       <Filter>Light Manager</Filter>
     </ClInclude>
-    <ClInclude Include="LitComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="LightSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="cShaderManager\cShader.h">
       <Filter>Shader Manager</Filter>
     </ClInclude>
     <ClInclude Include="cShaderManager\cShaderProgram.h">
       <Filter>Shader Manager</Filter>
     </ClInclude>
-    <ClInclude Include="AISystem.h">
-      <Filter>Systems</Filter>
+    <ClInclude Include="cTextureManager\C24BitBMPpixel.h">
+      <Filter>Texture Manager</Filter>
     </ClInclude>
-    <ClInclude Include="AIComponent.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="cTextureManager\cPNGTexture.h">
+      <Filter>Texture Manager</Filter>
     </ClInclude>
-    <ClInclude Include="cPNGTexture\cPNGTexture.h">
-      <Filter>PNG Texture</Filter>
+    <ClInclude Include="cTextureManager\CTextureFromBMP.h">
+      <Filter>Texture Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cTextureManager\cTextureManager.h">
+      <Filter>Texture Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="cAnimationManager\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cAnimationManager\AnimationManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\AIComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\AnimationComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\BoundingBoxComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\LitComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\MeshComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\ShaderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TextureComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TransformComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\VelocityComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cPLyFileLoader\cPlyFileLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawBoundingBox\DrawBoundingBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECSengine\ECSengine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager\EntityManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonParser\JsonParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OldEngine\Moteur.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\AISystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\LightSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\MeshSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\MotionSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\RenderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ShaderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cRenderReticle\cRenderReticle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OldModelLoader\LoadModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OldMeshClass\cMeshInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicPhysics\Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicPhysics\ParticleAccelerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\SoundSystem.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

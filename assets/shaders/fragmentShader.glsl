@@ -22,7 +22,7 @@ uniform vec4 diffuseColour;
 uniform vec4 specularColour;
 
 uniform vec4 debugColour;
-uniform bool doNotLight;
+uniform bool isLit;
 
 uniform vec4 eyeLocation;
 
@@ -195,7 +195,7 @@ void main()
 //		return;
 	}
 
-	if (doNotLight)
+	if (!isLit)
 	{
 		// Set the output colour and exit early
 		// (Don't apply the lighting to this)
@@ -214,10 +214,10 @@ void main()
 
 	float ambientLightAmount = ambientLight;
 
-	if (useTexture) {
-		ambientLightAmount *= 40.f;
-	}
-
+//	if (useTexture) {
+//		ambientLightAmount *= 40.f;
+//	}
+//
 	if (!useRGBAColour && !useTexture) {
 		
 		ambientLightAmount = 0.005f;

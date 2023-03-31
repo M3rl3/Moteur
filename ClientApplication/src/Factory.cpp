@@ -1,7 +1,8 @@
 #include "Factory.h"
 #include "BGObject.h"
 #include "Character.h"
-#include <Animation.h>
+
+#include <cAnimationManager/Animation.h>
 
 using namespace std;
 using namespace glm;

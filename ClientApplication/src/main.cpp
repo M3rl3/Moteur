@@ -6,19 +6,31 @@
 #define ECS_ENGINE    
 #endif // !ECS_ENGINE
 
-#include "ECSengine.h"
+#include "ECSengine/ECSengine.h"
 
-#include "AIComponent.h"
-#include "AISystem.h"
-#include "RenderSystem.h"
-#include "MeshSystem.h"
-#include "ShaderSystem.h"
+#include "Components/AIComponent.h"
+#include "Components/TransformComponent.h"
+#include "Components/MeshComponent.h"
+#include "Components/ShaderComponent.h"
+#include "Components/TextureComponent.h"
+#include "Components/AnimationComponent.h"
+#include "Components/VelocityComponent.h"
+#include "Components/BoundingBoxComponent.h"
+#include "Components/LitComponent.h"
+#include "Components/SoundComponent.h"
 
-#include "Moteur.h"
-#include "../Moteur/cPNGTexture/cPNGTexture.h"
+#include "Systems/ShaderSystem.h"
+#include "Systems/RenderSystem.h"
+#include "Systems/MeshSystem.h"
+#include "Systems/MotionSystem.h"
+#include "Systems/LightSystem.h"
+#include "Systems/SoundSystem.h"
+#include "Systems/AISystem.h"
+
+#include "OldEngine/Moteur.h"
 
 #include "Scene.h"
-#include "Timer.h"
+#include "Timer/Timer.h"
 
 #include <sstream>
 
@@ -100,8 +112,6 @@ void MoteurKeysCheck(bool* keys) {
     {
         Moteur::Engine_GetCameraObject()->position.y += CAMERA_MOVE_SPEED;
     }
-
-
 }
 
 void ECSKeysCheck() {
@@ -119,22 +129,22 @@ void ECSKeysCheck() {
     case CAMERA:
 
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_W)) {
-            renderSystem->GetCamera()->position.z += MOVE_SPEED;
+            renderSystem->GetCamera()->MoveForward();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_S)) {
-            renderSystem->GetCamera()->position.z -= MOVE_SPEED;
+            renderSystem->GetCamera()->MoveBackward();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_D)) {
-            renderSystem->GetCamera()->position.x += MOVE_SPEED;
+            renderSystem->GetCamera()->StrafeRight();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_A)) {
-            renderSystem->GetCamera()->position.x -= MOVE_SPEED;
+            renderSystem->GetCamera()->StrafeLeft();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_Q)) {
-            renderSystem->GetCamera()->position.y += MOVE_SPEED;
+            renderSystem->GetCamera()->MoveUp();
         }
         if (renderSystem->IsKeyHeldDown(GLFW_KEY_E)) {
-            renderSystem->GetCamera()->position.y -= MOVE_SPEED;
+            renderSystem->GetCamera()->MoveDown();
         }
         break;
 
@@ -179,12 +189,15 @@ void ECSKeysCheck() {
 
     if (gameMode == PLAYER) {
         renderSystem->GetCamera()->position = transformComponent->position - glm::vec3(0, -3, 10);
-        renderSystem->GetCamera()->target = transformComponent->position;
+
+        if (!renderSystem->GetMouseStatus()) {
+            renderSystem->GetCamera()->target = transformComponent->position;
+        }
     }
 }
 
 /// <summary>
-/// The new engine initialization. Still WIP
+/// The new engine initialization.
 /// </summary>
 void ECSEngine() {
 
@@ -196,7 +209,7 @@ void ECSEngine() {
     renderSystem->Initialize("ECSengine", 1366, 768, false);
 
     renderSystem->SetCameraPosition(glm::vec3(-30.f, 5.f, -50.f));
-    renderSystem->SetCameraTarget(glm::vec3(1.f));
+    renderSystem->SetCameraTarget(glm::vec3(0.f, 0.f, 1.f));
 
     // AI System
     aiSystem = new AISystem();
@@ -211,74 +224,80 @@ void ECSEngine() {
     shaderSystem->CreateShaderProgramFromFiles(shaderID, v_Shader, g_Shader, f_Shader);
 
     // Meshes loaded here
-    sModelDrawInfo skybox;
-    renderSystem->LoadMesh("../assets/meshes/skybox_sphere.ply", "skybox", skybox, shaderID);
-    
-    sModelDrawInfo steve;
-    renderSystem->LoadMesh("../assets/meshes/steve.ply", "steve", steve, shaderID);
+    renderSystem->SetMeshPath("../assets/meshes");
 
-    sModelDrawInfo creepyMonster;
-    renderSystem->LoadMesh("../assets/meshes/creepyMonster.ply", "creepyMonster", creepyMonster, shaderID);
-    
-    sModelDrawInfo plain;
-    renderSystem->LoadMesh("../assets/meshes/west_town.ply", "plain", plain, shaderID);
+    renderSystem->LoadMesh("skybox_sphere.ply", "skybox", shaderID);
+    renderSystem->LoadMesh("steve.ply", "steve", shaderID);
+    renderSystem->LoadMesh("creepyMonster.ply", "creepyMonster", shaderID);
+    renderSystem->LoadMesh("west_town.ply", "plain", shaderID);
     
     // Textures loaded here
     renderSystem->SetTexturePath("../assets/textures");
 
     // Skybox textures
-    unsigned int textureID0 = 0;
-    std::string errorString = "";
 
-    std::string skyboxName = "sunnyday";
-    renderSystem->LoadCubeMapTexture(textureID0, skyboxName,
+    // BMP
+    unsigned int skyboxTextureID0 = 0;
+    std::string errorString0 = "";
+
+    std::string skyboxNameBMP = "sunnyday";
+    renderSystem->LoadCubeMapTextureBMP(skyboxTextureID0, skyboxNameBMP,
         "TropicalSunnyDayLeft2048.bmp",
         "TropicalSunnyDayRight2048.bmp",
         "TropicalSunnyDayDown2048.bmp",
         "TropicalSunnyDayUp2048.bmp",
         "TropicalSunnyDayFront2048.bmp",
         "TropicalSunnyDayBack2048.bmp",
-        true, errorString);
+        true, errorString0);
+
+    // PNG
+    unsigned int skyboxTextureID1 = 0;
+    std::string errorString1 = "";
+
+    std::string skyboxNamePNG = "desert";
+    renderSystem->LoadCubeMapTexturePNG(skyboxTextureID1, skyboxNamePNG,
+        "desertlf.png",
+        "desertrt.png",
+        "desertdn.png",
+        "desertup.png",
+        "desertft.png",
+        "desertbk.png",
+        true, errorString1);
 
     // 2D textures
 
     // PNG Textures
     unsigned int textureID = 0;
-    cPNGTexture texture0(textureID, "../assets/textures/man.png");
+    renderSystem->Load2DTexturePNG("man.png");
 
     // BMP Textures
-    unsigned int textureID1 = 0;
-    renderSystem->Load2DTexture(textureID1, "Archer.bmp");
-    
-    unsigned int textureID2 = 0;
-    renderSystem->Load2DTexture(textureID2, "seamless-green-grass-pattern.bmp");
+    renderSystem->Load2DTextureBMP("Archer.bmp");
+    renderSystem->Load2DTextureBMP("seamless-green-grass-pattern.bmp");
+    renderSystem->Load2DTextureBMP("full_low_body__BaseColor.bmp");
 
-    unsigned int textureID3 = 0;
-    renderSystem->Load2DTexture(textureID3, "full_low_body__BaseColor.bmp");
-    
-    unsigned int textureID4 = 0;
-    renderSystem->Load2DTexture(textureID4, "full_low_body__Roughness.bmp");
+    // Sounds
+    SoundSystem* soundSystem = new SoundSystem();
 
-    unsigned int textureID5 = 0;
-    renderSystem->Load2DTexture(textureID5, "full_low_body__AO.bmp");
+    // Flags
+    constexpr int flags = FMOD_DEFAULT | FMOD_3D | FMOD_LOOP_NORMAL;
 
-    unsigned int textureID6 = 0;
-    renderSystem->Load2DTexture(textureID6, "full_low_body__Metallic.bmp");
+    // Sounds loaded here
+    soundSystem->SetSoundPath("../assets/sounds/sfx");
 
-    unsigned int textureID7 = 0;
-    renderSystem->Load2DTexture(textureID7, "full_low_body__Normal.bmp");
+    soundSystem->LoadSound("deep_stone_lullaby.mp3", flags);
+    soundSystem->LoadSound("chicken.wav", flags);
 
     // Lighting
     LightSystem* lightSystem = new LightSystem();
 
     // Ambient light
-    float ambientLight = 0.025f;
+    float ambientLight = 0.5f;
     lightSystem->SetAmbientLightAmount(ambientLight);
 
     // attenuation on all lights
-    const glm::vec4 constLightAtten = glm::vec4(0.1f, 0.25f, 1.0e-7f, 1.0f);
+    const glm::vec4 constLightAtten = glm::vec4(0.1f, 2.5e-5f, 2.5e-5f, 1.0f);
 
-    cLight* newLight = lightSystem->AddLight(glm::vec4(-20, 20, 0, 1));
+    cLight* newLight = lightSystem->AddLight(glm::vec4(0, 50, 0, 1));
 
     newLight->diffuse = glm::vec4(1.f, 1.f, 1.f, 1.f);
     newLight->specular = glm::vec4(1.f, 1.f, 1.f, 1.f);
@@ -302,12 +321,13 @@ void ECSEngine() {
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
-        meshComponent->plyModel = skybox;
+        meshComponent->meshName = "skybox";
+        meshComponent->isWireframe = false;
         meshComponent->isSkyBox = true;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
-        textureComponent->textureID[0] = textureID0;
-        textureComponent->textures[0] = "sunnyday";
+        textureComponent->textureFormat = TextureFormat::PNG;
+        textureComponent->textures[0] = "desert";
     }
 
     {   // Entity "steve"
@@ -316,25 +336,35 @@ void ECSEngine() {
 
         transformComponent = engine.AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(-18.f, 0.f, -34.f);
-        transformComponent->scale = glm::vec3(1.0f);
+        transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
-        transformComponent->SetType("Player");
 
         ShaderComponent* shaderComponent = engine.AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
-        meshComponent->plyModel = steve;
+        meshComponent->meshName = "steve";
+        meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
-        textureComponent->textureID[0] = textureID;
+        textureComponent->textureFormat = TextureFormat::PNG;
+        textureComponent->textures[0] = "man.png";
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
+        BoundingBoxComponent* boundingBoxComponent = engine.AddComponent<BoundingBoxComponent>(entityID);
+        boundingBoxComponent->drawBBox = true;
+
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
-        litComponent->doNotLight = false;
+        litComponent->isLit = true;
+
+        SoundComponent* soundComponent = engine.AddComponent<SoundComponent>(entityID);
+        soundComponent->isPlaying = true;
+        soundComponent->maxDistance = 1.f;
+        soundComponent->soundVolume = 5.f;
+        soundComponent->soundName = "deep_stone_lullaby.mp3";
 
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
@@ -353,46 +383,31 @@ void ECSEngine() {
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
-        meshComponent->plyModel = creepyMonster;
+        meshComponent->meshName = "creepyMonster";
+        meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
-        textureComponent->textureID[0] = textureID3;
-        textureComponent->textureID[1] = textureID4;
-        textureComponent->textureID[2] = textureID5;
-        textureComponent->textureID[3] = textureID6;
-        textureComponent->textureID[4] = textureID7;
-        textureComponent->textureRatios[0] = 0.75f;
-        textureComponent->textureRatios[1] = 0.25f;
-        textureComponent->textureRatios[2] = 0.25f;
-        textureComponent->textureRatios[3] = 0.25f;
-        textureComponent->textureRatios[4] = 0.25f;
+        textureComponent->textureFormat = TextureFormat::BMP;
+        textureComponent->textures[0] = "full_low_body__BaseColor.bmp";
+        textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
-        litComponent->doNotLight = false;
+        litComponent->isLit = true;
 
-        BoundingBoxComponent* boundingBoxComponent = engine.AddComponent<BoundingBoxComponent>(entityID);
-        boundingBoxComponent->drawBBox = true;
-
-        AnimationComponent* animationComponent = engine.AddComponent<AnimationComponent>(entityID);
-        animationComponent->animation.AnimationType = "TestAnimation";
-        animationComponent->animation.IsPlaying = true;
-        animationComponent->animation.AnimationTime = 0.0f;
+        SoundComponent* soundComponent = engine.AddComponent<SoundComponent>(entityID);
+        soundComponent->isPlaying = true;
+        soundComponent->maxDistance = 1.f;
+        soundComponent->soundVolume = 5.f;
+        soundComponent->soundName = "chicken.wav";
 
         AIComponent* aiComponent = engine.AddComponent<AIComponent>(entityID);
         aiComponent->radius = 3.0f;
         aiComponent->type = BehaviorType::PURSUE;
         aiComponent->transformComponent = transformComponent;
         aiComponent->speed = 1.0f;
-        //aiComponent->targetPosition = transformComponent->position;
-
-
-        //VelocityCompoent* velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
-        //velocityComponent->targeting = false;
-        ////velocityComponent->velocity = glm::vec3(0.f, 0.f, 5.f);
-        //velocityComponent->destination = glm::vec3(0.f, 0.f, 1000.f);
     }
 
     {   // Entity "plain"
@@ -408,27 +423,28 @@ void ECSEngine() {
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine.AddComponent<MeshComponent>(entityID);
-        meshComponent->plyModel = plain;
+        meshComponent->meshName = "plain";
+        meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine.AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = false;
-        textureComponent->rgbaColor = glm::vec4(1, 1, 1, 1);
+        textureComponent->rgbaColor = glm::vec4(0.35f, 0.35f, 0.35f, 1.f);
         textureComponent->useTexture = false;
-        textureComponent->textureID[0] = textureID2;
+        textureComponent->textureFormat = TextureFormat::BMP;
         textureComponent->textures[0] = "seamless-green-grass-pattern.bmp";
         textureComponent->textureRatios[0] = 1.f;
 
         LitComponent* litComponent = engine.AddComponent<LitComponent>(entityID);
-        litComponent->doNotLight = false;
+        litComponent->isLit = true;
     }
 
     // Add all the systems
     engine.AddSystem(renderSystem);
     engine.AddSystem(lightSystem);
-    engine.AddSystem(shaderSystem);    
+    engine.AddSystem(shaderSystem);
     engine.AddSystem(motionSystem);
+    engine.AddSystem(soundSystem);
     engine.AddSystem(aiSystem);
-    // engine.AddSystem(meshSystem);
 
     // User defined update method (for user inputs)
     engine.UpdateCallback(&Update);

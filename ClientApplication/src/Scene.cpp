@@ -1,10 +1,10 @@
 #include "Scene.h"
-#include "JsonParser.h"
+#include "JsonParser/JsonParser.h"
 #include "Factory.h"
 #include "BGObject.h"
 #include "Character.h"
 #include "glm\vec3.hpp"
-#include "Moteur.h"
+#include "OldEngine/Moteur.h"
 
 #include <vector>
 
