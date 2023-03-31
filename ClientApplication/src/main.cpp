@@ -34,7 +34,20 @@
 
 #include <sstream>
 
+#include "Leaderboard.h"
+
+#include <thrift/transport/TSocket.h>
+#include <thrift/transport/TServerSocket.h>
+#include <thrift/transport/TBufferTransports.h>
+#include <thrift/protocol/TBinaryProtocol.h>
+
 const std::string DATABASE_NAME = "oguns_dice.db";
+
+using namespace ::apache::thrift;
+using namespace ::apache::thrift::protocol;
+using namespace ::apache::thrift::transport;
+
+using boost::shared_ptr;
 
 enum GameMode {
     CAMERA,
@@ -59,6 +72,8 @@ void ECSKeysCheck();
 
 void ECSEngine();
 void GoldenAgeEngine();
+
+void SetHighScore(const int32_t playerId, const int32_t highScore);
 
 // The main class
 int main(int argc, char** argv)
@@ -85,6 +100,19 @@ void Update(float dt) {
 #ifdef ECS_ENGINE
     ECSKeysCheck();
 #endif // ECS_ENGINE
+}
+
+void SetHighScore(const int32_t playerId, const int32_t highScore) {
+    shared_ptr<TSocket> socket(new TSocket("localhost", 9090));
+    shared_ptr<TTransport> transport(new TBufferedTransport(socket));
+    shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
+
+    LeaderboardClient client(protocol);
+
+    transport->open();
+    client.setHighScore(playerId, highScore);
+
+    transport->close();
 }
 
 void MoteurKeysCheck(bool* keys) {
@@ -371,6 +399,8 @@ void ECSEngine() {
 
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
+
+        SetHighScore(entityID, 50000);
 
     }
 

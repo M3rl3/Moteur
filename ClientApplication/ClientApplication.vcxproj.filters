@@ -16,6 +16,9 @@
     <Filter Include="DB">
       <UniqueIdentifier>{6bfec675-2863-49b6-ada3-52281d0a8985}</UniqueIdentifier>
     </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{1f6a4a0e-d3c2-4eae-a1d9-5a17a699e5fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Scene.cpp">
@@ -33,6 +36,15 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="src\Leaderboard.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\leaderboard_constants.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\leaderboard_types.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Scene.h">
@@ -46,6 +58,15 @@
     </ClInclude>
     <ClInclude Include="src\Factory.h">
       <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Leaderboard.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\leaderboard_constants.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\leaderboard_types.h">
+      <Filter>network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

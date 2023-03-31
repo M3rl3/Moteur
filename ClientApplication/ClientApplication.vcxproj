@@ -185,6 +185,9 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Leaderboard.cpp" />
+    <ClCompile Include="src\leaderboard_constants.cpp" />
+    <ClCompile Include="src\leaderboard_types.cpp" />
     <ClCompile Include="src\BGObject.cpp" />
     <ClCompile Include="src\Character.cpp" />
     <ClCompile Include="src\Factory.cpp" />
@@ -197,6 +200,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Leaderboard.h" />
+    <ClInclude Include="src\leaderboard_constants.h" />
+    <ClInclude Include="src\leaderboard_types.h" />
     <ClInclude Include="src\BGObject.h" />
     <ClInclude Include="src\Character.h" />
     <ClInclude Include="src\Factory.h" />

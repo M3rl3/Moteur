@@ -23,7 +23,6 @@ public:
 
 		// Client database
 		sql.Connect(DATABASE_NAME.c_str());
-		sql.SetHighScore(21, 77);
 		
 	}
 
@@ -33,7 +32,7 @@ public:
 		// Your implementation goes here
 		// 
 		// Test set high score
-		sql.SetHighScore(11, 77);
+		sql.SetHighScore(playerId, highScore);
 
 		printf("setHighScore\n");
 	}
