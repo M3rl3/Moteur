@@ -27,6 +27,12 @@
     <ClCompile Include="leaderboard_types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DBHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Leaderboard.h">
@@ -38,5 +44,14 @@
     <ClInclude Include="leaderboard_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DBHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="oguns_dice.db" />
   </ItemGroup>
 </Project>

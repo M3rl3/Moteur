@@ -1,3 +1,4 @@
+#include "DBHelper.h"
 #include "Leaderboard.h"
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/server/TSimpleServer.h>
@@ -9,13 +10,20 @@ using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
 using namespace ::apache::thrift::server;
 
+const std::string DATABASE_NAME = "oguns_dice.db";
+
 using boost::shared_ptr;
+DBHelper sql;
 
 class LeaderboardHandler : virtual public LeaderboardIf {
 public:
 	LeaderboardHandler() {
 		// Your initialization goes here
 		this->highScoreByPlayer = new std::map<int32_t, int32_t>();
+
+		// Client database
+		sql.Connect(DATABASE_NAME.c_str());
+		sql.SetHighScore(21, 77);
 		
 	}
 
@@ -23,11 +31,16 @@ public:
 		this->highScoreByPlayer->insert(std::pair<int32_t, int32_t>(playerId, highScore));
 
 		// Your implementation goes here
+		// 
+		// Test set high score
+		sql.SetHighScore(11, 77);
+
 		printf("setHighScore\n");
 	}
 
 	void getTop20(std::map<int32_t, int32_t> & _return) {
 		_return.insert(this->highScoreByPlayer->begin(), this->highScoreByPlayer->end());
+		//int score = sql.GetHighScore(entityID);
 		// Your implementation goes here
 		printf("getTop20\n");
 	}

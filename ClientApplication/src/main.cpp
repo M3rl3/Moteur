@@ -27,8 +27,6 @@
 #include "Systems/SoundSystem.h"
 #include "Systems/AISystem.h"
 
-#include "DBHelper.h"
-
 #include "OldEngine/Moteur.h"
 
 #include "Scene.h"
@@ -43,8 +41,6 @@ enum GameMode {
     PLAYER,
     NONE
 };
-
-DBHelper sql;
 
 GameMode gameMode = CAMERA;
 
@@ -292,9 +288,6 @@ void ECSEngine() {
 
     soundSystem->LoadSound("deep_stone_lullaby.mp3", flags);
     soundSystem->LoadSound("chicken.wav", flags);
-
-    // Client database
-    sql.Connect(DATABASE_NAME.c_str());
     
 
     // Lighting
@@ -379,12 +372,6 @@ void ECSEngine() {
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
 
-        // Test set high score
-        sql.SetHighScore(entityID, 70);
-
-        // Test get high score
-        int score = sql.GetHighScore(entityID);
-        printf("The high score is: %d\n", score);
     }
 
     {   // Entity "creepyMonster"

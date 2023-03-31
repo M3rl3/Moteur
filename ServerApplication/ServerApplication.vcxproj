@@ -112,13 +112,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\local\boost_1_59_0;C:\Thrift\thrift-0.9.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\local\boost_1_59_0;C:\Thrift\thrift-0.9.1\src;$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libthrift.lib;libboost_thread-vc140-mt-gd-1_59.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\local\boost_1_59_0\lib64-msvc-14.0;C:\Thrift\thrift-0.9.1\lib\$(IntDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\local\boost_1_59_0\lib64-msvc-14.0;C:\Thrift\thrift-0.9.1\lib\$(IntDir);$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,7 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\local\boost_1_59_0;C:\Thrift\thrift-0.9.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\local\boost_1_59_0;C:\Thrift\thrift-0.9.1\src;$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,19 +137,26 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libthrift.lib;libboost_thread-vc140-mt-1_59.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\local\boost_1_59_0\lib64-msvc-14.0;C:\Thrift\thrift-0.9.1\lib\$(IntDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\local\boost_1_59_0\lib64-msvc-14.0;C:\Thrift\thrift-0.9.1\lib\$(IntDir);$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DBHelper.cpp" />
     <ClCompile Include="Leaderboard.cpp" />
     <ClCompile Include="leaderboard_constants.cpp" />
     <ClCompile Include="Leaderboard_server.cpp" />
     <ClCompile Include="leaderboard_types.cpp" />
+    <ClCompile Include="sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DBHelper.h" />
     <ClInclude Include="Leaderboard.h" />
     <ClInclude Include="leaderboard_constants.h" />
     <ClInclude Include="leaderboard_types.h" />
+    <ClInclude Include="sqlite3.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="oguns_dice.db" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

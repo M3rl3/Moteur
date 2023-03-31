@@ -33,12 +33,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="src\sqlite3.c">
-      <Filter>DB</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DBHelper.cpp">
-      <Filter>DB</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Scene.h">
@@ -53,14 +47,5 @@
     <ClInclude Include="src\Factory.h">
       <Filter>Factory</Filter>
     </ClInclude>
-    <ClInclude Include="src\DBHelper.h">
-      <Filter>DB</Filter>
-    </ClInclude>
-    <ClInclude Include="src\sqlite3.h">
-      <Filter>DB</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\oguns_dice.db" />
   </ItemGroup>
 </Project>

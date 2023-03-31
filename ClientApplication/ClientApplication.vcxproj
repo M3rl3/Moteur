@@ -185,13 +185,11 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\DBHelper.cpp" />
     <ClCompile Include="src\BGObject.cpp" />
     <ClCompile Include="src\Character.cpp" />
     <ClCompile Include="src\Factory.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Scene.cpp" />
-    <ClCompile Include="src\sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Moteur\Moteur.vcxproj">
@@ -199,15 +197,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\DBHelper.h" />
     <ClInclude Include="src\BGObject.h" />
     <ClInclude Include="src\Character.h" />
     <ClInclude Include="src\Factory.h" />
     <ClInclude Include="src\Scene.h" />
-    <ClInclude Include="src\sqlite3.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\oguns_dice.db" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
