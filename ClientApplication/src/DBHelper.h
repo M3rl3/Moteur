@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "sqllite/sqlite3.h"
 
 class DBHelper
