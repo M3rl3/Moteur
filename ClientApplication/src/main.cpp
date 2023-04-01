@@ -410,7 +410,7 @@ void ECSEngine() {
         unsigned int entityID = engine.CreateEntity();
 
         TransformComponent* transformComponent = engine.AddComponent<TransformComponent>(entityID);
-        transformComponent->position = glm::vec3(10.f, 50.f, -30.f);
+        transformComponent->position = glm::vec3(10.f, 10.f, -30.f);
         transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
