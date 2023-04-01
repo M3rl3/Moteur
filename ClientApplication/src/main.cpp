@@ -391,11 +391,11 @@ void ECSEngine() {
         rigidBodyComponent->bodyShape = new physics::CylinderShape(transformComponent->scale);
         rigidBodyComponent->rigidBodyDesc.isStatic = false;
         rigidBodyComponent->rigidBodyDesc.mass = 1.f;
-        rigidBodyComponent->isInfluenced = false;
+        rigidBodyComponent->isInfluenced = true;
 
         velocityComponent = engine.AddComponent<VelocityComponent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
-        velocityComponent->useVelocity = true;
+        velocityComponent->useVelocity = false;
 
         // Test set high score
         sql.SetHighScore(entityID, 70);
