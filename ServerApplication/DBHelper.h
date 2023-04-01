@@ -2,6 +2,8 @@
 
 #include <string>
 #include "sqllite/sqlite3.h"
+#include<vector>
+#include <map>
 
 class DBHelper
 {
@@ -31,6 +33,12 @@ public:
 	/// <param name="playerId">The player id</param>
 	/// <returns>The score</returns>
 	int GetHighScore(int playerId);
+
+	/// <summary>
+	/// Get top 20 high scores
+	/// </summary>
+	/// <returns></returns>
+	std::map<int32_t, int32_t> GetTopHighScores();
 
 private:
 	sqlite3* mDB;

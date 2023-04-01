@@ -14,9 +14,4 @@
 
 #include <thrift/cxxfunctional.h>
 
-
-
-
-
-
 #endif

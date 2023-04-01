@@ -29,19 +29,15 @@ public:
 	void setHighScore(const int32_t playerId, const int32_t highScore) {
 		this->highScoreByPlayer->insert(std::pair<int32_t, int32_t>(playerId, highScore));
 
-		// Your implementation goes here
-		// 
-		// Test set high score
+		// Set high score
 		sql.SetHighScore(playerId, highScore);
-
-		printf("setHighScore\n");
 	}
 
 	void getTop20(std::map<int32_t, int32_t> & _return) {
-		_return.insert(this->highScoreByPlayer->begin(), this->highScoreByPlayer->end());
-		//int score = sql.GetHighScore(entityID);
-		// Your implementation goes here
-		printf("getTop20\n");
+		// Get Top High scores
+		std::map<int32_t, int32_t> result = sql.GetTopHighScores();
+
+		_return.insert(result.begin(), result.end());
 	}
 private:
 	std::map<int32_t, int32_t> *highScoreByPlayer;

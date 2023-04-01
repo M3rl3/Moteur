@@ -69,3 +69,24 @@ int DBHelper::GetHighScore(int playerId)
 
 	return score;
 }
+
+std::map<int32_t, int32_t> DBHelper::GetTopHighScores()
+{
+	std::map<int32_t, int32_t> highScores;
+	sqlite3_stmt* statement;
+
+	std::string query = "SELECT id, high_score FROM player ORDER BY high_score DESC LIMIT 20";
+	
+	sqlite3_prepare_v2(mDB, query.c_str(), -1, &statement, NULL);
+
+	while (sqlite3_step(statement) == SQLITE_ROW) {
+		int32_t playerId = sqlite3_column_int(statement, 0);
+		int32_t score = sqlite3_column_int(statement, 1);
+		
+		highScores[playerId] = score;
+	}
+
+	sqlite3_finalize(statement);
+
+	return highScores;
+}

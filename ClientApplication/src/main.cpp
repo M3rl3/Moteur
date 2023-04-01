@@ -7,6 +7,7 @@
 #endif // !ECS_ENGINE
 
 #include "ECSengine/ECSengine.h"
+#include "cRenderReticle/cRenderReticle.h"
 
 #include "Components/AIComponent.h"
 #include "Components/TransformComponent.h"
@@ -40,6 +41,7 @@
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
 #include <thrift/protocol/TBinaryProtocol.h>
+#include <imgui/imgui.cpp>
 
 const std::string DATABASE_NAME = "oguns_dice.db";
 
@@ -60,6 +62,7 @@ GameMode gameMode = CAMERA;
 AISystem* aiSystem;
 
 RenderSystem* renderSystem;
+cRenderReticle imguiDisplay;
 
 // Player's transform and velocity
 TransformComponent* transformComponent;
@@ -74,6 +77,7 @@ void ECSEngine();
 void GoldenAgeEngine();
 
 void SetHighScore(const int32_t playerId, const int32_t highScore);
+std::map<int32_t, int32_t> TopHighScores();
 
 // The main class
 int main(int argc, char** argv)
@@ -115,6 +119,24 @@ void SetHighScore(const int32_t playerId, const int32_t highScore) {
     transport->close();
 }
 
+std::map<int32_t, int32_t> TopHighScores() {
+    std::map<int32_t, int32_t> topHighScores;
+
+    shared_ptr<TSocket> socket(new TSocket("localhost", 9090));
+    shared_ptr<TTransport> transport(new TBufferedTransport(socket));
+    shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
+
+    LeaderboardClient client(protocol);
+    transport->open();
+
+    client.getTop20(topHighScores);
+
+    std::map<int32_t, int32_t>::iterator it;
+
+    return topHighScores; 
+}
+
+
 void MoteurKeysCheck(bool* keys) {
 
     const float CAMERA_MOVE_SPEED = 1.f;
@@ -152,6 +174,16 @@ void ECSKeysCheck() {
     }
     if (renderSystem->IsKeyPressed(GLFW_KEY_F)) {
         gameMode = PLAYER;
+    }
+    if (renderSystem->IsKeyPressed(GLFW_KEY_P)) {
+        std::map<int32_t, int32_t> top20 = TopHighScores();
+        
+        std::map<int32_t, int32_t>::iterator it;
+        std::cout << "[PlayerID][Score]:" << std::endl;
+        for (it = top20.begin(); it != top20.end(); it++) {
+            std::cout << it->first << " " << it->second << std::endl;
+        }
+        
     }
 
     switch (gameMode)
@@ -311,6 +343,12 @@ void ECSEngine() {
     // Flags
     constexpr int flags = FMOD_DEFAULT | FMOD_3D | FMOD_LOOP_NORMAL;
 
+    // IMGUI
+    
+
+    const char* glsl_version = "#version 420";
+    imguiDisplay.Initialize(renderSystem->GetWindow()->theWindow, glsl_version);
+
     // Sounds loaded here
     soundSystem->SetSoundPath("../assets/sounds/sfx");
 
@@ -400,7 +438,7 @@ void ECSEngine() {
         velocityComponent = engine.AddComponent<VelocityCompoent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
 
-        SetHighScore(entityID, 50000);
+        SetHighScore(entityID, 600);
 
     }
 
