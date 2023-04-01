@@ -356,7 +356,7 @@ void ECSEngine() {
         unsigned int entityID = engine.CreateEntity();
 
         transformComponent = engine.AddComponent<TransformComponent>(entityID);
-        transformComponent->position = glm::vec3(-18.f, 10.f, -34.f);
+        transformComponent->position = glm::vec3(-18.f, 2.f, -34.f);
         transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
 
@@ -391,11 +391,11 @@ void ECSEngine() {
         rigidBodyComponent->bodyShape = new physics::CylinderShape(transformComponent->scale);
         rigidBodyComponent->rigidBodyDesc.isStatic = false;
         rigidBodyComponent->rigidBodyDesc.mass = 1.f;
-        rigidBodyComponent->isInfluenced = true;
+        rigidBodyComponent->isInfluenced = false;
 
         velocityComponent = engine.AddComponent<VelocityComponent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
-        velocityComponent->useVelocity = false;
+        velocityComponent->useVelocity = true;
 
         // Test set high score
         sql.SetHighScore(entityID, 70);
