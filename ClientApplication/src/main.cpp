@@ -298,19 +298,6 @@ void ECSEngine() {
 
     // Skybox textures
 
-    // BMP
-    unsigned int skyboxTextureID0 = 0;
-    std::string errorString0 = "";
-
-    std::string skyboxNameBMP = "sunnyday";
-    renderSystem->LoadCubeMapTextureBMP(skyboxTextureID0, skyboxNameBMP,
-        "TropicalSunnyDayLeft2048.bmp",
-        "TropicalSunnyDayRight2048.bmp",
-        "TropicalSunnyDayDown2048.bmp",
-        "TropicalSunnyDayUp2048.bmp",
-        "TropicalSunnyDayFront2048.bmp",
-        "TropicalSunnyDayBack2048.bmp",
-        true, errorString0);
 
     // PNG
     unsigned int skyboxTextureID1 = 0;
@@ -334,7 +321,6 @@ void ECSEngine() {
 
     // BMP Textures
     renderSystem->Load2DTextureBMP("Archer.bmp");
-    renderSystem->Load2DTextureBMP("seamless-green-grass-pattern.bmp");
     renderSystem->Load2DTextureBMP("full_low_body__BaseColor.bmp");
 
     // Sounds

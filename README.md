@@ -30,6 +30,10 @@ The core engine for Ogun's Dice
 2. Create a folder in drive `c:`, name it `Thrift`
 3. Download `Thrift 0.9.1`, extract the zip file to your drive `c:\Thrift`.
 
+### How to run
+1. There are two major project, `ServerApplication` and `ClientApplication`. `ServerApplication` runs the `thrift` server and `ClientApplication` has the game play.
+2. Please run the `ServerApplication` first before `ClientApplication`
+
 ### Configure Boost
 1. Include => All Configurations - All Platforms: "C:\local\boost_1_59_0"
 2. Lib => All Configurations - x64: "C:\local\boost_1_59_0\lib64-msvc-14.0" (Note this is for `x64`)
