@@ -54,6 +54,9 @@ The python script is located in `..\assets\scripts\png_compressor.py`
 1. Press `f` to enable movement of the main character
 2. User the `w`, `s`, `d` and `a` keys to move around
 
+#### Leaderboard
+1. If you press `p` it will print the top 20 high scores in the console. We tried ImGui for this implementation but ran into so many issue.
+
 #### UML diagram
 The diagram is in the root directory of this project. Folder name is `uml_diagram`
 
