@@ -97,7 +97,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                 transformComponent->position = position;
 
-                if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
+                if (velocityComponent != nullptr) {
                     rigidBody->ApplyForce(velocityComponent->velocity);
                 }
             }
