@@ -5,7 +5,7 @@
 #include "../Components/TransformComponent.h"
 
 #include "../cAnimationManager/AnimationManager.h"
-#include "../cPLyFileLoader/cPlyFileLoader.h"
+#include "../cModelFileLoader/cModelFileLoader.h"
 
 #include "../cVAOManager/cVAOManager.h"
 #include "../cTextureManager/cTextureManager.h"
@@ -114,7 +114,7 @@ private:
 	Camera* camera;
 
 	// Ply file loader
-	cPlyFileLoader* plyFileLoader;
+	cModelFileLoader* modelFileLoader;
 
 	// Handler for all VAO related stuff
 	cVAOManager* vaoManager;

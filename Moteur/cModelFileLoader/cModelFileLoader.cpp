@@ -1,24 +1,39 @@
-#include "cPlyFileLoader.h"
+#include "cModelFileLoader.h"
 
-cPlyFileLoader::cPlyFileLoader() : basePath("") {
+#include <glm/glm.hpp>
+
+struct vertexLayout {
+
+    float x, y, z;
+    float nx, ny, nz;
+    float r, g, b, a;
+    float texture_u, texture_v;
+};
+
+struct triangleLayout {
+
+    unsigned int triangleIndices[3];
+};
+
+cModelFileLoader::cModelFileLoader() {
 
 }
 
-cPlyFileLoader::~cPlyFileLoader() {
+cModelFileLoader::~cModelFileLoader() {
 
 }
 
-sModelDrawInfo* cPlyFileLoader::GetPlyModelByID(unsigned int id) {
+sModelDrawInfo* cModelFileLoader::GetPlyModelByID(unsigned int id) {
 
     return plyModels[id];
 }
 
-void cPlyFileLoader::SetBasePath(std::string path)
+void cModelFileLoader::SetBasePath(std::string filePath)
 {
-    basePath = path;
+    basePath = filePath;
 }
 
-int cPlyFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
+int cModelFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
 
     vertexLayout* modelArray = NULL;
     triangleLayout* triangleArray = NULL;
@@ -118,8 +133,8 @@ int cPlyFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
         plyModel.pVertices[index].ny = modelArray[index].ny;
         plyModel.pVertices[index].nz = modelArray[index].nz;
 
-        plyModel.pVertices[index].texture_u = modelArray[index].texture_u;
-        plyModel.pVertices[index].texture_v = modelArray[index].texture_v;
+        plyModel.pVertices[index].u0 = modelArray[index].texture_u;
+        plyModel.pVertices[index].v0 = modelArray[index].texture_v;
     }
 
     plyModel.numberOfIndices = plyModel.numberOfTriangles * 3;

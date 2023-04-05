@@ -27,6 +27,11 @@ namespace physics {
 
 		bulletRigidBody = new btRigidBody(bodyCI);
 
+		// bulletRigidBody->setCollisionFlags(bulletRigidBody->getCollisionFlags() |
+		//	btCollisionObject::CF_KINEMATIC_OBJECT);
+
+		bulletRigidBody->setActivationState(DISABLE_DEACTIVATION);
+
 		btVector3 btAngularFactor;
 		btVector3 btLinearFactor;
 

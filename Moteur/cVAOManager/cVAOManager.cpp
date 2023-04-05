@@ -30,35 +30,10 @@ sModelDrawInfo::sModelDrawInfo()
 	glm::vec3 maxValues;
 	glm::vec3 minValues;
 
-//	scale = 5.0/maxExtent;		-> 5x5x5
+	// scale = 5.0/maxExtent;		-> 5x5x5
 	float maxExtent;
 
-	// calculate the min and max values of the model
-	// this->CalculateExtents();
-
-	// copy the vertices into a vector of glm::vec3
-	this->CopyVertices();
-
 	return;
-}
-
-void sModelDrawInfo::CopyVertices() {
-	unsigned int numVertices = this->numberOfVertices;
-	std::vector <glm::vec3> vertices(numVertices);
-
-	for (int i = 0; i < numVertices; i++) {
-		vertices[i].x = this->pVertices[i].x;
-		vertices[i].y = this->pVertices[i].y;
-		vertices[i].z = this->pVertices[i].z;
-
-		if (vertices[i].x < this->minX) this->minX = vertices[i].x;
-		if (vertices[i].x > this->maxX) this->maxX = vertices[i].x;
-		if (vertices[i].y < this->minY) this->minY = vertices[i].y;
-		if (vertices[i].y > this->maxY) this->maxY = vertices[i].y;
-		if (vertices[i].z < this->minZ) this->minZ = vertices[i].z;
-		if (vertices[i].z > this->maxZ) this->maxZ = vertices[i].z;
-	}
-	this->vecVertices = vertices;
 }
 
 void sModelDrawInfo::CalculateExtents(void)
@@ -99,9 +74,9 @@ void sModelDrawInfo::CalculateExtents(void)
 }
 
 bool cVAOManager::LoadModelIntoVAO(
-		std::string fileName, 
-		sModelDrawInfo &drawInfo,
-	    unsigned int shaderProgramID)
+	std::string fileName,
+	sModelDrawInfo& drawInfo,
+	unsigned int shaderProgramID)
 
 {
 	// Load the model from file
@@ -122,7 +97,7 @@ bool cVAOManager::LoadModelIntoVAO(
 	//	from this buffer...
 
 	// Ask OpenGL for a new buffer ID...
-	glGenVertexArrays( 1, &(drawInfo.VAO_ID) );
+	glGenVertexArrays(1, &(drawInfo.VAO_ID));
 	// "Bind" this buffer:
 	// - aka "make this the 'current' VAO buffer
 	glBindVertexArray(drawInfo.VAO_ID);
@@ -134,59 +109,89 @@ bool cVAOManager::LoadModelIntoVAO(
 
 	// NOTE: OpenGL error checks have been omitted for brevity
 //	glGenBuffers(1, &vertex_buffer);
-	glGenBuffers(1, &(drawInfo.VertexBufferID) );
+	glGenBuffers(1, &(drawInfo.VertexBufferID));
 
-//	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	//	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, drawInfo.VertexBufferID);
 	// sVert vertices[3]
-	glBufferData( GL_ARRAY_BUFFER, 
-				  sizeof(vertLayout) * drawInfo.numberOfVertices,	// ::g_NumberOfVertsToDraw,	// sizeof(vertices), 
-				  (GLvoid*) drawInfo.pVertices,							// pVertices,			//vertices, 
-				  GL_STATIC_DRAW );
+	glBufferData(GL_ARRAY_BUFFER,
+		sizeof(vertLayout) * drawInfo.numberOfVertices,	// ::g_NumberOfVertsToDraw,	// sizeof(vertices), 
+		(GLvoid*)drawInfo.pVertices,							// pVertices,			//vertices, 
+		GL_STATIC_DRAW);
+	// glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
 	// Copy the index buffer into the video card, too
 	// Create an index buffer.
-	glGenBuffers( 1, &(drawInfo.IndexBufferID) );
+	glGenBuffers(1, &(drawInfo.IndexBufferID));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawInfo.IndexBufferID);
 
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER,			// Type: Index element array
-	              sizeof( unsigned int ) * drawInfo.numberOfIndices, 
-	              (GLvoid*) drawInfo.pIndices,
-                  GL_STATIC_DRAW );
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,			// Type: Index element array
+		sizeof(unsigned int) * drawInfo.numberOfIndices,
+		(GLvoid*)drawInfo.pIndices,
+		GL_STATIC_DRAW);
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	// Set the vertex attributes.
 
-	GLint vPositionLocation = glGetAttribLocation(shaderProgramID, "vPosition");	
+	GLint vPositionLocation = glGetAttribLocation(shaderProgramID, "vPosition");
 	GLint vColourLocation = glGetAttribLocation(shaderProgramID, "vColour");
 	GLint vNormalLocation = glGetAttribLocation(shaderProgramID, "vNormal");
 	GLint vUV2Location = glGetAttribLocation(shaderProgramID, "vUV2");
+	GLint vTangentLocation = glGetAttribLocation(shaderProgramID, "vTangent");
+	GLint vBiNormalLocation = glGetAttribLocation(shaderProgramID, "vBiNormal");
+	GLint vBoneIDLocation = glGetAttribLocation(shaderProgramID, "vBoneID");
+	GLint vBoneWeightLocation = glGetAttribLocation(shaderProgramID, "vBoneWeight");
 
 	// Set the vertex attributes for this shader
 	glEnableVertexAttribArray(vPositionLocation);	// vPos
-	glVertexAttribPointer(vPositionLocation, 3,			// vPos
-						    GL_FLOAT, GL_FALSE,
-						    sizeof(vertLayout),
-						    (void*)offsetof(vertLayout, x));
+	glVertexAttribPointer(vPositionLocation, 4,			// vPos
+							GL_FLOAT, GL_FALSE,
+							sizeof(vertLayout),					// Stride	(number of bytes)
+							(void*)offsetof(vertLayout, x));
 
 	glEnableVertexAttribArray(vColourLocation);		// vCol
-	glVertexAttribPointer(vColourLocation, 3,			// vCol
-						    GL_FLOAT, GL_FALSE,
-						    sizeof(vertLayout),
-						    (void*)offsetof(vertLayout, r));
+	glVertexAttribPointer(vColourLocation, 4,			// vCol
+							GL_FLOAT, GL_FALSE,
+							sizeof(vertLayout),					// Stride	(number of bytes)
+							(void*)offsetof(vertLayout, r));
 
 	glEnableVertexAttribArray(vNormalLocation);		// vNormal
-	glVertexAttribPointer(vNormalLocation, 3,			// vNormal
+	glVertexAttribPointer(vNormalLocation, 4,			// vNormal
 							GL_FLOAT, GL_FALSE,
-							sizeof(vertLayout),
+							sizeof(vertLayout),					// Stride	(number of bytes)
 							(void*)offsetof(vertLayout, nx));
 
 	glEnableVertexAttribArray(vUV2Location);		// vUV2
 	glVertexAttribPointer(vUV2Location, 4,				// vUV2
-						    GL_FLOAT, GL_FALSE,
+							GL_FLOAT, GL_FALSE,
 							sizeof(vertLayout),						// Stride	(number of bytes)
-							(void*)offsetof(vertLayout, texture_u));
+							(void*)offsetof(vertLayout, u0));
+
+	glEnableVertexAttribArray(vTangentLocation);		// vTangent
+	glVertexAttribPointer(vTangentLocation, 4,				// vTangent
+							GL_FLOAT, GL_FALSE,
+							sizeof(vertLayout),						// Stride	(number of bytes)
+							(void*)offsetof(vertLayout, tx));
+
+	glEnableVertexAttribArray(vBiNormalLocation);		// vBiNormal
+	glVertexAttribPointer(vBiNormalLocation, 4,				// vBiNormal
+							GL_FLOAT, GL_FALSE,
+							sizeof(vertLayout),						// Stride	(number of bytes)
+							(void*)offsetof(vertLayout, bx));
+
+	glEnableVertexAttribArray(vBoneIDLocation);		// vBoneID
+	glVertexAttribPointer(vBoneIDLocation, 4,				// vBoneID
+							GL_FLOAT, GL_FALSE,
+							sizeof(vertLayout),						// Stride	(number of bytes)
+							(void*)offsetof(vertLayout, BoneID[0]));
+
+	glEnableVertexAttribArray(vBoneWeightLocation);		// vBoneWeight
+	glVertexAttribPointer(vBoneWeightLocation, 4,				// vBoneWeight
+							GL_FLOAT, GL_FALSE,
+							sizeof(vertLayout),						// Stride	(number of bytes)
+							(void*)offsetof(vertLayout, BoneWeight[0]));
 
 	// Now that all the parts are set up, set the VAO to zero
 	glBindVertexArray(0);
@@ -198,10 +203,13 @@ bool cVAOManager::LoadModelIntoVAO(
 	glDisableVertexAttribArray(vColourLocation);
 	glDisableVertexAttribArray(vNormalLocation);
 	glDisableVertexAttribArray(vUV2Location);
-
+	glDisableVertexAttribArray(vTangentLocation);
+	glDisableVertexAttribArray(vBiNormalLocation);
+	glDisableVertexAttribArray(vBoneIDLocation);
+	glDisableVertexAttribArray(vBoneWeightLocation);
 
 	// Store the draw information into the map
-	this->m_map_ModelName_to_VAOID[ drawInfo.meshName ] = drawInfo;
+	this->m_map_ModelName_to_VAOID[drawInfo.meshName] = drawInfo;
 
 
 	return true;
@@ -210,15 +218,15 @@ bool cVAOManager::LoadModelIntoVAO(
 
 // We don't want to return an int, likely
 bool cVAOManager::FindDrawInfoByModelName(
-		std::string filename,
-		sModelDrawInfo &drawInfo) 
+	std::string filename,
+	sModelDrawInfo& drawInfo)
 {
 	std::map< std::string /*model name*/,
-			sModelDrawInfo /* info needed to draw*/ >::iterator 
-		itDrawInfo = this->m_map_ModelName_to_VAOID.find( filename );
+		sModelDrawInfo /* info needed to draw*/ >::iterator
+		itDrawInfo = this->m_map_ModelName_to_VAOID.find(filename);
 
 	// Find it? 
-	if ( itDrawInfo == this->m_map_ModelName_to_VAOID.end() )
+	if (itDrawInfo == this->m_map_ModelName_to_VAOID.end())
 	{
 		// Nope
 		return false;
@@ -229,4 +237,3 @@ bool cVAOManager::FindDrawInfoByModelName(
 	drawInfo = itDrawInfo->second;
 	return true;
 }
-

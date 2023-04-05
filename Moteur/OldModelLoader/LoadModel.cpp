@@ -99,8 +99,8 @@ void LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
         plyModel.pVertices[index].ny = modelArray[index].ny;
         plyModel.pVertices[index].nz = modelArray[index].nz;
 
-        plyModel.pVertices[index].texture_u = modelArray[index].texture_u;
-        plyModel.pVertices[index].texture_v = modelArray[index].texture_v;
+        plyModel.pVertices[index].u0 = modelArray[index].texture_u;
+        plyModel.pVertices[index].v1 = modelArray[index].texture_v;
         int breakpoint = 1;
     }
 
@@ -117,8 +117,6 @@ void LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
 
         indexIndices += 3;
     }
-
-    
 
     delete[] modelArray;
     delete[] triangleArray;

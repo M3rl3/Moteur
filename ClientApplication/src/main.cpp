@@ -42,15 +42,11 @@
 
 #include <sstream>
 
-const std::string DATABASE_NAME = "oguns_dice.db";
-
 enum GameMode {
     CAMERA,
     PLAYER,
     NONE
 };
-
-DBHelper sql;
 
 GameMode gameMode = CAMERA;
 
@@ -63,6 +59,8 @@ PhysicsSystem* physicsSystem;
 TransformComponent* transformComponent;
 VelocityComponent* velocityComponent;
 RigidBodyComponent* rigidBodyComponent;
+
+double g_prevTime, g_currentTime, g_elapsedTime;
 
 void Update(float dt);
 
@@ -313,9 +311,9 @@ void ECSEngine() {
     lightSystem->SetAmbientLightAmount(ambientLight);
 
     // attenuation on all lights
-    const glm::vec4 constLightAtten = glm::vec4(0.1f, 2.5e-5f, 2.5e-5f, 1.0f);
+    const glm::vec4 constLightAtten = glm::vec4(0.1f, 2.5e-5f, 2.5e-6f, 1.0f);
 
-    cLight* newLight = lightSystem->AddLight(glm::vec4(0, 50, 0, 1));
+    cLight* newLight = lightSystem->AddLight(glm::vec4(0, 175, 0, 1));
 
     newLight->diffuse = glm::vec4(1.f, 1.f, 1.f, 1.f);
     newLight->specular = glm::vec4(1.f, 1.f, 1.f, 1.f);
@@ -326,9 +324,6 @@ void ECSEngine() {
 
     // If a velocity component exists
     MotionSystem* motionSystem = new MotionSystem();
-
-    // Client database
-    sql.Connect(DATABASE_NAME.c_str());
 
     // Scene
 
@@ -396,13 +391,6 @@ void ECSEngine() {
         velocityComponent = engine.AddComponent<VelocityComponent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
         velocityComponent->useVelocity = false;
-
-        // Test set high score
-        sql.SetHighScore(entityID, 70);
-
-        // Test get high score
-        int score = sql.GetHighScore(entityID);
-        printf("The high score is: %d\n", score);
     }
 
     {   // Entity "creepyMonster"
@@ -500,7 +488,11 @@ void ECSEngine() {
     // The actual update method
     while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) 
     {
-        engine.Update(0.25f);
+        g_prevTime = g_currentTime;
+        g_currentTime = glfwGetTime();
+        g_elapsedTime = g_currentTime - g_prevTime;
+
+        engine.Update(g_elapsedTime);
     }
 
     // Gracefully close everything down

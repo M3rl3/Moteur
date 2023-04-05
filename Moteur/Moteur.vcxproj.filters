@@ -110,7 +110,7 @@
     <ClCompile Include="cAnimationManager\AnimationManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cPLyFileLoader\cPlyFileLoader.cpp">
+    <ClCompile Include="cModelFileLoader\cModelFileLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DrawBoundingBox\DrawBoundingBox.cpp">
@@ -292,7 +292,7 @@
     <ClInclude Include="Components\VelocityComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cPLyFileLoader\cPlyFileLoader.h">
+    <ClInclude Include="cModelFileLoader\cModelFileLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DrawBoundingBox\DrawBoundingBox.h">
@@ -359,6 +359,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Systems\PhysicsSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cVAOManager\sModelDrawInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

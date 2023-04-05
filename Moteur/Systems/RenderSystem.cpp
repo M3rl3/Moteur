@@ -51,7 +51,7 @@ RenderSystem::RenderSystem()
     // Initialize all the managers
     vaoManager = new cVAOManager();
     textureManager = new cTextureManager();
-    plyFileLoader = new cPlyFileLoader();
+    modelFileLoader = new cModelFileLoader();
     animationManager = new AnimationManager();
 
     // Initialize all the structs
@@ -879,13 +879,13 @@ void RenderSystem::SetMeshPath(std::string filePath)
 {
     std::cout << "\nLoading meshes..." << std::endl;
 
-    plyFileLoader->SetBasePath(filePath);
+    modelFileLoader->SetBasePath(filePath);
 }
 
 // Loads model from ply file and gets it into the VAO
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
 {
-    plyFileLoader->LoadModel(fileName, plyModel);
+    modelFileLoader->LoadModel(fileName, plyModel);
 
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
         std::cout << "Model " << modelName << " loaded successfully." << std::endl;
@@ -900,7 +900,7 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, unsigned int shaderID)
 {
     sModelDrawInfo plyModel;
-    plyFileLoader->LoadModel(fileName, plyModel);
+    modelFileLoader->LoadModel(fileName, plyModel);
     
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
         std::cout << "Model " << modelName << " loaded successfully." << std::endl;
