@@ -185,6 +185,9 @@
     <ClCompile Include="Systems\PhysicsSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\GUISystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenGL.h">
@@ -362,6 +365,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cVAOManager\sModelDrawInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\GUISystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

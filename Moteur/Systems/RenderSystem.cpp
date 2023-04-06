@@ -19,7 +19,7 @@
 
 // Global variables
 Camera* cam;
-AnimationManager* animeMan;
+Window* win;
 
 float yaw = 0.f;
 float pitch = 0.f;
@@ -52,13 +52,13 @@ RenderSystem::RenderSystem()
     vaoManager = new cVAOManager();
     textureManager = new cTextureManager();
     modelFileLoader = new cModelFileLoader();
-    animationManager = new AnimationManager();
 
     // Initialize all the structs
     window = new Window();
 	camera = new Camera();
+
     cam = camera;
-    animeMan = animationManager;
+    win = window;
 
     ambientLight = 1.f;
     enableMouse = false;
@@ -196,12 +196,6 @@ void ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
 
-        // quick cleanup
-        if (animeMan != nullptr) {
-            animeMan = nullptr;
-            delete animeMan;
-        }
-
         float ratio;
         int rWidth, rHeight;
 
@@ -234,22 +228,7 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
         glm::vec3 targetLocation = cam->position + t * ray_world;
         std::cout << "Mouse left click at position: " << targetLocation.x << ", " << targetLocation.y << ", " << targetLocation.z << std::endl;
 
-        animeMan = new AnimationManager();
-
         targetLoc = targetLocation;
-
-        /*for (cMeshInfo* meshInfo : meshArray) {
-            if (meshInfo->enabled) {
-                AnimationData testAnimation;
-                testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(meshInfo->position, 0.0f, EaseIn));
-                testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLocation, 0.50f, EaseIn));
-                testAnimation.Duration = 2.0f;
-                meshInfo->animation.IsPlaying = true;
-                meshInfo->animation.AnimationTime = 0.0f;
-
-                animationManager->Load("TestAnimation", testAnimation);
-            }
-        }*/
     }
 }
 
@@ -780,18 +759,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             // Manage animations
             if (animationComponent != nullptr) {
-                if (glfwGetMouseButton(window->theWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)  {
-                    AnimationData testAnimation;
-                    testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(transformComponent->position, 0.0f, EaseIn));
-                    testAnimation.PositionKeyFrames.push_back(PositionKeyFrame(targetLoc, 0.50f, EaseInOut));
-                    testAnimation.Duration = 2.0f;
 
-                    //animationComponent->animation = new Animation();
-                    /*animationComponent->animation.IsPlaying = true;
-                    animationComponent->animation.AnimationTime = 1.0f;*/
-
-                    animationManager->Load("TestAnimation", testAnimation);
-                }                
             }
 
             // Check if model is to be drawn in wireframe mode
@@ -866,8 +834,6 @@ void RenderSystem::Shutdown()
 
     textureManager = nullptr;
     delete textureManager;
-
-    exit(EXIT_SUCCESS);
 }
 
 bool RenderSystem::GetMouseStatus() {

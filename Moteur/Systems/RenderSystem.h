@@ -4,7 +4,6 @@
 
 #include "../Components/TransformComponent.h"
 
-#include "../cAnimationManager/AnimationManager.h"
 #include "../cModelFileLoader/cModelFileLoader.h"
 
 #include "../cVAOManager/cVAOManager.h"
@@ -122,8 +121,7 @@ private:
 	// Handler for all Texture related stuff
 	cTextureManager* textureManager;
 
-	// Handler for all stuff animation related
-	AnimationManager* animationManager;
+	// Handler for all animation related stuff
 
 	// Amount of ambient light
 	float ambientLight;

@@ -6,11 +6,12 @@
 class Window {
 public:
 	// Constructor
-	Window(): 
-		theWindow(nullptr), 
-		width(NULL), 
-		height(NULL), 
-		title("") 
+	Window() :
+		theWindow(nullptr),
+		width(NULL),
+		height(NULL),
+		title(""),
+		glslVersion("")
 	{
 		for (size_t i = 0; i < 100; i++) {
 			keyPressedID[i] = false;
@@ -31,6 +32,9 @@ public:
 
 	// Window title
 	const char* title;
+
+	// GLSL Version
+	const char* glslVersion;
 
 	// boolean array for handling input
 	bool keyPressedID[255];
