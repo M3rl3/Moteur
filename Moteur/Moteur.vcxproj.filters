@@ -107,9 +107,6 @@
     <ClCompile Include="cTextureManager\cTextureManager.cpp">
       <Filter>Texture Manager</Filter>
     </ClCompile>
-    <ClCompile Include="cAnimationManager\AnimationManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cModelFileLoader\cModelFileLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -125,9 +122,6 @@
     <ClCompile Include="JsonParser\JsonParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OldEngine\Moteur.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -140,9 +134,6 @@
     <ClCompile Include="Systems\LightSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\MeshSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Systems\MotionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -150,21 +141,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Systems\ShaderSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cRenderReticle\cRenderReticle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OldModelLoader\LoadModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OldMeshClass\cMeshInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BasicPhysics\Particle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BasicPhysics\ParticleAccelerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cSoundManager\cSoundManager.h">
@@ -186,6 +162,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Systems\GUISystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cAnimationManager\cAnimationManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -262,12 +241,6 @@
     <ClInclude Include="cTextureManager\cTextureManager.h">
       <Filter>Texture Manager</Filter>
     </ClInclude>
-    <ClInclude Include="cAnimationManager\Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cAnimationManager\AnimationManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Components\AIComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -313,9 +286,6 @@
     <ClInclude Include="JsonParser\JsonParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OldEngine\Moteur.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -328,9 +298,6 @@
     <ClInclude Include="Systems\LightSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\MeshSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Systems\MotionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -338,21 +305,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Systems\ShaderSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cRenderReticle\cRenderReticle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OldModelLoader\LoadModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OldMeshClass\cMeshInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicPhysics\Particle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicPhysics\ParticleAccelerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Systems\SoundSystem.h">
@@ -368,6 +320,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Systems\GUISystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cAnimationManager\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cAnimationManager\BoneHierarchy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cAnimationManager\cAnimationManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

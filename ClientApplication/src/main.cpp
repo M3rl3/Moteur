@@ -1,11 +1,3 @@
-#ifndef MOTEUR
-//#define MOTEUR
-#endif // !MOTEUR
-
-#ifndef ECS_ENGINE
-#define ECS_ENGINE    
-#endif // !ECS_ENGINE
-
 #include "ECSengine/ECSengine.h"
 
 #include "Components/AIComponent.h"
@@ -23,7 +15,6 @@
 #include "Systems/ShaderSystem.h"
 #include "Systems/RenderSystem.h"
 #include "Systems/PhysicsSystem.h"
-#include "Systems/MeshSystem.h"
 #include "Systems/MotionSystem.h"
 #include "Systems/LightSystem.h"
 #include "Systems/SoundSystem.h"
@@ -33,11 +24,6 @@
 #include "../PhysicsEngine/interfaces/PlaneShape.h"
 #include "../PhysicsEngine/interfaces/RigidBodyDesc.h"
 
-#include "DBHelper.h"
-
-#include "OldEngine/Moteur.h"
-
-#include "Scene.h"
 #include "Timer/Timer.h"
 
 #include <sstream>
@@ -50,8 +36,6 @@ enum GameMode {
 
 GameMode gameMode = CAMERA;
 
-AISystem* aiSystem;
-
 RenderSystem* renderSystem;
 PhysicsSystem* physicsSystem;
 
@@ -60,27 +44,14 @@ TransformComponent* transformComponent;
 VelocityComponent* velocityComponent;
 RigidBodyComponent* rigidBodyComponent;
 
-double g_prevTime, g_currentTime, g_elapsedTime;
-
 void Update(float dt);
 
-void MoteurKeysCheck(bool* keys);
-void ECSKeysCheck();
-
 void ECSEngine();
-void GoldenAgeEngine();
 
 // The main class
 int main(int argc, char** argv)
 {
-    
-#ifdef ECS_ENGINE
     ECSEngine();
-#endif // ECS_ENGINE
-
-#ifdef MOTEUR
-    GoldenAgeEngine();
-#endif // MOTEUR
 
     return 0;
 }
@@ -88,46 +59,7 @@ int main(int argc, char** argv)
 // custom user-defined update function
 void Update(float dt) {
 
-#ifdef MOTEUR
-    MoteurKeysCheck(Moteur::Engine_GetKeyPressedArray());
-#endif // MOTEUR
-
-#ifdef ECS_ENGINE
-    ECSKeysCheck();
-#endif // ECS_ENGINE
-}
-
-void MoteurKeysCheck(bool* keys) {
-
-    const float CAMERA_MOVE_SPEED = 1.f;
-    if (keys[GLFW_KEY_A])     // Left
-    {
-        Moteur::Engine_GetCameraObject()->position.x -= CAMERA_MOVE_SPEED;
-    }
-    if (keys[GLFW_KEY_D])     // Right
-    {
-        Moteur::Engine_GetCameraObject()->position.x += CAMERA_MOVE_SPEED;
-    }
-    if (keys[GLFW_KEY_W])     // Forward
-    {
-        Moteur::Engine_GetCameraObject()->position.z += CAMERA_MOVE_SPEED;
-    }
-    if (keys[GLFW_KEY_S])     // Backwards
-    {
-        Moteur::Engine_GetCameraObject()->position.z -= CAMERA_MOVE_SPEED;
-    }
-    if (keys[GLFW_KEY_Q])     // Down
-    {
-        Moteur::Engine_GetCameraObject()->position.y -= CAMERA_MOVE_SPEED;
-    }
-    if (keys[GLFW_KEY_E])     // Up
-    {
-        Moteur::Engine_GetCameraObject()->position.y += CAMERA_MOVE_SPEED;
-    }
-}
-
-void ECSKeysCheck() {
-    constexpr float MOVE_SPEED = 1.f;
+    const float MOVE_SPEED = 1.f;
 
     if (renderSystem->IsKeyPressed(GLFW_KEY_C)) {
         gameMode = CAMERA;
@@ -209,7 +141,7 @@ void ECSKeysCheck() {
 }
 
 /// <summary>
-/// The new engine initialization.
+/// The ECS Engine
 /// </summary>
 void ECSEngine() {
 
@@ -222,9 +154,6 @@ void ECSEngine() {
 
     renderSystem->SetCameraPosition(glm::vec3(-30.f, 5.f, -50.f));
     renderSystem->SetCameraTarget(glm::vec3(0.f, 0.f, 1.f));
-
-    // AI System
-    aiSystem = new AISystem();
 
     // Shaders loaded here
     unsigned int shaderID = 0;
@@ -431,12 +360,6 @@ void ECSEngine() {
         soundComponent->maxDistance = 0.25f;
         soundComponent->soundVolume = 1.f;
         soundComponent->soundName = "chicken.wav";
-
-        AIComponent* aiComponent = engine.AddComponent<AIComponent>(entityID);
-        aiComponent->radius = 3.0f;
-        aiComponent->type = BehaviorType::PURSUE;
-        aiComponent->transformComponent = transformComponent;
-        aiComponent->speed = 1.0f;
     }
 
     {   // Entity "plain"
@@ -480,7 +403,18 @@ void ECSEngine() {
     engine.AddSystem(shaderSystem);
     engine.AddSystem(motionSystem);
     engine.AddSystem(soundSystem);
-    engine.AddSystem(aiSystem);
+
+    // Delta time
+    CTimer* timer = CTimer::GetInstance();
+    float elapsedTime = 0.f;
+    float dt = 0.f;
+    
+    // Frame rate & Frame time
+    unsigned int frameCount = 0;
+    unsigned int frameRate = 0;
+    unsigned int frameTime = 0;
+
+    std::stringstream ssTitle;
 
     // User defined update method (for user inputs)
     engine.UpdateCallback(&Update);
@@ -488,119 +422,50 @@ void ECSEngine() {
     // The actual update method
     while (!glfwWindowShouldClose(renderSystem->GetWindow()->theWindow)) 
     {
-        g_prevTime = g_currentTime;
-        g_currentTime = glfwGetTime();
-        g_elapsedTime = g_currentTime - g_prevTime;
+        // Update current time
+        timer->Update();
 
-        engine.Update(g_elapsedTime);
+        // check if update is available
+        if (timer->IsUpdateAvailable()) {
+
+            // Get delta time
+            dt = timer->GetTimeDelta();
+
+            // Engine update
+            engine.Update(dt);
+
+            // Increment frame counter
+            frameCount++;
+        }
+
+        // Get elapsed time 
+        elapsedTime += timer->GetTimeDefault();
+
+        // Update window title
+        if (elapsedTime >= 1.f / 30.f)
+        {
+            ssTitle.str("");
+
+            // Calculate Frame rate & Frame time
+            frameRate = (1.f / elapsedTime) * frameCount;
+            frameTime = (elapsedTime / frameCount) * 1000;
+
+            ssTitle << "Camera: " << "(" <<
+                renderSystem->GetCamera()->position.x << ", " <<
+                renderSystem->GetCamera()->position.y << ", " <<
+                renderSystem->GetCamera()->position.z << ") " <<
+                " FPS: " << frameRate <<
+                " ms: " << frameTime;
+
+            // Set window title
+            glfwSetWindowTitle(renderSystem->GetWindow()->theWindow, ssTitle.str().c_str());
+
+            // Reset counters
+            frameCount = 0;
+            elapsedTime = 0.f;
+        }
     }
 
     // Gracefully close everything down
     engine.Shutdown();
-}
-
-// The current game engine used
-void GoldenAgeEngine() {
-
-    // Check Memory Leak
-    _CrtDumpMemoryLeaks();
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
-    //_CrtSetBreakAlloc(185080);
-
-    Moteur::Engine_CreateWindow("Engine", 1366, 768, false, false);
-
-    Moteur::Engine_Initialize();
-
-    glm::vec3 cameraEye = glm::vec3(0, 20, -140);
-    Moteur::Engine_SetCameraPosition(cameraEye);
-
-    unsigned int shaderID;
-    const char* v_Shader = "../assets/shaders/vertexShader_backup.glsl";
-    const char* f_Shader = "../assets/shaders/fragmentShader_backup.glsl";
-
-    Moteur::Engine_CreateShaderProgramFromFiles(shaderID, v_Shader, f_Shader);
-
-    //{
-    //    int modelID;
-    //    const char* model_path = "../assets/meshes/steve.ply";
-    //    const char* model_name = "steve";
-    //    Engine::Engine_LoadModel(modelID, model_path, model_name, false, glm::vec3(0.f, 0.f, -75.f), glm::vec4(1.f));
-    //    cMeshInfo* playermesh = Engine::Engine_GetMeshObjectFromVector(modelID);
-    //    Engine::Engine_SetPlayerMesh(modelID);
-    //}
-    //
-    //{
-    //    int modelID;
-    //    const char* model_path = "../assets/meshes/bulb.ply";
-    //    const char* model_name = "bulb";
-    //    Engine::Engine_LoadModel(modelID, model_path, model_name, false, glm::vec3(0.f, 0.f, -5.f), glm::vec4(1.f));
-    //}
-    //
-    //{
-    //    int modelID;
-    //    const char* model_path = "../assets/meshes/terrain.ply";
-    //    const char* model_name = "terrain";
-    //    Engine::Engine_LoadModel(modelID, model_path, model_name, false, glm::vec3(50.f, -5.f, 0.f), glm::vec4(1.f));
-    //}
-
-    CTimer* pTimer = CTimer::GetInstance();
-    unsigned int iFPS = 0;
-    float fCheckTime = 0.f;
-    std::stringstream ssTitle;
-    GLFWwindow* pWindow = Moteur::Engine_GetWindow()->theWindow;
-    Camera* pCamera = Moteur::Engine_GetCameraObject();
-
-    Scene* pScene = new Scene;
-    pScene->Ready();
-
-    // callback for a user defined update method
-    Moteur::Engine_UpdateCallback(&Update);
-
-    while (!glfwWindowShouldClose(pWindow)) {
-
-        pTimer->Update();
-
-        if (pTimer->IsUpdateAvailable())
-        {
-            float dt = pTimer->GetTimeDelta();
-
-            pScene->Update(dt);
-            pScene->Render();
-
-            // made a getter for the mesh vector
-            std::vector <cMeshInfo*> theDrawingArray;
-            Moteur::Engine_GetDrawingArray(theDrawingArray);
-
-            if (Moteur::Engine_GetAnimationManager() != nullptr) {
-                Moteur::Engine_GetAnimationManager()->Update(theDrawingArray, dt);
-            }
-
-            Moteur::Engine_Update(dt);
-            iFPS++;
-        }
-
-        fCheckTime += pTimer->GetTimeDefault();
-        if (fCheckTime >= 1.f)
-        {
-            ssTitle.str("");
-
-            ssTitle << "Camera: " << "(" <<
-                pCamera->position.x << ", " <<
-                pCamera->position.y << ", " <<
-                pCamera->position.z << ") " <<
-                "FPS: " << iFPS;
-
-            glfwSetWindowTitle(pWindow, ssTitle.str().c_str());
-
-            iFPS = 0;
-            fCheckTime = 0.f;
-        }
-    }
-
-    pScene->Destroy();
-
-    Moteur::Engine_Shutdown();
-
-    return;
 }

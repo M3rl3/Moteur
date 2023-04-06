@@ -18,49 +18,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Scene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BGObject.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Character.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Factory.cpp">
-      <Filter>Factory</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="src\sqlite3.c">
-      <Filter>DB</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DBHelper.cpp">
-      <Filter>DB</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\Scene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BGObject.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Character.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Factory.h">
-      <Filter>Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DBHelper.h">
-      <Filter>DB</Filter>
-    </ClInclude>
-    <ClInclude Include="src\sqlite3.h">
-      <Filter>DB</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\oguns_dice.db" />
   </ItemGroup>
 </Project>

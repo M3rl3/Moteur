@@ -804,12 +804,6 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
         }
     }
 
-    // Set window title
-    std::stringstream ss;
-    ss << " Camera: " << "(" << camera->position.x << ", " << camera->position.y << ", " << camera->position.z << ")";
-
-    glfwSetWindowTitle(window->theWindow, ss.str().c_str());
-
     glfwSwapBuffers(window->theWindow);
     glfwPollEvents();
 }
