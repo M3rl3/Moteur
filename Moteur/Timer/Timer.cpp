@@ -1,64 +1,50 @@
 #include "Timer.h"
 
-
-using namespace std;
-
-CTimer* CTimer::m_pInstance = nullptr;
-CTimer* CTimer::GetInstance()
+Timer::Timer()
+	: currentTime(0.f), deltaTime(0.f), elapsedTime(0.f), frameRate(0.f)
 {
-	if (nullptr == m_pInstance)
-		m_pInstance = new CTimer;
-	return m_pInstance;
+	timeLastUpdate = std::chrono::steady_clock::now();
+	timeCurrentUpdate = std::chrono::steady_clock::now();
 }
 
-void CTimer::DestroyInstance()
+Timer::~Timer()
 {
-	if (nullptr != m_pInstance)
+
+}
+
+void Timer::Update()
+{
+	timeLastUpdate = timeCurrentUpdate;
+	timeCurrentUpdate = std::chrono::steady_clock::now();
+
+	std::chrono::duration<float> elapsed = timeCurrentUpdate - timeLastUpdate;
+	elapsedTime = elapsed.count();
+	currentTime += elapsedTime;
+}
+
+void Timer::SetFrameRate(int FrameRate)
+{
+	frameRate = 1.f / FrameRate;
+}
+
+bool Timer::IsUpdateAvailable()
+{
+	if (currentTime > frameRate)
 	{
-		m_pInstance->Destroy();
-		delete m_pInstance;
-		m_pInstance = nullptr;
-	}
-}
-
-CTimer::CTimer()
-	: m_fCurrentTime(0.f), m_fTimeDelta(0.f), m_fTimeDefault(0.f), m_fFrameRate(0.f)
-{
-	m_TimeLastUpdate = chrono::steady_clock::now();
-	m_TimeCurrentUpdate = chrono::steady_clock::now();
-}
-
-CTimer::~CTimer()
-{
-}
-
-void CTimer::Destroy()
-{
-}
-
-void CTimer::Update()
-{
-	m_TimeLastUpdate = m_TimeCurrentUpdate;
-	m_TimeCurrentUpdate = chrono::steady_clock::now();
-
-	chrono::duration<float> elapsed = m_TimeCurrentUpdate - m_TimeLastUpdate;
-	m_fTimeDefault = elapsed.count();
-	m_fCurrentTime += m_fTimeDefault;
-}
-
-void CTimer::SetFrameRate(int frameRate)
-{
-	m_fFrameRate = 1.f / frameRate;
-}
-
-bool CTimer::IsUpdateAvailable()
-{
-	if (m_fCurrentTime > m_fFrameRate)
-	{
-		m_fTimeDelta = m_fCurrentTime;
-		m_fCurrentTime = 0.f;
+		deltaTime = currentTime;
+		currentTime = 0.f;
 		return true;
 	}
 
 	return false;
+}
+
+float Timer::GetDeltaTime()
+{ 
+	return deltaTime > 0.1 ? 0 : deltaTime; 
+}
+
+float Timer::GetElapsedTime()
+{
+	return elapsedTime;
 }

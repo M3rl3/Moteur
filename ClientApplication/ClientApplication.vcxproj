@@ -186,6 +186,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Moteur\Moteur.vcxproj">
@@ -194,6 +195,9 @@
     <ProjectReference Include="..\PhysicsEngine\PhysicsEngine.vcxproj">
       <Project>{47154464-c209-489a-b79a-1e110f35745e}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

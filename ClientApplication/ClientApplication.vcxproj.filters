@@ -21,5 +21,9 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Scene.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
 </Project>
