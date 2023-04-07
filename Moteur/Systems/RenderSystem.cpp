@@ -57,6 +57,10 @@ RenderSystem::RenderSystem()
     window = new Window();
 	camera = new Camera();
 
+    // Initialize the GUI
+    guiSystem = new GUISystem();
+
+    // Point the copy variables to the real one
     cam = camera;
     win = window;
 
@@ -65,7 +69,7 @@ RenderSystem::RenderSystem()
 }
 
 // Destructor
-RenderSystem::~RenderSystem() 
+RenderSystem::~RenderSystem()
 {
 
 }
@@ -74,44 +78,6 @@ RenderSystem::~RenderSystem()
 static void ErrorCallback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
-}
-
-// Keyboard inputs
-static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    }
-
-    const float CAMERA_MOVE_SPEED = 1.f;
-    if (key == GLFW_KEY_A)     // Left
-    {
-        cam->position.x -= CAMERA_MOVE_SPEED;
-    }
-    if (key == GLFW_KEY_D)     // Right
-    {
-        cam->position.x += CAMERA_MOVE_SPEED;
-    }
-    if (key == GLFW_KEY_W)     // Forward
-    {
-        cam->position.z += CAMERA_MOVE_SPEED;
-    }
-    if (key == GLFW_KEY_S)     // Backwards
-    {
-        cam->position.z -= CAMERA_MOVE_SPEED;
-    }
-    if (key == GLFW_KEY_Q)     // Down
-    {
-        cam->position.y -= CAMERA_MOVE_SPEED;
-    }
-    if (key == GLFW_KEY_E)     // Up
-    {
-        cam->position.y += CAMERA_MOVE_SPEED;
-    }
-
-    /*if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
-        enableMouse = !enableMouse;
-    }*/
 }
 
 // keyboard callback
@@ -226,8 +192,6 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 
         // Get target location
         glm::vec3 targetLocation = cam->position + t * ray_world;
-        std::cout << "Mouse left click at position: " << targetLocation.x << ", " << targetLocation.y << ", " << targetLocation.z << std::endl;
-
         targetLoc = targetLocation;
     }
 }
@@ -282,7 +246,7 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
 
     // Init GLFW
     if (!glfwInit()) {
-        std::cerr << "GLFW init failed." << std::endl;
+        std::cout << "GLFW init failed." << std::endl;
         glfwTerminate();
         return;
     }
@@ -324,9 +288,10 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     glfwSetWindowAspectRatio(window->theWindow, 16, 9);
 
     // GLFW and glsl upper and lower version
-    const char* glsl_version = "#version 420";
+    window->glslVersion = "#version 420";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // keyboard callback
     glfwSetKeyCallback(window->theWindow, ProcessInput);
@@ -334,16 +299,16 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     // mouse, mouse button and, scroll callback
     glfwSetCursorPosCallback(window->theWindow, ProcessMouseMovement);
     glfwSetScrollCallback(window->theWindow, ScrollCallBack);
-    // glfwSetMouseButtonCallback(window->theWindow, MouseButtonCallback);
+    glfwSetMouseButtonCallback(window->theWindow, MouseButtonCallback);
 
     // capture mouse input
-    //glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    // glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Error callback
     glfwSetErrorCallback(ErrorCallback);
 
-    // bring the window in front
+    // Bring the window in front
     glfwMakeContextCurrent(window->theWindow);
 
     // Get process address for the app
@@ -360,6 +325,9 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     // Depth test
     glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Initialize Dear ImGui
+    guiSystem->Initialize(window);
 }
 
 // Update method called every tick
@@ -723,7 +691,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             GLint bIsSkyboxObjectLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsSkyboxObject");
 
             // Check if object is a skybox mesh
-            if (meshComponent->isSkyBox) {
+            if (meshComponent->isSkyBox && textureComponent != nullptr) {
 
                 glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_TRUE);
 
@@ -804,6 +772,9 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
         }
     }
 
+    // Call update on the GUI before swapping buffers
+    guiSystem->Process(entities, dt);
+
     glfwSwapBuffers(window->theWindow);
     glfwPollEvents();
 }
@@ -811,9 +782,16 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 // Gracefully closes everything down
 void RenderSystem::Shutdown()
 {
+    // Shutdown the GUI first
+    guiSystem->Shutdown();
+    guiSystem = nullptr;
+    delete guiSystem;
+
+    // Shutdown the window and GLFW
     glfwDestroyWindow(window->theWindow);
     glfwTerminate();
 
+    // Delete pointers
     window->theWindow = nullptr;
     delete window->theWindow;
 
@@ -830,7 +808,8 @@ void RenderSystem::Shutdown()
     delete textureManager;
 }
 
-bool RenderSystem::GetMouseStatus() {
+bool RenderSystem::GetMouseStatus() 
+{
     return enableMouse;
 }
 

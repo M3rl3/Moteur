@@ -12,6 +12,8 @@
 #include "../Window/Window.h"
 #include "../Camera/Camera.h"
 
+#include "GUISystem.h"
+
 // The system that handles rendering the scene
 class RenderSystem : public System {
 public:
@@ -121,7 +123,8 @@ private:
 	// Handler for all Texture related stuff
 	cTextureManager* textureManager;
 
-	// Handler for all animation related stuff
+	// System for handling the GUI
+	GUISystem* guiSystem;
 
 	// Amount of ambient light
 	float ambientLight;

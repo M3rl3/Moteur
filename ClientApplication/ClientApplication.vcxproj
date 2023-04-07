@@ -86,7 +86,7 @@
     <PreLinkEventUseInBuild />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Moteur;$(SolutionDir)include;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Moteur;$(SolutionDir)include;$(SolutionDir)PhysicsEngine</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)lib;</LibraryPath>
     <CustomBuildBeforeTargets>Build</CustomBuildBeforeTargets>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>

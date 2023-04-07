@@ -6,14 +6,10 @@
 
 #include "../Global.h"
 
-// Globals
-bool doOnce = true;
-
-GUISystem::GUISystem() {
-
+GUISystem::GUISystem() 
+{
     systemName = "GUISystem";
     drawReticle = false;
-    doOnce = false;
 }
 
 GUISystem::~GUISystem()
@@ -31,21 +27,14 @@ void GUISystem::Initialize(Window* window)
     ImGui_ImplGlfw_InitForOpenGL(window->theWindow, true);
     ImGui_ImplOpenGL3_Init(window->glslVersion);
 
-    ImVec2 window_size = ImVec2(window->width, window->height);
-    ImGui::SetNextWindowSize(window_size);
+    //ImVec2 window_size = ImVec2(window->width, window->height);
+    //ImGui::SetNextWindowSize(window_size);
 
     ImGui::StyleColorsDark();		// dark theme
 }
 
 void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
 {
-    // Initialize the GUI
-    if (doOnce) {
-        Initialize(win);
-
-        doOnce = false;
-    }
-
     // Start a new frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -67,7 +56,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     }
 
     // Render a gui here
-    ImGui::Begin("Bruh");
+    ImGui::Begin("Man");
     ImGui::Text("I Love Ass");
     ImGui::End();
 

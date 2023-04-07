@@ -45,10 +45,9 @@ VelocityComponent* velocityComponent;
 RigidBodyComponent* rigidBodyComponent;
 
 void Update(float dt);
-
 void ECSEngine();
 
-// The main class
+// main function
 int main(int argc, char** argv)
 {
     ECSEngine();
@@ -212,7 +211,6 @@ void ECSEngine() {
     renderSystem->Load2DTexturePNG("man.png");
 
     // BMP Textures
-    renderSystem->Load2DTextureBMP("Archer.bmp");
     renderSystem->Load2DTextureBMP("seamless-green-grass-pattern.bmp");
     renderSystem->Load2DTextureBMP("full_low_body__BaseColor.bmp");
 
