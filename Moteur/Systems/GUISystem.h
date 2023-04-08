@@ -27,4 +27,6 @@ private:
 
 	// name of the system
 	std::string systemName;
+
+	int index = 0;
 };

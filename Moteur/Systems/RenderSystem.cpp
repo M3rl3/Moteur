@@ -89,12 +89,12 @@ void RenderSystem::ProcessInput(GLFWwindow* window, int key, int scancode, int a
     if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
         enableMouse = !enableMouse;
     }
-    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
+    /*if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     if (key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
+    }*/
 
     if (key > 0 && key < 255) {
         if (action == GLFW_PRESS) {
@@ -201,7 +201,7 @@ void RenderSystem::CreateWindow(const char* title, const int width, const int he
 
     // Init GLFW
     if (!glfwInit()) {
-        std::cerr << "GLFW init failed." << std::endl;
+        std::cout << "GLFW init failed." << std::endl;
         glfwTerminate();
         return;
     }
@@ -233,7 +233,7 @@ void RenderSystem::CreateWindow(const char* title, const int width, const int he
 
     // If window creation fails
     if (!window->theWindow) {
-        std::cerr << "Window creation failed." << std::endl;
+        std::cout << "Window creation failed." << std::endl;
         glfwTerminate();
         return;
     }
@@ -277,9 +277,9 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
         window->theWindow = glfwCreateWindow(window->width, window->height, window->title, NULL, NULL);
     }
 
-    // if init window failed
+    // Check if window was initialized
     if (!window->theWindow) {
-        std::cerr << "Window creation failed." << std::endl;
+        std::cout << "Window creation failed." << std::endl;
         glfwTerminate();
         return;
     }
@@ -287,7 +287,7 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     // Set aspect ratio
     glfwSetWindowAspectRatio(window->theWindow, 16, 9);
 
-    // GLFW and glsl upper and lower version
+    // GLFW and GLSL version
     window->glslVersion = "#version 420";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -302,8 +302,8 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
     glfwSetMouseButtonCallback(window->theWindow, MouseButtonCallback);
 
     // capture mouse input
-    // glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    // glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Error callback
     glfwSetErrorCallback(ErrorCallback);
@@ -313,7 +313,7 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
 
     // Get process address for the app
     if (!gladLoadGLLoader((GLADloadproc)(glfwGetProcAddress))) {
-        std::cerr << "Error: unable to obtain pocess address." << std::endl;
+        std::cout << "Error: unable to obtain pocess address." << std::endl;
         return;
     }
     glfwSwapInterval(1); //vsync
@@ -357,7 +357,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
         camera->projection = glm::perspective(glm::radians(fov), ratio, 0.1f, 10000.f);
     }
     else {
-        // If camera has a rotation instead of a lookat
+        // If camera has a rotation instead of a lookat (othographic camera)
         // camera->view = glm::inverse(glm::translate(glm::mat4(1.f), camera->position) * glm::mat4(camera->rotation));
 
         camera->view = glm::lookAt(camera->position, camera->target, camera->upVector);

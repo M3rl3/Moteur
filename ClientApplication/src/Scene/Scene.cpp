@@ -58,6 +58,7 @@ Scene::Scene()
     // Set Game Mode
 	gameMode = GameMode::CAMERA;
 
+    // Khronos
     timer = new Timer();
 }
 
@@ -70,7 +71,7 @@ Scene::~Scene()
 // Initialize everything
 void Scene::Initialize() 
 {
-	renderSystem->Initialize("ECSengine", 1366, 768, false);
+	renderSystem->Initialize("Man", 1704, 960, false);
 
 	renderSystem->SetCameraPosition(glm::vec3(-30.f, 5.f, -50.f));
 	renderSystem->SetCameraTarget(glm::vec3(0.f, 0.f, 1.f));
@@ -105,25 +106,6 @@ void Scene::Initialize()
 void Scene::Render() 
 {
     // Entities
-
-    {   // Entity "skybox"
-
-        unsigned int entityID = engine->CreateEntity();
-
-        TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
-
-        ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
-        shaderComponent->shaderID = shaderID;
-
-        MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
-        meshComponent->meshName = "skybox";
-        meshComponent->isWireframe = false;
-        meshComponent->isSkyBox = true;
-
-        TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
-        textureComponent->textureFormat = TextureFormat::PNG;
-        textureComponent->textures[0] = "desert";
-    }
 
     {   // Entity "steve"
 
@@ -246,14 +228,31 @@ void Scene::Render()
         litComponent->isLit = true;
     }
 
+    {   // Entity "skybox"
+
+        unsigned int entityID = engine->CreateEntity();
+
+        TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
+
+        ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
+        shaderComponent->shaderID = shaderID;
+
+        MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
+        meshComponent->meshName = "skybox";
+        meshComponent->isWireframe = false;
+        meshComponent->isSkyBox = true;
+
+        TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
+        textureComponent->textureFormat = TextureFormat::PNG;
+        textureComponent->textures[0] = "desert";
+    }
+
+
     // Set update callback
     engine->UpdateCallback(&UpdateCallback);
 
     // Load assets
-    LoadLighting();
-    LoadModels();
-    LoadTextures();
-    LoadSounds();
+    LoadAssets();
 }
 
 void Scene::Update(float dt) 
@@ -396,9 +395,23 @@ void Scene::Shutdown()
     delete timer;
 }
 
+ECSengine* Scene::GetEngineInstance()
+{
+    return engine;
+}
+
 float Scene::GetDeltaTime() 
 {
     return timer->GetDeltaTime();
+}
+
+// Load all the asset files
+void Scene::LoadAssets()
+{
+    LoadLighting();
+    LoadModels();
+    LoadTextures();
+    LoadSounds();
 }
 
 void Scene::LoadModels() 
@@ -468,6 +481,7 @@ void Scene::LoadSounds()
 
     soundSystem->LoadSound("deep_stone_lullaby.mp3", flags);
     soundSystem->LoadSound("chicken.wav", flags);
+    soundSystem->LoadSound("za_warudo.mp3", flags);
 }
 
 void Scene::LoadLighting()

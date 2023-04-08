@@ -41,7 +41,11 @@ public:
 	void LoadSounds();
 	void LoadLighting();
 
+	// Load the asset files
+	void LoadAssets();
+
 	// Getters
+	ECSengine* GetEngineInstance();
 	float GetDeltaTime();
 
 private:
