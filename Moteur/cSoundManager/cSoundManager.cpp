@@ -395,6 +395,11 @@ bool cSoundManager::UpdateVolume(FMOD::Channel* channel, const float new_volume)
 	return channel->setVolume(new_volume);
 }
 
+bool cSoundManager::PauseSound(FMOD::Channel* channel, bool isPaused)
+{
+	return channel->setPaused(isPaused);
+}
+
 bool cSoundManager::LoadInternetSound(const std::string& name, const std::string& link, const int mode)
 {
 	FMOD::Sound* sound;

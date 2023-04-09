@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ECS/System.h>
+#include <vector>
 
 #include "../Window/Window.h"
 
@@ -28,5 +29,10 @@ private:
 	// name of the system
 	std::string systemName;
 
+	// ListBox stuff
 	int index = 0;
+	bool doOnce = true;
+
+	// store the names of the meshes
+	std::vector<std::string> meshNames;
 };

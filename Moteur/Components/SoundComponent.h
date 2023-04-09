@@ -16,6 +16,7 @@ public:
 		maxDistance(1.f),
 		soundVolume(1.f),
 		isPlaying(true),
+		isPaused(false),
 		doOnce(true)
 	{};
 
@@ -36,6 +37,9 @@ public:
 
 	// Is the sound playing?
 	bool isPlaying;
+
+	// Is the sound paused?
+	bool isPaused;
 
 	// Don't want the sound playing an infinite amount of times
 	bool doOnce;

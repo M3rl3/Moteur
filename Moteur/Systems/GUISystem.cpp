@@ -16,11 +16,23 @@
 
 #include "../Global.h"
 
+// list box stuff
+int selectedItem;
+bool isExpanded;
+
+int selectedtexture;
+
 GUISystem::GUISystem() 
 {
     systemName = "GUISystem";
     drawReticle = false;
     index = 0;
+    doOnce = true;
+
+    selectedItem = 0;
+    isExpanded = false;
+
+    selectedtexture = 0;
 }
 
 GUISystem::~GUISystem()
@@ -76,6 +88,56 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     RigidBodyComponent* rigidBodyComponent = nullptr;
     SoundComponent* soundComponent = nullptr;
 
+    // Only populate the list once
+    if (doOnce) {
+        MeshComponent* mesh_component = nullptr;
+
+        for (int i = 0; i < entities.size(); i++) {
+            Entity* currentEntity = entities[i];
+
+            mesh_component = currentEntity->GetComponentByType<MeshComponent>();
+
+            if (mesh_component != nullptr) {
+                // push back all the mesh item names into this vector
+                meshNames.push_back(mesh_component->meshName);
+            }
+        }
+        doOnce = false;
+    }
+
+    // The scene hierarchy
+    if (ImGui::Begin("Hierarchy", &isExpanded))
+    {    
+        // Do this only if the window is expanded
+        
+        // Create a listbox for the entities
+        if (ImGui::BeginListBox("Entities")) {
+            if (meshNames.size() != NULL) {
+                for (int i = 0; i < meshNames.size(); i++) {
+
+                    // Iterate through the mesh names
+                    std::string& meshName = meshNames[i];
+
+                    // Get the index of the selected item
+                    if (ImGui::Selectable(meshName.c_str(), selectedItem == i)) {
+                        selectedItem = i;
+
+                        // Update the index for displaying specific component data
+                        index = selectedItem;
+                    }
+                }
+            }
+            ImGui::EndListBox();
+        }
+
+        // Clear the array and add all the mesh names again (in case of changes)
+        if (ImGui::Button("Repopulate List")) {
+            meshNames.clear();
+            doOnce = true;
+        }
+    }
+    ImGui::End();
+
     Entity* currentEntity = entities[index];
 
     // get the specific instances for all components
@@ -87,8 +149,13 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     rigidBodyComponent = currentEntity->GetComponentByType<RigidBodyComponent>();
     soundComponent = currentEntity->GetComponentByType<SoundComponent>();
 
-    ImGui::Begin("Index");
-    ImGui::Text("%d", index);
+    ImGui::Begin("Misc.");
+    ImGui::Text("Camera Position");
+    ImGui::InputFloat("CamX", &cam->position.x);
+    ImGui::InputFloat("CamY", &cam->position.y);
+    ImGui::InputFloat("CamZ", &cam->position.z);
+    ImGui::Separator();
+    ImGui::Text("Index: %d", index);
     if (ImGui::Button("+")) {
         index++;
         if (index > entities.size() - 1) {
@@ -102,27 +169,29 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
             index = entities.size() - 1;
         }
     }
+    ImGui::Separator();
+    ImGui::Checkbox("Draw Reticle", &drawReticle);
     ImGui::End();
 
     ImGui::Begin("Transform Component");
     if (transformComponent != nullptr) {
 
         ImGui::Text("Position");
-        ImGui::InputFloat("Position X", &transformComponent->position.x);
-        ImGui::InputFloat("Position Y", &transformComponent->position.y);
-        ImGui::InputFloat("Position Z", &transformComponent->position.z);
+        ImGui::InputFloat("PosX", &transformComponent->position.x);
+        ImGui::InputFloat("PosY", &transformComponent->position.y);
+        ImGui::InputFloat("PosZ", &transformComponent->position.z);
         ImGui::Separator();
 
         ImGui::Text("Rotation");
-        ImGui::InputFloat("Rotation X", &transformComponent->rotation.x);
-        ImGui::InputFloat("Rotation Y", &transformComponent->rotation.y);
-        ImGui::InputFloat("Rotation Z", &transformComponent->rotation.z);
+        ImGui::InputFloat("RotX", &transformComponent->rotation.x);
+        ImGui::InputFloat("RotY", &transformComponent->rotation.y);
+        ImGui::InputFloat("RotZ", &transformComponent->rotation.z);
         ImGui::Separator();
 
         ImGui::Text("Scale");
-        ImGui::InputFloat("Scale X", &transformComponent->scale.x);
-        ImGui::InputFloat("Scale Y", &transformComponent->scale.y);
-        ImGui::InputFloat("Scale Z", &transformComponent->scale.z);
+        ImGui::InputFloat("ScaleX", &transformComponent->scale.x);
+        ImGui::InputFloat("ScaleY", &transformComponent->scale.y);
+        ImGui::InputFloat("ScaleZ", &transformComponent->scale.z);
     }
     ImGui::End();
 
@@ -157,14 +226,35 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         ImGui::InputFloat("Volume", &soundComponent->soundVolume);
         ImGui::InputFloat("Falloff", &soundComponent->maxDistance);
         ImGui::Checkbox("Is Playing", &soundComponent->isPlaying);
+        ImGui::SameLine();
+        ImGui::Checkbox("Is Paused", &soundComponent->isPaused);
     }
     ImGui::End();
 
     ImGui::Begin("Texture Component");
     if (textureComponent != nullptr) {
-        ImGui::InputText("Texture0", (char*)textureComponent->textures[0].c_str(), 30);
-        ImGui::InputFloat("TexRatio0", &textureComponent->textureRatios[0]);
-        ImGui::InputInt("Format", (int*)&textureComponent->textureFormat);
+        if (textureComponent->textures[1] != "") {
+            if (ImGui::BeginCombo("Textures", textureComponent->textures[selectedtexture].c_str())) {
+                if (sizeof(textureComponent->textures) != NULL) {
+                    for (int i = 0; i < IM_ARRAYSIZE(textureComponent->textures); i++) {
+                        bool isSelected = (selectedtexture == i);
+
+                        if (ImGui::Selectable(textureComponent->textures[i].c_str(), isSelected)) {
+                            selectedtexture = i;
+                        }
+                        if (isSelected) {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                }
+                ImGui::EndCombo();
+            }
+        }
+        else {
+            ImGui::InputText("Texture0", (char*)textureComponent->textures[0].c_str(), 30);
+        }
+        ImGui::InputFloat("TexRatio0", &textureComponent->textureRatios[selectedtexture]);
+        ImGui::Text("Format: ");
         ImGui::SameLine();
         if ((int)textureComponent->textureFormat == 0) {
             ImGui::Text("BMP");
@@ -176,9 +266,9 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         ImGui::Separator();
 
         ImGui::Text("Color");
-        ImGui::InputFloat("ColorR", &textureComponent->rgbaColor.r);
-        ImGui::InputFloat("ColorG", &textureComponent->rgbaColor.g);
-        ImGui::InputFloat("ColorB", &textureComponent->rgbaColor.b);
+        ImGui::InputFloat("ColR", &textureComponent->rgbaColor.r);
+        ImGui::InputFloat("ColG", &textureComponent->rgbaColor.g);
+        ImGui::InputFloat("ColB", &textureComponent->rgbaColor.b);
         ImGui::Checkbox("Use Color", &textureComponent->useRGBAColor);
     }
     ImGui::End();

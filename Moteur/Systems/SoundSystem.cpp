@@ -133,17 +133,24 @@ void SoundSystem::Process(const std::vector<Entity*>& entities, float dt) {
 			}
 
 			// Set whether the sound should play or not
+			// soundComponent->attachedSound->setPaused(&soundComponent->isPaused);
 			soundComponent->attachedSound->isPlaying(&soundComponent->isPlaying);
 
 			// If playing
 			if (soundComponent->isPlaying) {
+
 				// Update the positions of all the attached sounds
 				soundManager->UpdateSoundPosition(soundComponent->attachedSound, transformComponent->position);
 
 				// Update sound volume
 				soundManager->UpdateVolume(soundComponent->attachedSound, soundComponent->soundVolume);
+
+				// Update sound paused status
+				soundManager->PauseSound(soundComponent->attachedSound, soundComponent->isPaused);
+				
 			}
 			else {
+				soundComponent->attachedSound->stop();
 				// Move on
 				continue;
 			}
