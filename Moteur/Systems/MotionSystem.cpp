@@ -37,12 +37,9 @@ void MotionSystem::Process(const std::vector<Entity*>& entities, float dt) {
 
 					if (velocityComponent->velocity != glm::vec3(0.f) && velocityComponent->useVelocity) {
 						velocityComponent->velocity = glm::normalize(velocityComponent->velocity);
-						transformComponent->position += velocityComponent->velocity * dt;
+						transformComponent->position += velocityComponent->velocity * dt * 10.f;
 					}
 				}
-			}
-			else {
-				continue;
 			}
 			
 			/*if (velocityComponent->velocity != glm::vec3(0.f)) {

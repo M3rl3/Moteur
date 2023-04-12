@@ -33,6 +33,7 @@ float lastY = 600.f / 2.f;
 // If mouse is enabled
 bool enableMouse = false;
 bool mouseClick = false;
+bool enableCursor = true;
 
 glm::vec3 targetLoc = glm::vec3(0.f);
 
@@ -66,6 +67,7 @@ RenderSystem::RenderSystem()
 
     ambientLight = 1.f;
     enableMouse = false;
+    enableCursor = true;
 }
 
 // Destructor
@@ -89,13 +91,10 @@ void RenderSystem::ProcessInput(GLFWwindow* window, int key, int scancode, int a
     if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
         enableMouse = !enableMouse;
     }
-    /*if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS) {
+        enableCursor = !enableCursor;
     }
-    if (key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }*/
-
+    
     if (key > 0 && key < 255) {
         if (action == GLFW_PRESS) {
             keyPressedID[key] = true;
@@ -362,6 +361,14 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
         camera->view = glm::lookAt(camera->position, camera->target, camera->upVector);
         camera->projection = glm::perspective(0.6f, ratio, 0.1f, 10000.f);
+    }
+
+    // enable/disable cursor
+    if (enableCursor) {
+        glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    else {
+        glfwSetInputMode(window->theWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     // Size of the viewport
@@ -839,6 +846,7 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, unsigned int shaderID)
 {
     sModelDrawInfo plyModel;
+    
     modelFileLoader->LoadModel(fileName, plyModel);
     
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {

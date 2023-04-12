@@ -102,6 +102,7 @@ public:
 
 	// Get mouse enbled status
 	bool GetMouseStatus();
+	bool GetCursorStatus();
 
 private:
 

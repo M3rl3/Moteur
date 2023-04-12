@@ -161,6 +161,7 @@
     <ClCompile Include="cLightManager\cLight.cpp" />
     <ClCompile Include="cLightManager\cLightHelper.cpp" />
     <ClCompile Include="cLightManager\cLightManager.cpp" />
+    <ClCompile Include="Components\CharacterControllerComponent.h" />
     <ClCompile Include="Components\SoundComponent.h" />
     <ClCompile Include="cModelFileLoader\cModelFileLoader.cpp" />
     <ClCompile Include="cShaderManager\cShader.cpp" />

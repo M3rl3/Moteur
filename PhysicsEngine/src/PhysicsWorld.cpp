@@ -1,6 +1,8 @@
 #include "PhysicsWorld.h"
 #include "Conversion.h"
 
+#include <bullet/BulletCollision/CollisionDispatch/btGhostObject.h>
+
 #include <iostream>
 
 namespace physics {
@@ -48,6 +50,30 @@ namespace physics {
 		dynamicsWorld->removeRigidBody(bulletBody);
 	}
 
+	void PhysicsWorld::AddCharacterController(iCharacterController* characterController)
+	{
+		btCharacterControllerInterface* btCharacterController =
+			CastBulletCharacterController(characterController);
+		CharacterController* cc = dynamic_cast<CharacterController*>(characterController);
+
+		btPairCachingGhostObject* btGhostObject = cc->GetGhostObject();
+		dynamicsWorld->addCollisionObject(btGhostObject,
+			btBroadphaseProxy::CharacterFilter,
+			btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
+
+		dynamicsWorld->addAction(btCharacterController);
+	}
+
+	void PhysicsWorld::RemoveCharacterController(iCharacterController* characterController)
+	{
+		CharacterController* cc = dynamic_cast<CharacterController*>(characterController);
+		btPairCachingGhostObject* btGhostObject = cc->GetGhostObject();
+		btCharacterControllerInterface* btCharacterController =
+			CastBulletCharacterController(characterController);
+		dynamicsWorld->removeAction(btCharacterController);
+		dynamicsWorld->removeCollisionObject(btGhostObject);
+	}
+
 	void PhysicsWorld::TimeStep(float dt)
 	{
 		dynamicsWorld->stepSimulation(dt);
@@ -56,6 +82,11 @@ namespace physics {
 	btDiscreteDynamicsWorld* PhysicsWorld::GetDynamicsWorld(void) 
 	{
 		return dynamicsWorld;
+	}
+
+	void PhysicsWorld::DebugDraw()
+	{
+		return;
 	}
 
 	void PhysicsWorld::RegisterCollisionListener(iCollisionListener* listener) {

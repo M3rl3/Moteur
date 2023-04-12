@@ -23,8 +23,14 @@ public:
 	// Create a rigid body
 	void CreateRigidBody(const physics::RigidBodyDesc& desc, physics::iShape* shape);
 
-	// Add a body to the physics system
+	// Create a character controller
+	void CreateCharacterController(physics::iConvexShape* shape, float stepHeight, const glm::vec3& up);
+
+	// Add a body to the physics world
 	void AddBody(physics::iCollisionBody* body);
+
+	// Add a character controller to the physics world
+	void AddCharacterController(physics::iCharacterController* characterController);
 
 	// Set the gravitational constant
 	void SetGravity(const glm::vec3 gravity);

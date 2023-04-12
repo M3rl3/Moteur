@@ -3,6 +3,7 @@
 #include "iPhysicsWorld.h"
 #include "iRigidBody.h"
 #include "iSoftBody.h"
+#include "iCharacterController.h"
 #include "RigidBodyDesc.h"
 #include "SoftBodyDesc.h"
 #include "iShape.h"
@@ -17,6 +18,8 @@ namespace physics
 		virtual iPhysicsWorld* CreateWorld() = 0;
 		virtual iRigidBody* CreateRigidBody(const RigidBodyDesc& desc, iShape* shape) = 0;
 		virtual iSoftBody* CreateSoftBody(const SoftBodyDesc& desc) = 0;
+		virtual iCharacterController* CreateCharacterController(
+			iConvexShape* shape, float stepHeight, const Vector3& up) = 0;
 
 	protected:
 		iPhysicsFactory() {}

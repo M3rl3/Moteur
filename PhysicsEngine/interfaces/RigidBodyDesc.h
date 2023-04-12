@@ -10,6 +10,7 @@ namespace physics
 		RigidBodyDesc()
 			: mass(1.f)
 			, isStatic(false)
+			, useInertia(true)
 			, position(0.f, 0.f, 0.f)
 			, rotation(1.0f, 0.f, 0.f, 0.f)
 			, linearVelocity(0.f, 0.f, 0.f)
@@ -23,9 +24,11 @@ namespace physics
 		{}
 
 		float mass;
-		bool isStatic;
 		float restitution;
 		float friction;
+
+		bool isStatic;
+		bool useInertia;
 
 		Vector3 position;
 		Vector3 linearVelocity;

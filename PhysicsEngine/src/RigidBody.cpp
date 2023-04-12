@@ -18,19 +18,31 @@ namespace physics {
 		btVector3 inertia(0, 0, 0);
 		btCollisionShape* bulletShape = CastBulletShape(shape);
 
-		if (desc.mass != 0.0f)
+		// If inertia needs to be calculated
+		if (desc.useInertia && !desc.isStatic)
 		{
 			bulletShape->calculateLocalInertia(desc.mass, inertia);
 		}
 
-		btRigidBody::btRigidBodyConstructionInfo bodyCI(desc.mass, motionState, bulletShape, inertia);
+		// If the object is static
+		if (desc.isStatic) {
+			// mass will be 0
+			btRigidBody::btRigidBodyConstructionInfo bodyCI(0.f, motionState, bulletShape, inertia);
+			bulletRigidBody = new btRigidBody(bodyCI);
 
-		bulletRigidBody = new btRigidBody(bodyCI);
+			// no need to disable deactivation on static objects
+		}
+		else {
+			// object has a non-zero mass
+			btRigidBody::btRigidBodyConstructionInfo bodyCI(desc.mass, motionState, bulletShape, inertia);
+			bulletRigidBody = new btRigidBody(bodyCI);
+
+			// Disable deactivation is expensive on large physics simulations
+			bulletRigidBody->setActivationState(DISABLE_DEACTIVATION);
+		}
 
 		// bulletRigidBody->setCollisionFlags(bulletRigidBody->getCollisionFlags() |
 		//	btCollisionObject::CF_KINEMATIC_OBJECT);
-
-		bulletRigidBody->setActivationState(DISABLE_DEACTIVATION);
 
 		btVector3 btAngularFactor;
 		btVector3 btLinearFactor;

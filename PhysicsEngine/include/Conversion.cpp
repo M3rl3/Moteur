@@ -4,8 +4,11 @@
 #include "PlaneShape.h"
 #include "SphereShape.h"
 #include "CylinderShape.h"
+#include "CapsuleShape.h"
 
+#include "PhysicsWorld.h"
 #include "RigidBody.h"
+#include "CharacterController.h"
 
 void physics::CastGLMQuat(const btQuaternion& in, glm::quat* out)
 {
@@ -64,6 +67,7 @@ btCollisionShape* physics::CastBulletShape(iShape* shape)
 		btEmptyShape* btEmpty = new btEmptyShape();
 
 		return btEmpty;
+
 	} break;
 
 	case ShapeType::Box:
@@ -77,6 +81,7 @@ btCollisionShape* physics::CastBulletShape(iShape* shape)
 		btBoxShape* btBox = new btBoxShape(halfExtents);
 
 		return btBox;
+
 	} break;
 
 	case ShapeType::Plane:
@@ -92,6 +97,7 @@ btCollisionShape* physics::CastBulletShape(iShape* shape)
 		btStaticPlaneShape* btPlane = new btStaticPlaneShape(normal, planeConstant);
 
 		return btPlane;
+
 	} break;
 
 	case ShapeType::Sphere:
@@ -119,13 +125,40 @@ btCollisionShape* physics::CastBulletShape(iShape* shape)
 		btCylinderShape* btCylinder = new btCylinderShape(btHalfExtents);
 
 		return btCylinder;
+
 	} break;
 
-	default:
-		break;
+	case ShapeType::Capsule:
+	{
+		CapsuleShape* capsule = CapsuleShape::Cast(shape);
 
-		return 0;
+		btScalar radius;
+		btScalar height;
+
+		CastBulletScalar(capsule->GetRadius(), &radius);
+		CastBulletScalar(capsule->GetHeight(), &height);
+
+		btCapsuleShape* btCapsule = new btCapsuleShape(radius, height);
+
+		return btCapsule;
 	}
+	break;
+
+	default:
+		// Not a valid shape
+		assert(0);
+		break;
+	}
+
+	return nullptr;
+}
+
+btDiscreteDynamicsWorld* physics::CastBulletWorld(iPhysicsWorld* world)
+{
+	if (world == nullptr)
+		return nullptr;
+
+	return dynamic_cast<PhysicsWorld*>(world)->GetDynamicsWorld();
 }
 
 btRigidBody* physics::CastBulletRigidBody(iCollisionBody* body)
@@ -134,4 +167,40 @@ btRigidBody* physics::CastBulletRigidBody(iCollisionBody* body)
 		return nullptr;
 
 	return dynamic_cast<RigidBody*>(body)->GetBulletBody();
+}
+
+btConvexShape* physics::CastBulletConvexShape(iConvexShape* shape)
+{
+
+	switch (shape->GetShapeType())
+	{
+	case ShapeType::Capsule:
+	{
+		CapsuleShape* capsule = CapsuleShape::Cast(shape);
+
+		btScalar radius;
+		btScalar height;
+
+		CastBulletScalar(capsule->GetRadius(), &radius);
+		CastBulletScalar(capsule->GetHeight(), &height);
+
+		btCapsuleShape* btCapsule = new btCapsuleShape(radius, height);
+
+		return btCapsule;
+	}
+	break;
+
+	default:
+		// Not a valid shape
+		assert(0);
+		break;
+	}
+
+	return nullptr;
+}
+
+btCharacterControllerInterface* physics::CastBulletCharacterController(
+	iCharacterController* characterController)
+{
+	return dynamic_cast<CharacterController*>(characterController)->GetBulletCharacterController();
 }

@@ -70,6 +70,9 @@
     <ClInclude Include="include\RigidBody.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\CharacterController.h" />
+    <ClInclude Include="interfaces\iCharacterController.h" />
+    <ClInclude Include="interfaces\CapsuleShape.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="interfaces\BoxShape.cpp">
@@ -95,5 +98,7 @@
     </ClCompile>
     <ClCompile Include="include\Conversion.h" />
     <ClCompile Include="include\Conversion.cpp" />
+    <ClCompile Include="src\CharacterController.cpp" />
+    <ClCompile Include="interfaces\CapsuleShape.cpp" />
   </ItemGroup>
 </Project>

@@ -3,10 +3,12 @@
 // Bullet Source
 #include <bullet/btBulletCollisionCommon.h>
 #include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/BulletDynamics/Character/btCharacterControllerInterface.h>
 
 // Physics Interfaces
 #include <iShape.h>
 #include <iCollisionBody.h>
+#include <iCharacterController.h>
 
 // Math Library
 #include <glm/gtx/quaternion.hpp>
@@ -26,5 +28,9 @@ namespace physics
 
 	// Interface -> Bullet
 	btCollisionShape* CastBulletShape(iShape* shape);
+	btDiscreteDynamicsWorld* CastBulletWorld(iPhysicsWorld* world);
 	btRigidBody* CastBulletRigidBody(iCollisionBody* body);
+	btConvexShape* CastBulletConvexShape(iConvexShape* shape);
+	btCharacterControllerInterface* CastBulletCharacterController(
+		iCharacterController* characterController);
 };

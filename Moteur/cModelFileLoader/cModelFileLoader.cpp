@@ -42,7 +42,7 @@ int cModelFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) 
 
     std::ifstream plyFile(fileToLoadFullPath);
     if (!plyFile.is_open()) {
-        std::cout << "Could not load file." << std::endl;
+        std::cout << "Could not load model file " << fileName << std::endl;
         return -1;
     }
 

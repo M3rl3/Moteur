@@ -6,6 +6,7 @@
 #include "../Components/RigidBodyComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
+#include "../Components/CharacterControllerComponent.h"
 
 // Constructor
 PhysicsSystem::PhysicsSystem()
@@ -33,10 +34,22 @@ void PhysicsSystem::CreateRigidBody(const physics::RigidBodyDesc& desc, physics:
     physicsFactory->CreateRigidBody(desc, shape);
 }
 
-// Add a body to the physics system
+// Create a character controller
+void PhysicsSystem::CreateCharacterController(physics::iConvexShape* shape, float stepHeight, const glm::vec3& up)
+{
+    physicsFactory->CreateCharacterController(shape, stepHeight, up);
+}
+
+// Add a body to the physics world
 void PhysicsSystem::AddBody(physics::iCollisionBody* body)
 {
     physicsWorld->AddBody(body);
+}
+
+// Add a character controller to the physics world
+void PhysicsSystem::AddCharacterController(physics::iCharacterController* characterController)
+{
+    physicsWorld->AddCharacterController(characterController);
 }
 
 // Set the gravitational constant
@@ -52,6 +65,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
     RigidBodyComponent* rigidBodyComponent = nullptr;
     TransformComponent* transformComponent = nullptr;
     VelocityComponent* velocityComponent = nullptr;
+    CharacterControllerComponent* characterControllerComponent = nullptr;
 
     // Iterate through all entities
     for (int i = 0; i < entities.size(); i++) {
@@ -62,12 +76,13 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
         rigidBodyComponent = currentEntity->GetComponentByType<RigidBodyComponent>();
         transformComponent = currentEntity->GetComponentByType<TransformComponent>();
         velocityComponent = currentEntity->GetComponentByType<VelocityComponent>();
+        characterControllerComponent = currentEntity->GetComponentByType<CharacterControllerComponent>();
 
         // Check if the required components exist
         if (rigidBodyComponent != nullptr && transformComponent != nullptr) {
 
             // Create and add the entity rigid bodies
-            if (rigidBodyComponent->isInfluenced && rigidBodyComponent->doOnce) {
+            if (rigidBodyComponent->usePhysics && rigidBodyComponent->doOnce) {
 
                 // Set initital position
                 rigidBodyComponent->rigidBodyDesc.position = transformComponent->position;
@@ -85,7 +100,8 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
             }
 
             // Check if the object should be under the influence of physics
-            if (rigidBodyComponent->isInfluenced) {
+            if (rigidBodyComponent->usePhysics) {
+
                 // convert all collision bodies to rigid bodies
                 physics::iRigidBody* rigidBody =
                     dynamic_cast<physics::iRigidBody*>(rigidBodyComponent->rigidBody);
@@ -97,13 +113,37 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                 transformComponent->position = position;
 
-                if (velocityComponent != nullptr) {
+                if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
                     rigidBody->ApplyForce(velocityComponent->velocity);
                 }
             }
-            else {
-                // Move on
-                continue;
+        }
+
+        if (characterControllerComponent != nullptr && transformComponent != nullptr) {
+
+            if (characterControllerComponent->isControllable && characterControllerComponent->doOnce) {
+
+                // Initialize the character controller
+                characterControllerComponent->characterController =
+                    physicsFactory->CreateCharacterController(characterControllerComponent->convexShape,
+                        characterControllerComponent->stepHeight, characterControllerComponent->up);
+
+                physicsWorld->AddCharacterController(characterControllerComponent->characterController);
+            }
+
+            if (characterControllerComponent->isControllable) {
+
+                if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
+
+                    characterControllerComponent->characterController->SetWalkDirection(velocityComponent->velocity);
+
+                    if (characterControllerComponent->canJump && velocityComponent->velocity.y != 0.f) {
+                        characterControllerComponent->characterController->Jump(velocityComponent->velocity);
+                    }
+                }
+
+                // Call update action on the character controller
+                characterControllerComponent->characterController->UpdateAction(physicsWorld, dt);
             }
         }
     }

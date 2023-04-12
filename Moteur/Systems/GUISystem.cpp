@@ -216,7 +216,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
 
     ImGui::Begin("Rigidbody Component");
     if (rigidBodyComponent != nullptr) {
-        ImGui::Checkbox("Use Physics", &rigidBodyComponent->isInfluenced);
+        ImGui::Checkbox("Use Physics", &rigidBodyComponent->usePhysics);
     }
     ImGui::End();
 
@@ -233,27 +233,26 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
 
     ImGui::Begin("Texture Component");
     if (textureComponent != nullptr) {
-        if (textureComponent->textures[1] != "") {
-            if (ImGui::BeginCombo("Textures", textureComponent->textures[selectedtexture].c_str())) {
-                if (sizeof(textureComponent->textures) != NULL) {
-                    for (int i = 0; i < IM_ARRAYSIZE(textureComponent->textures); i++) {
-                        bool isSelected = (selectedtexture == i);
 
-                        if (ImGui::Selectable(textureComponent->textures[i].c_str(), isSelected)) {
-                            selectedtexture = i;
-                        }
-                        if (isSelected) {
-                            ImGui::SetItemDefaultFocus();
-                        }
+        if (ImGui::BeginCombo("Textures", textureComponent->textures[selectedtexture].c_str())) {
+            for (int i = 0; i < 8; i++) {
+
+                // Only add the texture strings that are initialized
+                if (!textureComponent->textures[i].empty()) {
+                    bool isSelected = (selectedtexture == i);
+
+                    if (ImGui::Selectable(textureComponent->textures[i].c_str(), isSelected)) {
+                        selectedtexture = i;
                     }
-                }
-                ImGui::EndCombo();
+                    if (isSelected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }                   
             }
+            ImGui::EndCombo();
         }
-        else {
-            ImGui::InputText("Texture0", (char*)textureComponent->textures[0].c_str(), 30);
-        }
-        ImGui::InputFloat("TexRatio0", &textureComponent->textureRatios[selectedtexture]);
+        
+        ImGui::InputFloat("TexRatio", &textureComponent->textureRatios[selectedtexture]);
         ImGui::Text("Format: ");
         ImGui::SameLine();
         if ((int)textureComponent->textureFormat == 0) {

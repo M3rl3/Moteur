@@ -11,8 +11,10 @@
 #include "Components/LitComponent.h"
 #include "Components/SoundComponent.h"
 #include "Components/RigidBodyComponent.h"
+#include "Components/CharacterControllerComponent.h"
 
 #include "../PhysicsEngine/interfaces/CylinderShape.h"
+#include "../PhysicsEngine/interfaces/CapsuleShape.h"
 #include "../PhysicsEngine/interfaces/PlaneShape.h"
 #include "../PhysicsEngine/interfaces/RigidBodyDesc.h"
 
@@ -27,6 +29,7 @@ GameMode gameMode;
 TransformComponent* transformComponent;
 VelocityComponent* velocityComponent;
 RigidBodyComponent* rigidBodyComponent;
+CharacterControllerComponent* characterControllerComponent;
 
 // Systems
 RenderSystem* renderSys;
@@ -143,11 +146,21 @@ void Scene::Render()
         soundComponent->soundVolume = 5.f;
         soundComponent->soundName = "deep_stone_lullaby.mp3";
 
-        rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
-        rigidBodyComponent->bodyShape = new physics::CylinderShape(transformComponent->scale);
-        rigidBodyComponent->rigidBodyDesc.isStatic = false;
-        rigidBodyComponent->rigidBodyDesc.mass = 1.f;
-        rigidBodyComponent->isInfluenced = true;
+        //rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
+        //rigidBodyComponent->bodyShape = new physics::CapsuleShape(transformComponent->scale.x, transformComponent->scale.y * 2);
+        //// rigidBodyComponent->bodyShape = new physics::CylinderShape(transformComponent->scale);
+        //rigidBodyComponent->rigidBodyDesc.useInertia = false;
+        //rigidBodyComponent->rigidBodyDesc.mass = 1.f;
+        //rigidBodyComponent->usePhysics = true;
+        
+        float radius = 1.f;
+        float height = 3.f;
+        characterControllerComponent = engine->AddComponent<CharacterControllerComponent>(entityID);
+        // characterControllerComponent->convexShape = new physics::CapsuleShape(transformComponent->scale.x, transformComponent->scale.y * 1.25f);
+        characterControllerComponent->convexShape = new physics::CapsuleShape(radius, height);
+        characterControllerComponent->stepHeight = 0.25f;
+        characterControllerComponent->canJump = true;
+        characterControllerComponent->isControllable = true;
 
         velocityComponent = engine->AddComponent<VelocityComponent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
@@ -180,9 +193,9 @@ void Scene::Render()
 
         RigidBodyComponent* rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
         rigidBodyComponent->bodyShape = new physics::CylinderShape(transformComponent->scale);
-        rigidBodyComponent->rigidBodyDesc.isStatic = true;
+        rigidBodyComponent->rigidBodyDesc.isStatic = false;
         rigidBodyComponent->rigidBodyDesc.mass = 1.f;
-        rigidBodyComponent->isInfluenced = true;
+        rigidBodyComponent->usePhysics = true;
 
         LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
         litComponent->isLit = true;
@@ -221,8 +234,7 @@ void Scene::Render()
         RigidBodyComponent* rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
         rigidBodyComponent->bodyShape = new physics::PlaneShape(1.0f, glm::vec3(0.f, 1.f, 0.f));
         rigidBodyComponent->rigidBodyDesc.isStatic = true;
-        rigidBodyComponent->rigidBodyDesc.mass = 0.f;
-        rigidBodyComponent->isInfluenced = true;
+        rigidBodyComponent->usePhysics = true;
 
         LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
         litComponent->isLit = true;
@@ -246,7 +258,6 @@ void Scene::Render()
         textureComponent->textureFormat = TextureFormat::PNG;
         textureComponent->textures[0] = "desert";
     }
-
 
     // Set update callback
     engine->UpdateCallback(&UpdateCallback);
@@ -281,6 +292,10 @@ void Scene::Update(float dt)
 
         ssTitle.str("");
 
+        // Gets the GPU that's in use
+        const GLubyte* vendor = glGetString(GL_VENDOR);
+        const GLubyte* renderer = glGetString(GL_RENDERER);
+
         // Calculate Frame rate & Frame time
         frameRate = (1.f / elapsedTime) * frameCount;
         frameTime = (elapsedTime / frameCount) * 1000;
@@ -290,7 +305,8 @@ void Scene::Update(float dt)
             renderSystem->GetCamera()->position.y << ", " <<
             renderSystem->GetCamera()->position.z << ") " <<
             " FPS: " << frameRate <<
-            " ms: " << frameTime;
+            " ms: " << frameTime <<
+            "   Renderer: " << renderer;
 
         // Set window title
         glfwSetWindowTitle(renderSystem->GetWindow()->theWindow, ssTitle.str().c_str());
@@ -364,6 +380,12 @@ void Scene::UpdateCallback(float dt)
             transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
         }
         if (renderSys->IsKeyReleased(GLFW_KEY_A)) {
+            velocityComponent->velocity = glm::vec3(0.f);
+        }
+        if (renderSys->IsKeyHeldDown(GLFW_KEY_SPACE)) {
+            velocityComponent->velocity.y += MOVE_SPEED;
+        }
+        if (renderSys->IsKeyReleased(GLFW_KEY_SPACE)) {
             velocityComponent->velocity = glm::vec3(0.f);
         }
         break;

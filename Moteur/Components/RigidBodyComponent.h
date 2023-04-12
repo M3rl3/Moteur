@@ -16,7 +16,7 @@ public:
 		componentType("RigidBodyComponent"),
 		bodyShape(nullptr),
 		rigidBody(nullptr),
-		isInfluenced(true),
+		usePhysics(true),
 		doOnce(true)
 	{};
 
@@ -33,7 +33,7 @@ public:
 	physics::iCollisionBody* rigidBody;
 
 	// If the object is influenced by physics
-	bool isInfluenced;
+	bool usePhysics;
 
 	// Add the physics body only once
 	bool doOnce;

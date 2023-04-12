@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include <iostream>
 #include <sstream>
 
 sModelDrawInfo::sModelDrawInfo()
@@ -88,6 +89,9 @@ bool cVAOManager::LoadModelIntoVAO(
 	// Calculate the min and max values
 	drawInfo.CalculateExtents();
 
+	// Error check
+	GLenum error = glGetError();
+
 	// 
 	// Model is loaded and the vertices and indices are in the drawInfo struct
 	// 
@@ -107,8 +111,7 @@ bool cVAOManager::LoadModelIntoVAO(
 	//	of the VAO... 
 
 
-	// NOTE: OpenGL error checks have been omitted for brevity
-//	glGenBuffers(1, &vertex_buffer);
+	//	glGenBuffers(1, &vertex_buffer);
 	glGenBuffers(1, &(drawInfo.VertexBufferID));
 
 	//	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -120,6 +123,10 @@ bool cVAOManager::LoadModelIntoVAO(
 		GL_STATIC_DRAW);
 	// glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	if (error != GL_NO_ERROR) {
+		std::cout << "OpenGL has reported an error: " << error << std::endl;
+		return false;
+	}
 
 	// Copy the index buffer into the video card, too
 	// Create an index buffer.
@@ -132,6 +139,11 @@ bool cVAOManager::LoadModelIntoVAO(
 		(GLvoid*)drawInfo.pIndices,
 		GL_STATIC_DRAW);
 	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	if (error != GL_NO_ERROR) {
+		std::cout << "OpenGL has reported an error: " << error << std::endl;
+		return false;
+	}
 
 	// Set the vertex attributes.
 
@@ -193,6 +205,11 @@ bool cVAOManager::LoadModelIntoVAO(
 							sizeof(vertLayout),						// Stride	(number of bytes)
 							(void*)offsetof(vertLayout, BoneWeight[0]));
 
+	if (error != GL_NO_ERROR) {
+		std::cout << "OpenGL has reported an error: " << error << std::endl;
+		return false;
+	}
+
 	// Now that all the parts are set up, set the VAO to zero
 	glBindVertexArray(0);
 
@@ -207,6 +224,11 @@ bool cVAOManager::LoadModelIntoVAO(
 	glDisableVertexAttribArray(vBiNormalLocation);
 	glDisableVertexAttribArray(vBoneIDLocation);
 	glDisableVertexAttribArray(vBoneWeightLocation);
+
+	if (error != GL_NO_ERROR) {
+		std::cout << "OpenGL has reported an error: " << error << std::endl;
+		return false;
+	}
 
 	// Store the draw information into the map
 	this->m_map_ModelName_to_VAOID[drawInfo.meshName] = drawInfo;

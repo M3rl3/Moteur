@@ -147,12 +147,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\CharacterController.h" />
     <ClInclude Include="include\PhysicsFactory.h" />
     <ClInclude Include="include\PhysicsWorld.h" />
     <ClInclude Include="include\RigidBody.h" />
     <ClInclude Include="interfaces\BodyType.h" />
     <ClInclude Include="interfaces\BoxShape.h" />
+    <ClInclude Include="interfaces\CapsuleShape.h" />
     <ClInclude Include="interfaces\CylinderShape.h" />
+    <ClInclude Include="interfaces\iCharacterController.h" />
     <ClInclude Include="interfaces\iCollisionBody.h" />
     <ClInclude Include="interfaces\iPhysicsFactory.h" />
     <ClInclude Include="interfaces\iPhysicsWorld.h" />
@@ -170,9 +173,11 @@
     <ClCompile Include="include\Conversion.cpp" />
     <ClCompile Include="include\Conversion.h" />
     <ClCompile Include="interfaces\BoxShape.cpp" />
+    <ClCompile Include="interfaces\CapsuleShape.cpp" />
     <ClCompile Include="interfaces\CylinderShape.cpp" />
     <ClCompile Include="interfaces\PlaneShape.cpp" />
     <ClCompile Include="interfaces\SphereShape.cpp" />
+    <ClCompile Include="src\CharacterController.cpp" />
     <ClCompile Include="src\PhysicsFactory.cpp" />
     <ClCompile Include="src\PhysicsWorld.cpp" />
     <ClCompile Include="src\RigidBody.cpp" />
