@@ -143,7 +143,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                 if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
 
-                    characterControllerComponent->characterController->SetWalkDirection(velocityComponent->velocity);
+                    characterControllerComponent->characterController->SetWalkDirection(velocityComponent->velocity * dt);
 
                     if (characterControllerComponent->canJump && velocityComponent->velocity.y != 0.f) {
                         characterControllerComponent->characterController->Jump(velocityComponent->velocity);

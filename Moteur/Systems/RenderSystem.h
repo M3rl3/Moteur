@@ -3,6 +3,7 @@
 #include <ECS/System.h>
 
 #include "../Components/TransformComponent.h"
+#include "../Components/MeshComponent.h"
 
 #include "../cModelFileLoader/cModelFileLoader.h"
 
@@ -36,7 +37,7 @@ public:
 	bool LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID);
 
 	// Loads model from ply file and gets it into the VAO
-	bool LoadMesh(std::string fileName, std::string modelName, unsigned int shaderID);
+	bool LoadMesh(std::string fileName, std::string modelName, ModelType modelType, unsigned int shaderID);
 
 	// Set the path where the textures are located
 	void SetTexturePath(std::string filePath);

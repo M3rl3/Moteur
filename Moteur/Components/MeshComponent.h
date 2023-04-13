@@ -4,6 +4,11 @@
 
 #include "../cVAOManager/cVAOManager.h"
 
+enum ModelType {
+	PLY,
+	FBX
+};
+
 // Struct holding the actual mesh model which is to be drawn
 struct MeshComponent : Component {
 public:
@@ -13,7 +18,8 @@ public:
 		meshName(""),
 		isWireframe(false),
 		isSkyBox(false),
-		isTerrain(false)
+		isTerrain(false),
+		modelType(PLY)
 	{};
 
 	// Destructor
@@ -24,6 +30,8 @@ public:
 
 	// name of the mesh
 	std::string meshName;
+
+	ModelType modelType;
 
 	// Mesh is to be drawn in wireframe mode
 	bool isWireframe;

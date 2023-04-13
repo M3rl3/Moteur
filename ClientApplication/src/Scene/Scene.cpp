@@ -125,6 +125,7 @@ void Scene::Render()
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "steve";
+        meshComponent->modelType = ModelType::FBX;
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
@@ -134,9 +135,6 @@ void Scene::Render()
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
-
-        BoundingBoxComponent* boundingBoxComponent = engine->AddComponent<BoundingBoxComponent>(entityID);
-        boundingBoxComponent->drawBBox = true;
 
         LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
         litComponent->isLit = true;
@@ -149,16 +147,12 @@ void Scene::Render()
 
         //rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
         //rigidBodyComponent->bodyShape = new physics::CapsuleShape(transformComponent->scale.x, transformComponent->scale.y * 2);
-        //// rigidBodyComponent->bodyShape = new physics::CylinderShape(transformComponent->scale);
         //rigidBodyComponent->rigidBodyDesc.useInertia = false;
         //rigidBodyComponent->rigidBodyDesc.mass = 1.f;
         //rigidBodyComponent->usePhysics = true;
-        
-        float radius = 1.f;
-        float height = 2.f;
 
         characterControllerComponent = engine->AddComponent<CharacterControllerComponent>(entityID);
-        characterControllerComponent->convexShape = new physics::CapsuleShape(radius, height);
+        characterControllerComponent->convexShape = new physics::CapsuleShape(1, 1);
         characterControllerComponent->stepHeight = 2.f;
         characterControllerComponent->canJump = true;
         characterControllerComponent->isControllable = true;
@@ -496,10 +490,10 @@ void Scene::LoadModels()
     // Meshes loaded here
     renderSystem->SetMeshPath("../assets/meshes");
 
-    renderSystem->LoadMesh("skybox_sphere.ply", "skybox", shaderID);
-    renderSystem->LoadMesh("steve.ply", "steve", shaderID);
-    renderSystem->LoadMesh("creepyMonster.ply", "creepyMonster", shaderID);
-    renderSystem->LoadMesh("west_town.ply", "plain", shaderID);
+    renderSystem->LoadMesh("skybox_sphere.ply", "skybox", ModelType::PLY,shaderID);
+    renderSystem->LoadMesh("steve.ply", "steve", ModelType::PLY, shaderID);
+    renderSystem->LoadMesh("creepyMonster.ply", "creepyMonster", ModelType::PLY, shaderID);
+    renderSystem->LoadMesh("west_town.ply", "plain", ModelType::PLY, shaderID);
 }
 
 void Scene::LoadTextures() 

@@ -873,14 +873,22 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
     }
 }
 
-bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, unsigned int shaderID)
+bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, ModelType modelType, unsigned int shaderID)
 {
-    sModelDrawInfo plyModel;
+    sModelDrawInfo model;
     
-    modelFileLoader->LoadModelPLY(fileName, plyModel);
+    if (modelType == ModelType::PLY) {
+        modelFileLoader->LoadModelPLY(fileName, model);
+    }
+    else if (modelType == ModelType::FBX) {
+        modelFileLoader->LoadModelFBX(fileName, model);
+    }
+    else {
+        // No idea what this model is
+    }
     
-    if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
-        std::cout << "Model " << modelName << " loaded successfully." << std::endl;
+    if (vaoManager->LoadModelIntoVAO(modelName, model, shaderID)) {
+        std::cout << "Model " << modelName << " loaded successfully into VAO." << std::endl;
         return true;
     }
     else {

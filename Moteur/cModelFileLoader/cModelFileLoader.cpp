@@ -183,6 +183,7 @@ int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxMode
     aiNode* rootNode = scene->mRootNode;
 
     for (unsigned int i = 0; i < rootNode->mNumMeshes; i++) {
+
         aiMesh* mesh = scene->mMeshes[rootNode->mMeshes[i]];
 
         fbxModel.numberOfVertices = mesh->mNumVertices;
@@ -190,25 +191,45 @@ int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxMode
         fbxModel.numberOfIndices = mesh->mNumFaces * 3;
 
         for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
+
             fbxModel.pVertices->x = mesh->mVertices[j].x;
             fbxModel.pVertices->y = mesh->mVertices[j].y;
             fbxModel.pVertices->z = mesh->mVertices[j].z;
 
+            fbxModel.pVertices->nx = mesh->mNormals[j].x;
+            fbxModel.pVertices->ny = mesh->mNormals[j].y;
+            fbxModel.pVertices->nz = mesh->mNormals[j].z;
+
             if (mesh->mColors[0]) {
+
                 fbxModel.pVertices->r = mesh->mColors[0][j].r;
                 fbxModel.pVertices->g = mesh->mColors[0][j].g;
                 fbxModel.pVertices->b = mesh->mColors[0][j].b;
             }
             
-            fbxModel.pVertices->nx = mesh->mNormals[j].x;
-            fbxModel.pVertices->ny = mesh->mNormals[j].y;
-            fbxModel.pVertices->nz = mesh->mNormals[j].z;
-
             if (mesh->mTextureCoords[0]) {
+
                 fbxModel.pVertices->u0 = mesh->mTextureCoords[0][j].x;
                 fbxModel.pVertices->v0 = mesh->mTextureCoords[0][j].y;
             }
-        }        
+        }
+
+        for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+
+            aiFace& face = mesh->mFaces[i];
+
+            for (unsigned int j = 0; j < face.mNumIndices; j++) {
+
+                fbxModel.pIndices[i * 3 + j] = face.mIndices[j];
+            }
+        }
+
         // access mesh data here
+
+        if (&fbxModel != nullptr) {
+            fbxModels.push_back(&fbxModel);
+        }
+
+        return fbxModels.size() - 1;
     };
 }
