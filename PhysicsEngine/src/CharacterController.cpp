@@ -25,6 +25,7 @@ namespace physics
 		characterController->setMaxPenetrationDepth(0);
 
 		ghostObject->setCollisionFlags(0);
+		ghostObject->activate(true);
 	}
 
 	CharacterController::~CharacterController()

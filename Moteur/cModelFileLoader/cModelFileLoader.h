@@ -19,9 +19,13 @@ public:
 	sModelDrawInfo* GetPlyModelByID(unsigned int id);
 
 	void SetBasePath(std::string filePath);
-	int LoadModel(std::string fileName, sModelDrawInfo& plyModel);
+
+	int LoadModelPLY(std::string fileName, sModelDrawInfo& plyModel);
+	int LoadModelFBX(std::string fileName, sModelDrawInfo& plyModel);
 
 private:
 	std::vector<sModelDrawInfo*> plyModels;
+	std::vector<sModelDrawInfo*> fbxModels;
+
 	std::string basePath;
 };

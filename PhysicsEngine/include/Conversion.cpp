@@ -38,6 +38,10 @@ void physics::CastFloat(const btScalar& in, float* out)
 
 void physics::CastGLMMat4(const btTransform& in, glm::mat4* out)
 {
+	*out = glm::make_mat4(&in.getBasis().getRow(0).getX());
+	(*out)[3] = glm::vec4(in.getOrigin().getX(),
+						  in.getOrigin().getY(),
+						  in.getOrigin().getZ(), 1.0f);
 }
 
 void physics::CastBulletQuaternion(const glm::quat& in, btQuaternion* out)

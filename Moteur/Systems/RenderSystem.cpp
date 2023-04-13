@@ -861,7 +861,7 @@ void RenderSystem::SetMeshPath(std::string filePath)
 // Loads model from ply file and gets it into the VAO
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
 {
-    modelFileLoader->LoadModel(fileName, plyModel);
+    modelFileLoader->LoadModelPLY(fileName, plyModel);
 
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
         std::cout << "Model " << modelName << " loaded successfully." << std::endl;
@@ -877,7 +877,7 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, unsigne
 {
     sModelDrawInfo plyModel;
     
-    modelFileLoader->LoadModel(fileName, plyModel);
+    modelFileLoader->LoadModelPLY(fileName, plyModel);
     
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
         std::cout << "Model " << modelName << " loaded successfully." << std::endl;

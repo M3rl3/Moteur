@@ -154,8 +154,8 @@ void Scene::Render()
         //rigidBodyComponent->rigidBodyDesc.mass = 1.f;
         //rigidBodyComponent->usePhysics = true;
         
-        float radius = 2.f;
-        float height = 6.f;
+        float radius = 1.f;
+        float height = 2.f;
 
         characterControllerComponent = engine->AddComponent<CharacterControllerComponent>(entityID);
         characterControllerComponent->convexShape = new physics::CapsuleShape(radius, height);

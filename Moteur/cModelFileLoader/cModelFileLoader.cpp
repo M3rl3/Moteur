@@ -1,6 +1,12 @@
 #include "cModelFileLoader.h"
 
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/Importer.hpp>
+
 #include <glm/glm.hpp>
+
+Assimp::Importer assimpImporter;
 
 struct vertexLayout {
 
@@ -33,7 +39,7 @@ void cModelFileLoader::SetBasePath(std::string filePath)
     basePath = filePath;
 }
 
-int cModelFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) {
+int cModelFileLoader::LoadModelPLY(std::string fileName, sModelDrawInfo& plyModel) {
 
     vertexLayout* modelArray = NULL;
     triangleLayout* triangleArray = NULL;
@@ -128,6 +134,7 @@ int cModelFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) 
         plyModel.pVertices[index].r = modelArray[index].r;
         plyModel.pVertices[index].g = modelArray[index].g;
         plyModel.pVertices[index].b = modelArray[index].b;
+        plyModel.pVertices[index].a = modelArray[index].a;
 
         plyModel.pVertices[index].nx = modelArray[index].nx;
         plyModel.pVertices[index].ny = modelArray[index].ny;
@@ -160,4 +167,48 @@ int cModelFileLoader::LoadModel(std::string fileName, sModelDrawInfo& plyModel) 
     delete[] triangleArray;
 
     return plyModels.size() - 1;
+}
+
+int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxModel)
+{
+    std::string fileToLoadFullPath = this->basePath + "/" + fileName;
+
+    const aiScene* scene = assimpImporter.ReadFile(fileToLoadFullPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+    if (!scene) {
+        std::cout << "Could not load model file " << fileName << std::endl;
+        return -1;
+    }
+
+    aiNode* rootNode = scene->mRootNode;
+
+    for (unsigned int i = 0; i < rootNode->mNumMeshes; i++) {
+        aiMesh* mesh = scene->mMeshes[rootNode->mMeshes[i]];
+
+        fbxModel.numberOfVertices = mesh->mNumVertices;
+        fbxModel.numberOfTriangles = mesh->mNumFaces;
+        fbxModel.numberOfIndices = mesh->mNumFaces * 3;
+
+        for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
+            fbxModel.pVertices->x = mesh->mVertices[j].x;
+            fbxModel.pVertices->y = mesh->mVertices[j].y;
+            fbxModel.pVertices->z = mesh->mVertices[j].z;
+
+            if (mesh->mColors[0]) {
+                fbxModel.pVertices->r = mesh->mColors[0][j].r;
+                fbxModel.pVertices->g = mesh->mColors[0][j].g;
+                fbxModel.pVertices->b = mesh->mColors[0][j].b;
+            }
+            
+            fbxModel.pVertices->nx = mesh->mNormals[j].x;
+            fbxModel.pVertices->ny = mesh->mNormals[j].y;
+            fbxModel.pVertices->nz = mesh->mNormals[j].z;
+
+            if (mesh->mTextureCoords[0]) {
+                fbxModel.pVertices->u0 = mesh->mTextureCoords[0][j].x;
+                fbxModel.pVertices->v0 = mesh->mTextureCoords[0][j].y;
+            }
+        }        
+        // access mesh data here
+    };
 }
