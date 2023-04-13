@@ -115,9 +115,10 @@ void Scene::Render()
         unsigned int entityID = engine->CreateEntity();
 
         transformComponent = engine->AddComponent<TransformComponent>(entityID);
-        transformComponent->position = glm::vec3(-18.f, 2.f, -34.f);
+        transformComponent->position = glm::vec3(-18.f, 12.f, -34.f);
         transformComponent->scale = glm::vec3(1.f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f));
+        transformComponent->useModel = true;
 
         ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
@@ -153,12 +154,12 @@ void Scene::Render()
         //rigidBodyComponent->rigidBodyDesc.mass = 1.f;
         //rigidBodyComponent->usePhysics = true;
         
-        float radius = 1.f;
-        float height = 3.f;
+        float radius = 2.f;
+        float height = 6.f;
+
         characterControllerComponent = engine->AddComponent<CharacterControllerComponent>(entityID);
-        // characterControllerComponent->convexShape = new physics::CapsuleShape(transformComponent->scale.x, transformComponent->scale.y * 1.25f);
         characterControllerComponent->convexShape = new physics::CapsuleShape(radius, height);
-        characterControllerComponent->stepHeight = 0.25f;
+        characterControllerComponent->stepHeight = 2.f;
         characterControllerComponent->canJump = true;
         characterControllerComponent->isControllable = true;
 
@@ -354,39 +355,93 @@ void Scene::UpdateCallback(float dt)
 
     case PLAYER:
 
-        if (renderSys->IsKeyHeldDown(GLFW_KEY_W)) {
-            velocityComponent->velocity.z += MOVE_SPEED;
-            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(0.0f), 0.0f));
+        if (renderSys->GetMouseStatus()) {
+
+            glm::vec3 direction = renderSys->GetCamera()->target;
+            glm::vec3 up = renderSys->GetCamera()->upVector;
+
+            direction.y = 0.f;
+
+            glm::quat rotation =
+                glm::quat(glm::lookAt(transformComponent->position, velocityComponent->velocity, up))
+              * glm::quat(glm::vec3(glm::radians(180.f), glm::radians(180.f), glm::radians(180.f)));
+
+            float rotationAngle = 5.f * dt;
+            glm::quat rotation_delta = glm::angleAxis(rotationAngle, up);
+            
+            rotation = rotation_delta * rotation;
+
+            transformComponent->rotation = rotation;
+
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_W)) {
+                velocityComponent->velocity += MOVE_SPEED * direction;
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_W)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_S)) {
+                velocityComponent->velocity += -MOVE_SPEED * direction;
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_S)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_D)) {
+                glm::vec3 strafeDirection = glm::cross(direction, up);
+                velocityComponent->velocity += MOVE_SPEED * strafeDirection;
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_D)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_A)) {
+                glm::vec3 strafeDirection = glm::cross(direction, up);
+                velocityComponent->velocity += -MOVE_SPEED * strafeDirection;
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_A)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_SPACE)) {
+                velocityComponent->velocity.y += MOVE_SPEED;
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_SPACE)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
         }
-        if (renderSys->IsKeyReleased(GLFW_KEY_W)) {
-            velocityComponent->velocity = glm::vec3(0.f);
-        }
-        if (renderSys->IsKeyHeldDown(GLFW_KEY_S)) {
-            velocityComponent->velocity.z -= MOVE_SPEED;
-            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f), 0.0f));
-        }
-        if (renderSys->IsKeyReleased(GLFW_KEY_S)) {
-            velocityComponent->velocity = glm::vec3(0.f);
-        }
-        if (renderSys->IsKeyHeldDown(GLFW_KEY_D)) {
-            velocityComponent->velocity.x -= MOVE_SPEED;
-            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(-90.0f), 0.0f));
-        }
-        if (renderSys->IsKeyReleased(GLFW_KEY_D)) {
-            velocityComponent->velocity = glm::vec3(0.f);
-        }
-        if (renderSys->IsKeyHeldDown(GLFW_KEY_A)) {
-            velocityComponent->velocity.x += MOVE_SPEED;
-            transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
-        }
-        if (renderSys->IsKeyReleased(GLFW_KEY_A)) {
-            velocityComponent->velocity = glm::vec3(0.f);
-        }
-        if (renderSys->IsKeyHeldDown(GLFW_KEY_SPACE)) {
-            velocityComponent->velocity.y += MOVE_SPEED;
-        }
-        if (renderSys->IsKeyReleased(GLFW_KEY_SPACE)) {
-            velocityComponent->velocity = glm::vec3(0.f);
+
+        else {
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_W)) {
+                velocityComponent->velocity.z += MOVE_SPEED;
+                transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(0.0f), 0.0f));
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_W)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_S)) {
+                velocityComponent->velocity.z -= MOVE_SPEED;
+                transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f), 0.0f));
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_S)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_D)) {
+                velocityComponent->velocity.x -= MOVE_SPEED;
+                transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(-90.0f), 0.0f));
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_D)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_A)) {
+                velocityComponent->velocity.x += MOVE_SPEED;
+                transformComponent->rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_A)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
+            if (renderSys->IsKeyHeldDown(GLFW_KEY_SPACE)) {
+                velocityComponent->velocity.y += MOVE_SPEED;
+            }
+            if (renderSys->IsKeyReleased(GLFW_KEY_SPACE)) {
+                velocityComponent->velocity = glm::vec3(0.f);
+            }
         }
         break;
 

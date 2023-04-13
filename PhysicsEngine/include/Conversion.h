@@ -18,6 +18,7 @@ namespace physics
 	// GLM -> Bullet
 	void CastBulletQuaternion(const glm::quat& in, btQuaternion* out);
 	void CastBulletVector3(const glm::vec3& in, btVector3* out);
+	void CastBulletMatrix4x4(const glm::mat4x4& in, btTransform* out);
 	void CastBulletScalar(const float in, btScalar* out);
 
 	// Bullet -> GLM

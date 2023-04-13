@@ -2,6 +2,7 @@
 #include "Conversion.h"
 
 #include <bullet/BulletCollision/CollisionDispatch/btGhostObject.h>
+#include <bullet/BulletCollision/CollisionDispatch/btCollisionObject.h>
 #include <bullet/BulletCollision/btBulletCollisionCommon.h>
 
 namespace physics
@@ -22,6 +23,8 @@ namespace physics
 		characterController->setUseGhostSweepTest(false);
 
 		characterController->setMaxPenetrationDepth(0);
+
+		ghostObject->setCollisionFlags(0);
 	}
 
 	CharacterController::~CharacterController()
@@ -70,6 +73,19 @@ namespace physics
 	{
 		btDiscreteDynamicsWorld* btCollisionWorld = CastBulletWorld(collisionWorld);
 		characterController->updateAction(btCollisionWorld, dt);
+	}
+
+	void CharacterController::GetTransform(glm::mat4& transform)
+	{
+		btTransform btMatrix = ghostObject->getWorldTransform();
+		CastGLMMat4(btMatrix, &transform);
+	}
+
+	void CharacterController::SetTransform(const Matrix4x4& transform)
+	{
+		btTransform btMatrix;
+		CastBulletMatrix4x4(transform, &btMatrix);
+		ghostObject->setWorldTransform(btMatrix);
 	}
 
 	btPairCachingGhostObject* CharacterController::GetGhostObject()

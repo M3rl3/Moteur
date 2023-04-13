@@ -15,6 +15,7 @@ namespace physics {
 		virtual iRigidBody* CreateRigidBody(const RigidBodyDesc& desc, iShape* shape) override;
 		virtual iSoftBody* CreateSoftBody(const SoftBodyDesc& desc) override;
 		virtual iCharacterController* CreateCharacterController(iConvexShape* shape, float stepHeight, const Vector3& up) override;
+		virtual iCharacterController* CreateCharacterController(iConvexShape* shape, float stepHeight, const Vector3& up, const Matrix4x4& model) override;
 
 	private:
 		btDynamicsWorld* dynamicsWorld;

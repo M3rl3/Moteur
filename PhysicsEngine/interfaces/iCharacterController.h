@@ -18,7 +18,9 @@ namespace physics
 		virtual void Jump(const Vector3& dir = Vector3(0, 0, 0)) = 0;
 		virtual bool OnGround() const = 0;
 		virtual void UpdateAction(iPhysicsWorld* collisionWorld, float dt) = 0;
-
+		virtual void GetTransform(Matrix4x4& transform) = 0;
+		virtual void SetTransform(const Matrix4x4& transform) = 0;
+		
 	protected:
 		iCharacterController() {}
 

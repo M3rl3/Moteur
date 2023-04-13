@@ -10,6 +10,8 @@
 #include "RigidBody.h"
 #include "CharacterController.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 void physics::CastGLMQuat(const btQuaternion& in, glm::quat* out)
 {
 	CastFloat(in.x(), &out->x);
@@ -51,6 +53,12 @@ void physics::CastBulletVector3(const glm::vec3& in, btVector3* out)
 	out->setX(in.x);
 	out->setY(in.y);
 	out->setZ(in.z);
+}
+
+void physics::CastBulletMatrix4x4(const glm::mat4x4& in, btTransform* out)
+{
+	const float* matrixData = glm::value_ptr(in);
+	out->setFromOpenGLMatrix(matrixData);
 }
 
 void physics::CastBulletScalar(const float in, btScalar* out)

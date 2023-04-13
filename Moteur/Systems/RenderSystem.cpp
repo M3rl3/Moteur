@@ -13,6 +13,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -398,7 +400,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
         // check if the component exists
         if (transformComponent != nullptr && shaderComponent != nullptr)
         {
-            //MVP
+            // MVP
             GLint modelLocaction = glGetUniformLocation(shaderComponent->shaderID, "Model");
             GLint viewLocation = glGetUniformLocation(shaderComponent->shaderID, "View");
             GLint projectionLocation = glGetUniformLocation(shaderComponent->shaderID, "Projection");
@@ -412,7 +414,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             glUniform4f(eyeLocationLocation, camera->position.x, camera->position.y, camera->position.z, 1.f);
 
             // Set the model matrix based on transformations applied
-            glm::mat4x4 model = glm::mat4x4(1.f);
+            glm::mat4 model = glm::mat4(1.f);
 
             glm::mat4 translationMatrix = glm::translate(glm::mat4(1.f), transformComponent->position);
             glm::mat4 scaling = glm::scale(glm::mat4(1.f), transformComponent->scale);
@@ -421,6 +423,34 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             model *= translationMatrix;
             model *= rotation;
             model *= scaling;
+
+            if (transformComponent->doOnce) {
+                // make a copy of the initial model matrix
+                transformComponent->initMatModel = model;
+                transformComponent->doOnce = false;
+            }
+
+            // If the transformations are calculated externally
+            if (transformComponent->useModel) {
+
+                model = transformComponent->matModel;
+
+                // Update the transform component values
+
+                // Extract position component
+                transformComponent->position = glm::vec3(model[3]);
+
+                // Extract scale component
+                transformComponent->scale.x = glm::length(glm::vec3(model[0]));
+                transformComponent->scale.y = glm::length(glm::vec3(model[1]));
+                transformComponent->scale.z = glm::length(glm::vec3(model[2]));
+                transformComponent->scale /= 3.0f; // average scale value
+
+                // Extract rotation component
+                glm::vec3 skew;
+                glm::vec4 perspective;
+                glm::decompose(model, transformComponent->scale, transformComponent->rotation, transformComponent->position, skew, perspective);
+            }      
 
             // Uniform location in the shader
             glUniformMatrix4fv(modelLocaction, 1, GL_FALSE, glm::value_ptr(model));

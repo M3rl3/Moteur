@@ -52,4 +52,26 @@ namespace physics {
 
 		return cc;
 	}
+
+	iCharacterController* PhysicsFactory::CreateCharacterController(iConvexShape* shape, float stepHeight, const Vector3& up, const Matrix4x4& model)
+	{
+		btPairCachingGhostObject* btGhostObject = new btPairCachingGhostObject();
+		btConvexShape* btShape;
+		btScalar btStepHeight;
+		btVector3 btUp;
+		btTransform btModel;
+
+		btShape = CastBulletConvexShape(shape);
+		CastBulletScalar(stepHeight, &btStepHeight);
+		CastBulletVector3(up, &btUp);
+		CastBulletMatrix4x4(model, &btModel);
+
+		iCharacterController* cc = new CharacterController(btGhostObject, btShape, btStepHeight, btUp);
+
+		// Do this after Creating the Character Controller
+		btGhostObject->setCollisionShape(btShape);
+		btGhostObject->setWorldTransform(btModel);
+
+		return cc;
+	}
 }

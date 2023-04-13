@@ -119,6 +119,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
             }
         }
 
+        // Check if a character controller component exists
         if (characterControllerComponent != nullptr && transformComponent != nullptr) {
 
             if (characterControllerComponent->isControllable && characterControllerComponent->doOnce) {
@@ -126,24 +127,35 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
                 // Initialize the character controller
                 characterControllerComponent->characterController =
                     physicsFactory->CreateCharacterController(characterControllerComponent->convexShape,
-                        characterControllerComponent->stepHeight, characterControllerComponent->up);
-
+                        characterControllerComponent->stepHeight, characterControllerComponent->up,
+                            transformComponent->initMatModel);  
+                
+                // Add the character controller to the physics world
                 physicsWorld->AddCharacterController(characterControllerComponent->characterController);
+
+                // pass in the initial model matrix from transform values
+                // characterControllerComponent->characterController->SetTransform(transformComponent->initMatModel);
+
+                characterControllerComponent->doOnce = false;
             }
 
             if (characterControllerComponent->isControllable) {
 
                 if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
 
-                    characterControllerComponent->characterController->SetWalkDirection(velocityComponent->velocity);
+                    characterControllerComponent->characterController->SetVelocityForTimeInterval(velocityComponent->velocity, dt);
 
                     if (characterControllerComponent->canJump && velocityComponent->velocity.y != 0.f) {
                         characterControllerComponent->characterController->Jump(velocityComponent->velocity);
                     }
+
+                    // This just assumes that the model matrix is in use
+                    // Update the transformation on the visual side
+                    characterControllerComponent->characterController->GetTransform(transformComponent->matModel);
                 }
 
                 // Call update action on the character controller
-                characterControllerComponent->characterController->UpdateAction(physicsWorld, dt);
+                // characterControllerComponent->characterController->UpdateAction(physicsWorld, dt);
             }
         }
     }

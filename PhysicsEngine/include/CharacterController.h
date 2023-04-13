@@ -23,6 +23,8 @@ namespace physics
 		virtual void Jump(const Vector3& dir = Vector3(0, 0, 0)) override;
 		virtual bool OnGround() const override;
 		virtual void UpdateAction(iPhysicsWorld* collisionWorld, float dt) override;
+		virtual void GetTransform(glm::mat4& transform) override;
+		virtual void SetTransform(const Matrix4x4& transform) override;
 
 		btPairCachingGhostObject* GetGhostObject();
 		btCharacterControllerInterface* GetBulletCharacterController();
