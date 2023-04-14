@@ -156,7 +156,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
 
     ImGui::Begin("Misc.");
     ImGui::Text("Camera");
-    ImGui::InputFloat3("6", glm::value_ptr(cam->position));
+    ImGui::InputFloat3("5", glm::value_ptr(cam->position));
     ImGui::Separator();
     ImGui::Text("Index: %d", index);
     if (ImGui::Button("+")) {
@@ -180,15 +180,15 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     if (transformComponent != nullptr) {
 
         ImGui::Text("Position");
-        ImGui::InputFloat3("1", glm::value_ptr(transformComponent->position));
+        ImGui::InputFloat3("0", glm::value_ptr(transformComponent->position));
         ImGui::Separator();
 
         ImGui::Text("Rotation");
-        ImGui::InputFloat3("2", glm::value_ptr(transformComponent->rotation));
+        ImGui::InputFloat3("1", glm::value_ptr(transformComponent->rotation));
         ImGui::Separator();
 
         ImGui::Text("Scale");
-        ImGui::InputFloat3("3", glm::value_ptr(transformComponent->scale));
+        ImGui::InputFloat3("2", glm::value_ptr(transformComponent->scale));
     }
     ImGui::End();
 
@@ -197,6 +197,10 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         char buffer[20];
         strcpy_s(buffer, meshComponent->meshName.c_str());
         ImGui::InputText("Mesh Name", buffer, 20);
+    
+        if (meshComponent->meshName.c_str() != buffer) {
+            meshComponent->meshName = buffer;
+        }
         ImGui::Checkbox("Wireframe", &meshComponent->isWireframe);
     }
     ImGui::End();
@@ -204,7 +208,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     ImGui::Begin("Velocity Component");
     if (velocityComponent != nullptr) {
         ImGui::Text("Velocity");
-        ImGui::InputFloat3("4", glm::value_ptr(velocityComponent->velocity));
+        ImGui::InputFloat3("3", glm::value_ptr(velocityComponent->velocity));
         ImGui::Checkbox("Use Velocity", &velocityComponent->useVelocity);
     }
     ImGui::End();
@@ -225,7 +229,12 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
 
     ImGui::Begin("Sound Component");
     if (soundComponent != nullptr) {
-        ImGui::InputText("Sound Name", (char*)soundComponent->soundName.c_str(), 30);
+        char buffer[30];
+        strcpy_s(buffer, soundComponent->soundName.c_str());
+        ImGui::InputText("Sound Name", buffer, 30);
+        /*if (soundComponent->soundName.c_str() != buffer) {
+            soundComponent->soundName = buffer;
+        }*/
         ImGui::InputFloat("Volume", &soundComponent->soundVolume);
         ImGui::InputFloat("Falloff", &soundComponent->maxDistance);
         ImGui::Checkbox("Is Playing", &soundComponent->isPlaying);
@@ -268,7 +277,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         ImGui::Separator();
 
         ImGui::Text("Color");
-        ImGui::InputFloat3("5", glm::value_ptr(textureComponent->rgbaColor));
+        ImGui::InputFloat3("4", glm::value_ptr(textureComponent->rgbaColor));
         ImGui::Checkbox("Use Color", &textureComponent->useRGBAColor);
     }
     ImGui::End();
