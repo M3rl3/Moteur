@@ -12,9 +12,12 @@
 #include "../Components/TextureComponent.h"
 #include "../Components/VelocityComponent.h"
 #include "../Components/RigidBodyComponent.h"
+#include "../Components/CharacterControllerComponent.h"
 #include "../Components/SoundComponent.h"
 
 #include "../Global.h"
+
+#include <glm/gtc/type_ptr.hpp>
 
 // list box stuff
 int selectedItem;
@@ -86,6 +89,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     TextureComponent* textureComponent = nullptr;
     VelocityComponent* velocityComponent = nullptr;
     RigidBodyComponent* rigidBodyComponent = nullptr;
+    CharacterControllerComponent* characterController = nullptr;
     SoundComponent* soundComponent = nullptr;
 
     // Only populate the list once
@@ -147,13 +151,12 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     meshComponent = currentEntity->GetComponentByType<MeshComponent>();
     textureComponent = currentEntity->GetComponentByType<TextureComponent>();
     rigidBodyComponent = currentEntity->GetComponentByType<RigidBodyComponent>();
+    characterController = currentEntity->GetComponentByType<CharacterControllerComponent>();
     soundComponent = currentEntity->GetComponentByType<SoundComponent>();
 
     ImGui::Begin("Misc.");
-    ImGui::Text("Camera Position");
-    ImGui::InputFloat("CamX", &cam->position.x);
-    ImGui::InputFloat("CamY", &cam->position.y);
-    ImGui::InputFloat("CamZ", &cam->position.z);
+    ImGui::Text("Camera");
+    ImGui::InputFloat3("6", glm::value_ptr(cam->position));
     ImGui::Separator();
     ImGui::Text("Index: %d", index);
     if (ImGui::Button("+")) {
@@ -177,21 +180,15 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     if (transformComponent != nullptr) {
 
         ImGui::Text("Position");
-        ImGui::InputFloat("PosX", &transformComponent->position.x);
-        ImGui::InputFloat("PosY", &transformComponent->position.y);
-        ImGui::InputFloat("PosZ", &transformComponent->position.z);
+        ImGui::InputFloat3("1", glm::value_ptr(transformComponent->position));
         ImGui::Separator();
 
         ImGui::Text("Rotation");
-        ImGui::InputFloat("RotX", &transformComponent->rotation.x);
-        ImGui::InputFloat("RotY", &transformComponent->rotation.y);
-        ImGui::InputFloat("RotZ", &transformComponent->rotation.z);
+        ImGui::InputFloat3("2", glm::value_ptr(transformComponent->rotation));
         ImGui::Separator();
 
         ImGui::Text("Scale");
-        ImGui::InputFloat("ScaleX", &transformComponent->scale.x);
-        ImGui::InputFloat("ScaleY", &transformComponent->scale.y);
-        ImGui::InputFloat("ScaleZ", &transformComponent->scale.z);
+        ImGui::InputFloat3("3", glm::value_ptr(transformComponent->scale));
     }
     ImGui::End();
 
@@ -207,9 +204,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     ImGui::Begin("Velocity Component");
     if (velocityComponent != nullptr) {
         ImGui::Text("Velocity");
-        ImGui::InputFloat("VelX", &velocityComponent->velocity.x);
-        ImGui::InputFloat("VelY", &velocityComponent->velocity.y);
-        ImGui::InputFloat("VelZ", &velocityComponent->velocity.z);
+        ImGui::InputFloat3("4", glm::value_ptr(velocityComponent->velocity));
         ImGui::Checkbox("Use Velocity", &velocityComponent->useVelocity);
     }
     ImGui::End();
@@ -217,6 +212,14 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     ImGui::Begin("Rigidbody Component");
     if (rigidBodyComponent != nullptr) {
         ImGui::Checkbox("Use Physics", &rigidBodyComponent->usePhysics);
+    }
+    ImGui::End();
+
+    ImGui::Begin("Character Controller Component");
+    if (characterController != nullptr) {
+        ImGui::InputFloat("Step Height", &characterController->stepHeight);
+        ImGui::Checkbox("Is Controllable", &characterController->isControllable);
+        ImGui::Checkbox("Can Jump", &characterController->canJump);
     }
     ImGui::End();
 
@@ -265,9 +268,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         ImGui::Separator();
 
         ImGui::Text("Color");
-        ImGui::InputFloat("ColR", &textureComponent->rgbaColor.r);
-        ImGui::InputFloat("ColG", &textureComponent->rgbaColor.g);
-        ImGui::InputFloat("ColB", &textureComponent->rgbaColor.b);
+        ImGui::InputFloat3("5", glm::value_ptr(textureComponent->rgbaColor));
         ImGui::Checkbox("Use Color", &textureComponent->useRGBAColor);
     }
     ImGui::End();

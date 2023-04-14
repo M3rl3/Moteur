@@ -78,7 +78,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
         velocityComponent = currentEntity->GetComponentByType<VelocityComponent>();
         characterControllerComponent = currentEntity->GetComponentByType<CharacterControllerComponent>();
 
-        // Check if the required components exist
+        // Check if a rigid body component exists
         if (rigidBodyComponent != nullptr && transformComponent != nullptr) {
 
             // Create and add the entity rigid bodies
@@ -107,10 +107,13 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
                     dynamic_cast<physics::iRigidBody*>(rigidBodyComponent->rigidBody);
 
                 glm::vec3 position;
+                glm::quat rotation;
 
+                // Update the transformation on the visual side
                 rigidBody->GetPosition(position);
-                rigidBody->GetRotation(transformComponent->rotation);
+                rigidBody->GetRotation(rotation);
 
+                transformComponent->rotation = rotation;
                 transformComponent->position = position;
 
                 if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
@@ -121,7 +124,8 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
 
         // Check if a character controller component exists
         if (characterControllerComponent != nullptr && transformComponent != nullptr) {
-
+            
+            // Create and add the character controller
             if (characterControllerComponent->isControllable && characterControllerComponent->doOnce) {
 
                 // Initialize the character controller
@@ -136,22 +140,29 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
                 // pass in the initial model matrix from transform values
                 // characterControllerComponent->characterController->SetTransform(transformComponent->initMatModel);
 
+                // Do this only once per character controller
                 characterControllerComponent->doOnce = false;
             }
 
+            // If a character is controllable
             if (characterControllerComponent->isControllable) {
 
+                // Get the velocity of that guy
                 if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
 
+                    // Set the direction to whatever velocity value that is coming in
                     characterControllerComponent->characterController->SetWalkDirection(velocityComponent->velocity * dt);
 
+                    // Check if the character can jump
                     if (characterControllerComponent->canJump && velocityComponent->velocity.y != 0.f) {
                         characterControllerComponent->characterController->Jump(velocityComponent->velocity);
                     }
 
-                    // This just assumes that the model matrix is in use
                     // Update the transformation on the visual side
-                    characterControllerComponent->characterController->GetTransform(transformComponent->matModel);
+                    if (transformComponent->useModel) {
+                        // If the model matrix is in use
+                        characterControllerComponent->characterController->GetTransform(transformComponent->matModel);
+                    }
                 }
 
                 // Call update action on the character controller
