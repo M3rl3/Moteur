@@ -194,9 +194,9 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
 
     ImGui::Begin("Mesh Component");
     if (meshComponent != nullptr) {
-        char buffer[20];
+        char buffer[30];
         strcpy_s(buffer, meshComponent->meshName.c_str());
-        ImGui::InputText("Mesh Name", buffer, 20);
+        ImGui::InputText("Mesh Name", buffer, 30);
     
         if (meshComponent->meshName.c_str() != buffer) {
             meshComponent->meshName = buffer;

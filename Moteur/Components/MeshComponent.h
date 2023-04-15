@@ -6,7 +6,8 @@
 
 enum ModelType {
 	PLY,
-	FBX
+	FBX,
+	OBJ
 };
 
 // Struct holding the actual mesh model which is to be drawn

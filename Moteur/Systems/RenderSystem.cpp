@@ -873,7 +873,7 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
     }
 }
 
-bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, ModelType modelType, unsigned int shaderID)
+bool RenderSystem::LoadModel(std::string fileName, std::string modelName, ModelType modelType, unsigned int shaderID)
 {
     sModelDrawInfo model;
     
@@ -882,6 +882,9 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, ModelTy
     }
     else if (modelType == ModelType::FBX) {
         modelFileLoader->LoadModelFBX(fileName, model);
+    }
+    else if (modelType == ModelType::OBJ) {
+        // Not loading obj files atm
     }
     else {
         // No idea what this model is

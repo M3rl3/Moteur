@@ -116,22 +116,22 @@ void Scene::Render()
 
         transformComponent = engine->AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(-18.f, 12.f, -34.f);
-        transformComponent->scale = glm::vec3(1.f);
-        transformComponent->rotation = glm::quat(glm::vec3(0.f));
+        transformComponent->scale = glm::vec3(0.06f);
+        transformComponent->rotation = glm::quat(glm::vec3(glm::radians(90.0f), 0.0f, 0.0f));
         transformComponent->useModel = true;
 
         ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
-        meshComponent->meshName = "steve";
+        meshComponent->meshName = "steve.fbx";
         meshComponent->modelType = ModelType::FBX;
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
         textureComponent->textureFormat = TextureFormat::PNG;
-        textureComponent->textures[0] = "man.png";
+        textureComponent->textures[0] = "herobrinehd.png";
         textureComponent->textureRatios[0] = 1.f;
         textureComponent->useRGBAColor = false;
         textureComponent->rgbaColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
@@ -145,15 +145,15 @@ void Scene::Render()
         soundComponent->soundVolume = 5.f;
         soundComponent->soundName = "deep_stone_lullaby.mp3";
 
-        //rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
-        //rigidBodyComponent->bodyShape = new physics::CapsuleShape(transformComponent->scale.x, transformComponent->scale.y * 2);
-        //rigidBodyComponent->rigidBodyDesc.useInertia = false;
-        //rigidBodyComponent->rigidBodyDesc.mass = 1.f;
-        //rigidBodyComponent->usePhysics = true;
+        // rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
+        // rigidBodyComponent->bodyShape = new physics::CapsuleShape(transformComponent->scale.x, transformComponent->scale.y * 2);
+        // rigidBodyComponent->rigidBodyDesc.useInertia = false;
+        // rigidBodyComponent->rigidBodyDesc.mass = 1.f;
+        // rigidBodyComponent->usePhysics = true;
 
         characterControllerComponent = engine->AddComponent<CharacterControllerComponent>(entityID);
-        characterControllerComponent->convexShape = new physics::CapsuleShape(1, 1);
-        characterControllerComponent->stepHeight = 2.f;
+        characterControllerComponent->convexShape = new physics::CapsuleShape(1, 2);
+        characterControllerComponent->stepHeight = 0.25f;
         characterControllerComponent->canJump = true;
         characterControllerComponent->isControllable = true;
 
@@ -202,7 +202,7 @@ void Scene::Render()
         soundComponent->soundName = "chicken.wav";
     }
 
-    {   // Entity "plain"
+    {   // Entity "plane"
 
         unsigned int entityID = engine->CreateEntity();
 
@@ -215,12 +215,12 @@ void Scene::Render()
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
-        meshComponent->meshName = "plain";
+        meshComponent->meshName = "plane";
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
-        textureComponent->useRGBAColor = false;
-        textureComponent->rgbaColor = glm::vec4(0.35f, 0.35f, 0.35f, 1.f);
+        textureComponent->useRGBAColor = true;
+        textureComponent->rgbaColor = glm::vec4(0.5f, 0.5f, 0.5f, 1.f);
         textureComponent->useTexture = false;
         textureComponent->textureFormat = TextureFormat::BMP;
         textureComponent->textures[0] = "";
@@ -490,10 +490,11 @@ void Scene::LoadModels()
     // Meshes loaded here
     renderSystem->SetMeshPath("../assets/meshes");
 
-    renderSystem->LoadMesh("skybox_sphere.ply", "skybox", ModelType::PLY,shaderID);
-    renderSystem->LoadMesh("steve.ply", "steve", ModelType::PLY, shaderID);
-    renderSystem->LoadMesh("creepyMonster.ply", "creepyMonster", ModelType::PLY, shaderID);
-    renderSystem->LoadMesh("west_town.ply", "plain", ModelType::PLY, shaderID);
+    renderSystem->LoadModel("skybox_sphere.ply", "skybox", ModelType::PLY, shaderID);
+    renderSystem->LoadModel("steve.ply", "steve.ply", ModelType::PLY, shaderID);
+    renderSystem->LoadModel("steve.fbx", "steve.fbx", ModelType::FBX, shaderID);
+    renderSystem->LoadModel("creepyMonster.ply", "creepyMonster", ModelType::PLY, shaderID);
+    renderSystem->LoadModel("plane.ply", "plane", ModelType::PLY, shaderID);
 }
 
 void Scene::LoadTextures() 
@@ -536,6 +537,7 @@ void Scene::LoadTextures()
     // PNG Textures
     unsigned int textureID = 0;
     renderSystem->Load2DTexturePNG("man.png");
+    renderSystem->Load2DTexturePNG("herobrinehd.png");
 
     // BMP Textures
     renderSystem->Load2DTextureBMP("seamless-green-grass-pattern.bmp");

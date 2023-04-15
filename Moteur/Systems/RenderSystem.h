@@ -37,7 +37,7 @@ public:
 	bool LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID);
 
 	// Loads model from ply file and gets it into the VAO
-	bool LoadMesh(std::string fileName, std::string modelName, ModelType modelType, unsigned int shaderID);
+	bool LoadModel(std::string fileName, std::string modelName, ModelType modelType, unsigned int shaderID);
 
 	// Set the path where the textures are located
 	void SetTexturePath(std::string filePath);

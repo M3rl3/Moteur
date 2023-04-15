@@ -8,6 +8,8 @@
 
 Assimp::Importer assimpImporter;
 
+void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel);
+
 struct vertexLayout {
 
     float x, y, z;
@@ -106,7 +108,6 @@ int cModelFileLoader::LoadModelPLY(std::string fileName, sModelDrawInfo& plyMode
 
         plyFile >> modelArray[count].texture_u;
         plyFile >> modelArray[count].texture_v;
-        int breakpoint = 1;
     }
 
     triangleArray = new triangleLayout[plyModel.numberOfTriangles];
@@ -119,7 +120,6 @@ int cModelFileLoader::LoadModelPLY(std::string fileName, sModelDrawInfo& plyMode
         plyFile >> triangleArray[count].triangleIndices[0];
         plyFile >> triangleArray[count].triangleIndices[1];
         plyFile >> triangleArray[count].triangleIndices[2];
-        int breakpoint = 1;
     }
     plyFile.close();
 
@@ -158,15 +158,17 @@ int cModelFileLoader::LoadModelPLY(std::string fileName, sModelDrawInfo& plyMode
         indexIndices += 3;
     }
 
-    if (&plyModel != nullptr) {
-
-        plyModels.push_back(&plyModel);
-    }
-
     delete[] modelArray;
     delete[] triangleArray;
 
-    return plyModels.size() - 1;
+    // Store the model and return its index
+    if (&plyModel != nullptr) {
+        plyModels.push_back(&plyModel);
+        return plyModels.size() - 1;
+    }
+    else {
+        return -1;
+    }
 }
 
 int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxModel)
@@ -180,56 +182,109 @@ int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxMode
         return -1;
     }
 
-    aiNode* rootNode = scene->mRootNode;
+    std::cout << "Loading " << fileName << std::endl;
 
-    for (unsigned int i = 0; i < rootNode->mNumMeshes; i++) {
+    // Process all nodes in the scene
+    ProcessNode(scene->mRootNode, scene, fbxModel);
 
-        aiMesh* mesh = scene->mMeshes[rootNode->mMeshes[i]];
+    // Store the model and return its index
+    if (&fbxModel != nullptr) {
+        fbxModels.push_back(&fbxModel);
+        return fbxModels.size() - 1;
+    }
+    else {
+        return -1;
+    }
+}
+
+void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
+{
+    vertexLayout* modelArray = NULL;
+
+    // Process all meshes in this node
+    for (unsigned int i = 0; i < node->mNumMeshes; i++) {
+
+        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
         fbxModel.numberOfVertices = mesh->mNumVertices;
         fbxModel.numberOfTriangles = mesh->mNumFaces;
         fbxModel.numberOfIndices = mesh->mNumFaces * 3;
 
-        for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
+        modelArray = new vertexLayout[fbxModel.numberOfVertices];
 
-            fbxModel.pVertices->x = mesh->mVertices[j].x;
-            fbxModel.pVertices->y = mesh->mVertices[j].y;
-            fbxModel.pVertices->z = mesh->mVertices[j].z;
+        for (unsigned int count = 0; count != fbxModel.numberOfVertices; count++)
+        {
+            modelArray[count].x = mesh->mVertices[count].x;
+            modelArray[count].y = mesh->mVertices[count].y;
+            modelArray[count].z = mesh->mVertices[count].z;
 
-            fbxModel.pVertices->nx = mesh->mNormals[j].x;
-            fbxModel.pVertices->ny = mesh->mNormals[j].y;
-            fbxModel.pVertices->nz = mesh->mNormals[j].z;
+            modelArray[count].nx = mesh->mNormals[count].x;
+            modelArray[count].ny = mesh->mNormals[count].y;
+            modelArray[count].nz = mesh->mNormals[count].z;
 
-            if (mesh->mColors[0]) {
+            if (mesh->HasVertexColors(0)) {
 
-                fbxModel.pVertices->r = mesh->mColors[0][j].r;
-                fbxModel.pVertices->g = mesh->mColors[0][j].g;
-                fbxModel.pVertices->b = mesh->mColors[0][j].b;
+                modelArray[count].r = mesh->mColors[0][count].r;
+                modelArray[count].g = mesh->mColors[0][count].g;
+                modelArray[count].b = mesh->mColors[0][count].b;
+                modelArray[count].a = mesh->mColors[0][count].a;
             }
-            
-            if (mesh->mTextureCoords[0]) {
 
-                fbxModel.pVertices->u0 = mesh->mTextureCoords[0][j].x;
-                fbxModel.pVertices->v0 = mesh->mTextureCoords[0][j].y;
+            if (mesh->HasTextureCoords(0)) {
+
+                modelArray[count].texture_u = mesh->mTextureCoords[0][count].x;
+                modelArray[count].texture_v = mesh->mTextureCoords[0][count].y;
             }
+
+            int breakpoint = 0;
         }
 
-        for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+        // Copy the vertex data
+        fbxModel.pVertices = new vertLayout[fbxModel.numberOfVertices];
 
-            aiFace& face = mesh->mFaces[i];
+        for (unsigned int index = 0; index != fbxModel.numberOfVertices; index++)
+        {
+            fbxModel.pVertices[index].x = modelArray[index].x;
+            fbxModel.pVertices[index].y = modelArray[index].y;
+            fbxModel.pVertices[index].z = modelArray[index].z;
 
-            for (unsigned int j = 0; j < face.mNumIndices; j++) {
+            fbxModel.pVertices[index].r = modelArray[index].r;
+            fbxModel.pVertices[index].g = modelArray[index].g;
+            fbxModel.pVertices[index].b = modelArray[index].b;
+            fbxModel.pVertices[index].a = modelArray[index].a;
 
-                fbxModel.pIndices[i * 3 + j] = face.mIndices[j];
+            fbxModel.pVertices[index].nx = modelArray[index].nx;
+            fbxModel.pVertices[index].ny = modelArray[index].ny;
+            fbxModel.pVertices[index].nz = modelArray[index].nz;
+
+            fbxModel.pVertices[index].u0 = modelArray[index].texture_u;
+            fbxModel.pVertices[index].v0 = modelArray[index].texture_v;
+
+            int breakpoint = 0;
+        }
+
+        fbxModel.pIndices = new unsigned int[fbxModel.numberOfIndices];
+
+        // Copy the index data
+        unsigned int indexOffset = 0;
+
+        for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+        {
+            aiFace face = mesh->mFaces[i];
+
+            for (unsigned int j = 0; j < 3; j++)
+            {
+                fbxModel.pIndices[indexOffset + j] = face.mIndices[j];
             }
+
+            indexOffset += 3;
         }
+    }
 
-        // access mesh data here
+    // Recursively process all child nodes
+    for (unsigned int i = 0; i < node->mNumChildren; i++) {
+        ProcessNode(node->mChildren[i], scene, fbxModel);
+    }
 
-        if (&fbxModel != nullptr) {
-            fbxModels.push_back(&fbxModel);
-        }
-
-        return fbxModels.size() - 1;
-    };
+    delete[] modelArray;
 }
