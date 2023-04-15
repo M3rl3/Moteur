@@ -450,7 +450,17 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 glm::vec3 skew;
                 glm::vec4 perspective;
                 glm::decompose(model, transformComponent->scale, transformComponent->rotation, transformComponent->position, skew, perspective);
-            }      
+            }
+
+            GLuint isFBXLocation = glGetUniformLocation(shaderComponent->shaderID, "isFBX");
+            
+            // Check if the model type is FBX
+            if (meshComponent->modelFormat == ModelFormat::FBX) {
+                glUniform1f(isFBXLocation, (GLfloat)GL_TRUE);
+            }
+            else {
+                glUniform1f(isFBXLocation, (GLfloat)GL_FALSE);
+            }
 
             // Uniform location in the shader
             glUniformMatrix4fv(modelLocaction, 1, GL_FALSE, glm::value_ptr(model));
@@ -845,9 +855,14 @@ void RenderSystem::Shutdown()
     delete textureManager;
 }
 
-bool RenderSystem::GetMouseStatus() 
+bool RenderSystem::GetMouseStatus()
 {
     return enableMouse;
+}
+
+bool RenderSystem::GetCursorStatus()
+{
+    return enableCursor;
 }
 
 // Set the path where the meshes are located
@@ -873,17 +888,17 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
     }
 }
 
-bool RenderSystem::LoadModel(std::string fileName, std::string modelName, ModelType modelType, unsigned int shaderID)
+bool RenderSystem::LoadModel(std::string fileName, std::string modelName, ModelFormat modelType, unsigned int shaderID)
 {
     sModelDrawInfo model;
     
-    if (modelType == ModelType::PLY) {
+    if (modelType == ModelFormat::PLY) {
         modelFileLoader->LoadModelPLY(fileName, model);
     }
-    else if (modelType == ModelType::FBX) {
+    else if (modelType == ModelFormat::FBX) {
         modelFileLoader->LoadModelFBX(fileName, model);
     }
-    else if (modelType == ModelType::OBJ) {
+    else if (modelType == ModelFormat::OBJ) {
         // Not loading obj files atm
     }
     else {

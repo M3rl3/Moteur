@@ -125,7 +125,7 @@ void Scene::Render()
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "steve.fbx";
-        meshComponent->modelType = ModelType::FBX;
+        meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
@@ -176,6 +176,7 @@ void Scene::Render()
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "creepyMonster";
+        meshComponent->modelFormat = ModelFormat::PLY;
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
@@ -216,6 +217,7 @@ void Scene::Render()
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "plane";
+        meshComponent->modelFormat = ModelFormat::PLY;
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
@@ -246,6 +248,7 @@ void Scene::Render()
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "skybox";
+        meshComponent->modelFormat = ModelFormat::PLY;
         meshComponent->isWireframe = false;
         meshComponent->isSkyBox = true;
 
@@ -490,11 +493,11 @@ void Scene::LoadModels()
     // Meshes loaded here
     renderSystem->SetMeshPath("../assets/meshes");
 
-    renderSystem->LoadModel("skybox_sphere.ply", "skybox", ModelType::PLY, shaderID);
-    renderSystem->LoadModel("steve.ply", "steve.ply", ModelType::PLY, shaderID);
-    renderSystem->LoadModel("steve.fbx", "steve.fbx", ModelType::FBX, shaderID);
-    renderSystem->LoadModel("creepyMonster.ply", "creepyMonster", ModelType::PLY, shaderID);
-    renderSystem->LoadModel("plane.ply", "plane", ModelType::PLY, shaderID);
+    renderSystem->LoadModel("skybox_sphere.ply", "skybox", ModelFormat::PLY, shaderID);
+    renderSystem->LoadModel("steve.ply", "steve.ply", ModelFormat::PLY, shaderID);
+    renderSystem->LoadModel("herobrine.fbx", "steve.fbx", ModelFormat::FBX, shaderID);
+    renderSystem->LoadModel("creepyMonster.ply", "creepyMonster", ModelFormat::PLY, shaderID);
+    renderSystem->LoadModel("plane.ply", "plane", ModelFormat::PLY, shaderID);
 }
 
 void Scene::LoadTextures() 

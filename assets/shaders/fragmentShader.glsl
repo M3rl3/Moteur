@@ -23,6 +23,7 @@ uniform vec4 specularColour;
 
 uniform vec4 debugColour;
 uniform bool isLit;
+uniform bool isFBX;
 
 uniform vec4 eyeLocation;
 
@@ -218,7 +219,7 @@ void main()
 //		ambientLightAmount *= 40.f;
 //	}
 //
-	if (!useRGBAColour && !useTexture) {
+	if (!useRGBAColour && !useTexture && !isFBX) {
 		
 		ambientLightAmount = 0.005f;
 

@@ -212,8 +212,8 @@ void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
 
         modelArray = new vertexLayout[fbxModel.numberOfVertices];
 
-        for (unsigned int count = 0; count != fbxModel.numberOfVertices; count++)
-        {
+        for (unsigned int count = 0; count != fbxModel.numberOfVertices; count++) {
+
             modelArray[count].x = mesh->mVertices[count].x;
             modelArray[count].y = mesh->mVertices[count].y;
             modelArray[count].z = mesh->mVertices[count].z;
@@ -235,8 +235,6 @@ void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
                 modelArray[count].texture_u = mesh->mTextureCoords[0][count].x;
                 modelArray[count].texture_v = mesh->mTextureCoords[0][count].y;
             }
-
-            int breakpoint = 0;
         }
 
         // Copy the vertex data
@@ -259,8 +257,6 @@ void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
 
             fbxModel.pVertices[index].u0 = modelArray[index].texture_u;
             fbxModel.pVertices[index].v0 = modelArray[index].texture_v;
-
-            int breakpoint = 0;
         }
 
         fbxModel.pIndices = new unsigned int[fbxModel.numberOfIndices];

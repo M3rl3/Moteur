@@ -4,7 +4,7 @@
 
 #include "../cVAOManager/cVAOManager.h"
 
-enum ModelType {
+enum ModelFormat {
 	PLY,
 	FBX,
 	OBJ
@@ -20,7 +20,7 @@ public:
 		isWireframe(false),
 		isSkyBox(false),
 		isTerrain(false),
-		modelType(PLY)
+		modelFormat(PLY)
 	{};
 
 	// Destructor
@@ -32,7 +32,7 @@ public:
 	// name of the mesh
 	std::string meshName;
 
-	ModelType modelType;
+	ModelFormat modelFormat;
 
 	// Mesh is to be drawn in wireframe mode
 	bool isWireframe;
