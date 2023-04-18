@@ -43,6 +43,12 @@ public:
 	// Mesh is a terrain
 	bool isTerrain;
 
+	// If the mesh texture is coming from an FBO
+	bool isFBO;
+
+	// If the mesh is a screen quad
+	bool isQuad;
+
 private:
 	// name of the component
 	std::string componentType;

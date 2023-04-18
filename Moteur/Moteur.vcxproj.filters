@@ -170,6 +170,15 @@
     <ClCompile Include="Components\CharacterControllerComponent.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cFBOManager\cFBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\FBOSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cFBOManager\cFBOManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenGL.h">
@@ -332,6 +341,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cAnimationManager\cAnimationManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cFBOManager\cFBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\FBOComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\FBOSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cFBOManager\cFBOManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

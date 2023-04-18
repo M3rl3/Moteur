@@ -102,8 +102,8 @@ void main()
 		pixelColour = texture(FBO_Texture, screen_coordinates ).rgb;
 		crosshairColor = texture(crosshair_texture, screen_coordinates).rgb;
 
-		outputColor.rgb = (pixelColour.rgb * 0.9f) +
-		 				  (crosshairColor.rgb * 0.25f);
+		outputColor.rgb = (pixelColour.rgb * 1.f) +
+		 				  (crosshairColor.rgb * 0.f);
 
 		// outputColor = vec4(mix(pixelColour, crosshairColor, 0.15f), 1.f) + vec4(0.135, 0.135, 0.135, 1);
 

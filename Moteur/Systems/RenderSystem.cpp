@@ -8,6 +8,7 @@
 #include "../Components/AnimationComponent.h"
 #include "../Components/BoundingBoxComponent.h"
 #include "../Components/TextureComponent.h"
+#include "../Components/FBOComponent.h"
 
 #include "../DrawBoundingBox/DrawBoundingBox.h"
 
@@ -55,6 +56,7 @@ RenderSystem::RenderSystem()
     vaoManager = new cVAOManager();
     textureManager = new cTextureManager();
     modelFileLoader = new cModelFileLoader();
+    fboManager = new cFBOManager();
 
     // Initialize all the structs
     window = new Window();
@@ -383,6 +385,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
     AnimationComponent* animationComponent = nullptr;
     BoundingBoxComponent* boundingBoxComponent = nullptr;
     TextureComponent* textureComponent = nullptr;
+    FBOComponent* fboComponent = nullptr;
     
     // Iterate through all entities
     for (int i = 0; i < entities.size(); i++) {
@@ -396,6 +399,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
         animationComponent = currentEntity->GetComponentByType<AnimationComponent>();
         boundingBoxComponent = currentEntity->GetComponentByType<BoundingBoxComponent>();
         textureComponent = currentEntity->GetComponentByType<TextureComponent>();
+        fboComponent = currentEntity->GetComponentByType<FBOComponent>();
 
         // check if the component exists
         if (transformComponent != nullptr && shaderComponent != nullptr)
@@ -511,7 +515,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                         else {
                             textureID = textureComponent->textureID[0];
                         }
-
+                        
                         GLuint textureUnit = 0;
                         glActiveTexture(textureUnit + GL_TEXTURE0);
                         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -787,7 +791,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             }
 
-            // Find the models vertices and indices
+            // Find model draw info
             sModelDrawInfo modelInfo;
             std::string meshName;
 
@@ -833,6 +837,11 @@ void RenderSystem::Shutdown()
     guiSystem->Shutdown();
     guiSystem = nullptr;
     delete guiSystem;
+
+    // Shutdown FBOs
+    fboManager->Shutdown();
+    fboManager = nullptr;
+    delete fboManager;
 
     // Shutdown the window and GLFW
     glfwDestroyWindow(window->theWindow);
@@ -1042,6 +1051,16 @@ bool RenderSystem::LoadCubeMapTexturePNG(
     {
         std::cout << "\nError: failed to load skybox because " << errorString;
         return false;
+    }
+}
+
+bool RenderSystem::CreateFrameBuffer(std::string FBOname, int width, int height)
+{
+    if (!fboManager->CreateFrameBuffer(FBOname, width, height)) {
+        return false;
+    }
+    else {
+        return true;
     }
 }
 

@@ -12,6 +12,7 @@
 #include "Components/SoundComponent.h"
 #include "Components/RigidBodyComponent.h"
 #include "Components/CharacterControllerComponent.h"
+#include "Components/FBOComponent.h"
 
 #include "../PhysicsEngine/interfaces/CylinderShape.h"
 #include "../PhysicsEngine/interfaces/CapsuleShape.h"
@@ -256,7 +257,7 @@ void Scene::Render()
         textureComponent->textureFormat = TextureFormat::PNG;
         textureComponent->textures[0] = "desert";
     }
-
+    
     // Set update callback
     engine->UpdateCallback(&UpdateCallback);
 
@@ -498,6 +499,7 @@ void Scene::LoadModels()
     renderSystem->LoadModel("herobrine.fbx", "steve.fbx", ModelFormat::FBX, shaderID);
     renderSystem->LoadModel("creepyMonster.ply", "creepyMonster", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("plane.ply", "plane", ModelFormat::PLY, shaderID);
+    renderSystem->LoadModel("quad.ply", "quad", ModelFormat::PLY, shaderID);
 }
 
 void Scene::LoadTextures() 

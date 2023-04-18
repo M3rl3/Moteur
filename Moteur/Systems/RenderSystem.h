@@ -10,6 +10,8 @@
 #include "../cVAOManager/cVAOManager.h"
 #include "../cTextureManager/cTextureManager.h"
 
+#include "../cFBOManager/cFBOManager.h"
+
 #include "../Window/Window.h"
 #include "../Camera/Camera.h"
 
@@ -72,6 +74,8 @@ public:
 		std::string posZ_fileName, std::string negZ_fileName,
 		bool bIsSeamless, std::string& errorString);
 
+	bool CreateFrameBuffer(std::string FBOname, int width, int height);
+
 	// Update method called every tick
 	void Process(const std::vector<Entity*>& entities, float dt);
 
@@ -124,6 +128,9 @@ private:
 
 	// Handler for all Texture related stuff
 	cTextureManager* textureManager;
+
+	// Handler for all frame buffer objects
+	cFBOManager* fboManager;
 
 	// System for handling the GUI
 	GUISystem* guiSystem;

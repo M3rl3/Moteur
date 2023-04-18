@@ -158,6 +158,8 @@
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="cAnimationManager\cAnimationManager.cpp" />
+    <ClCompile Include="cFBOManager\cFBO.cpp" />
+    <ClCompile Include="cFBOManager\cFBOManager.cpp" />
     <ClCompile Include="cLightManager\cLight.cpp" />
     <ClCompile Include="cLightManager\cLightHelper.cpp" />
     <ClCompile Include="cLightManager\cLightManager.cpp" />
@@ -189,6 +191,7 @@
     <ClCompile Include="JsonParser\JsonParser.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Systems\AISystem.cpp" />
+    <ClCompile Include="Systems\FBOSystem.cpp" />
     <ClCompile Include="Systems\GUISystem.cpp" />
     <ClCompile Include="Systems\LightSystem.cpp" />
     <ClCompile Include="Systems\MotionSystem.cpp" />
@@ -206,12 +209,15 @@
     <ClInclude Include="cAnimationManager\Animation.h" />
     <ClInclude Include="cAnimationManager\BoneHierarchy.h" />
     <ClInclude Include="cAnimationManager\cAnimationManager.h" />
+    <ClInclude Include="cFBOManager\cFBO.h" />
+    <ClInclude Include="cFBOManager\cFBOManager.h" />
     <ClInclude Include="cLightManager\cLight.h" />
     <ClInclude Include="cLightManager\cLightHelper.h" />
     <ClInclude Include="cLightManager\cLightManager.h" />
     <ClInclude Include="Components\AIComponent.h" />
     <ClInclude Include="Components\AnimationComponent.h" />
     <ClInclude Include="Components\BoundingBoxComponent.h" />
+    <ClInclude Include="Components\FBOComponent.h" />
     <ClInclude Include="Components\LitComponent.h" />
     <ClInclude Include="Components\MeshComponent.h" />
     <ClInclude Include="Components\RigidBodyComponent.h" />
@@ -244,6 +250,7 @@
     <ClInclude Include="JsonParser\JsonParser.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Systems\AISystem.h" />
+    <ClInclude Include="Systems\FBOSystem.h" />
     <ClInclude Include="Systems\GUISystem.h" />
     <ClInclude Include="Systems\LightSystem.h" />
     <ClInclude Include="Systems\MotionSystem.h" />
