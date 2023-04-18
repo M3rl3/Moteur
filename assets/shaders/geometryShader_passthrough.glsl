@@ -14,6 +14,8 @@ in vec4 gTangent[];
 in vec4 gBiNormal[];
 in vec4 gBoneID[];
 in vec4 gBoneWeight[];
+in vec3 gReflectedVector[];
+in vec3 gRefractedVector[];
 
 // Going out to the fragment shader
 out vec4 fColour;		
@@ -24,6 +26,8 @@ out vec4 fTangent;
 out vec4 fBiNormal;
 out vec4 fBoneID;
 out vec4 fBoneWeight;
+out vec3 fReflectedVector;
+out vec3 fRefractedVector;
 
 void main()
 {
@@ -36,6 +40,8 @@ void main()
 	fBiNormal = gBiNormal[0];
 	fBoneID = gBoneID[0];
 	fBoneWeight = gBoneWeight[0];
+	fReflectedVector = gReflectedVector[0];
+	fRefractedVector = gRefractedVector[0];
 	EmitVertex();
 	
 	gl_Position = gl_in[1].gl_Position;
@@ -47,6 +53,8 @@ void main()
 	fBiNormal = gBiNormal[1];
 	fBoneID = gBoneID[1];
 	fBoneWeight = gBoneWeight[1];
+	fReflectedVector = gReflectedVector[1];
+    fRefractedVector = gRefractedVector[1];
 	EmitVertex();
 	
 	gl_Position = gl_in[2].gl_Position;
@@ -58,6 +66,8 @@ void main()
 	fBiNormal = gBiNormal[2];
 	fBoneID = gBoneID[2];
 	fBoneWeight = gBoneWeight[2];
+	fReflectedVector = gReflectedVector[2];
+	fRefractedVector = gRefractedVector[2];
 	EmitVertex();
 	
 	EndPrimitive();

@@ -19,7 +19,9 @@ public:
 		textureFormat(BMP),
 		rgbaColor(glm::vec4(0.f)),
 		useRGBAColor(false),
-		useTexture(false)
+		useTexture(false),
+		isReflective(false),
+		isTransparent(false)
 	{
 		// Iterate through all textures and set them to null
 		for (unsigned int i = 0; i < 8; i++) {
@@ -56,6 +58,12 @@ public:
 
 	// Use the set texture
 	bool useTexture;
+
+	// Reflective surface
+	bool isReflective;
+
+	// Refractive surface
+	bool isTransparent;
 
 private:
 

@@ -10,6 +10,8 @@ in vec4 fTangent;
 in vec4 fBiNormal;
 in vec4 fBoneID;
 in vec4 fBoneWeight;
+in vec3 fReflectedVector;
+in vec3 fRefractedVector;
 
 // Out to the screen
 out vec4 outputColor;
@@ -33,17 +35,6 @@ uniform sampler2D textures[8];
 
 uniform float textureRatios[8];
 
-//uniform sampler2D texture0;	
-//uniform sampler2D texture1;	
-//uniform sampler2D texture2;	
-//uniform sampler2D texture3;	
-//uniform sampler2D texture4;	
-//uniform sampler2D texture5;	
-//uniform sampler2D texture6;	
-//uniform sampler2D texture7;
-//uniform vec4 texRatio_0_3;	
-//uniform vec4 texRatio_4_7;
-
 uniform samplerCube skyboxTexture;
 
 // If true, applies the skybox texture
@@ -58,6 +49,10 @@ uniform sampler2D crosshair_texture;
 uniform sampler2D FBO_Texture;		// Color texture from the FBO
 uniform vec2 FBO_size;				// x = width, y = height
 uniform vec2 screen_size;			// x = width, y = height
+
+// Reflection/Refraction
+uniform bool bIsReflective;
+uniform bool bIsRefractive;
 
 // Lighting
 struct sLight
@@ -215,10 +210,6 @@ void main()
 
 	float ambientLightAmount = ambientLight;
 
-//	if (useTexture) {
-//		ambientLightAmount *= 40.f;
-//	}
-//
 	if (!useRGBAColour && !useTexture && !isFBX) {
 		
 		ambientLightAmount = 0.005f;
@@ -228,6 +219,20 @@ void main()
 	}
 
 	outputColor.rgb += (matColour.rgb * ambientLightAmount);
+
+	vec4 reflectedColor = texture(skyboxTexture, fReflectedVector);
+	vec4 refractedColor = texture(skyboxTexture, fRefractedVector);
+	vec4 environmentColor = mix(reflectedColor, refractedColor, 0.5f);
+
+	// If the surface is reflective/refractive
+	if (bIsReflective) {
+		outputColor = mix(outputColor, reflectedColor, 0.6f);
+	}
+
+	// Basically transparent
+	if (bIsRefractive) {
+		outputColor = mix(outputColor, environmentColor, 1.f);
+	}
 
 	return;
 }

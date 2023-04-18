@@ -20,12 +20,15 @@ out vec4 gTangent;
 out vec4 gBiNormal;
 out vec4 gBoneID;
 out vec4 gBoneWeight;
+out vec3 gReflectedVector;
+out vec3 gRefractedVector;
 
 // Uniforms
 uniform mat4 Model;
 uniform mat4 ModelInverse;
 uniform mat4 View;
 uniform mat4 Projection;
+uniform vec3 cameraPosition;
 
 void main()
 {
@@ -40,6 +43,16 @@ void main()
 
 	gNormal.xyz = normalize(ModelInverse * vec4(vNormal.xyz, 1.f)).xyz;
 	gNormal.w = 1.f;
+
+	// Reflection/Refraction
+	vec3 unitNormal = normalize(gNormal.xyz);
+	vec3 viewVector = normalize(gWorldLocation.xyz - cameraPosition);
+
+	// Refractive indexes of air and water
+	float ratio_refractive_index = 1.0/1.33;
+
+	gReflectedVector = reflect(viewVector, unitNormal);
+	gRefractedVector = refract(viewVector, unitNormal, 1.0/1.33);
 
 	gColour = vColour;
 	gUV2 = vUV2;

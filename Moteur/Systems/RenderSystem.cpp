@@ -413,9 +413,13 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             // Lighting
             // ManageLights(shaderComponent->shaderID);
 
-            // camera position
+            // camera position for lighting
             GLint eyeLocationLocation = glGetUniformLocation(shaderComponent->shaderID, "eyeLocation");
             glUniform4f(eyeLocationLocation, camera->position.x, camera->position.y, camera->position.z, 1.f);
+            
+            // camera position for reflections/refractions
+            GLint cameraPositionLocation = glGetUniformLocation(shaderComponent->shaderID, "cameraPosition");
+            glUniform3f(cameraPositionLocation, camera->position.x, camera->position.y, camera->position.z);
 
             // Set the model matrix based on transformations applied
             glm::mat4 model = glm::mat4(1.f);
@@ -479,6 +483,8 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 GLint useTextureLocation = glGetUniformLocation(shaderComponent->shaderID, "useTexture");
                 GLint useRGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "useRGBAColour");
                 GLint RGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "RGBAColour");
+                GLint bIsReflectiveLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsReflective");
+                GLint bIsRefractiveLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsRefractive");
 
                 // Check if it uses RGBA color or a texture
                 if (textureComponent->useRGBAColor) {
@@ -491,6 +497,25 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 }
                 else {
                     glUniform1f(useRGBAColourLocation, (GLfloat)GL_FALSE);
+                }
+
+                // Reflective surface
+                if (textureComponent->isReflective) {
+                    glUniform1f(bIsReflectiveLocation, (GLfloat)GL_TRUE);
+                }
+                else
+                {
+                    glUniform1f(bIsReflectiveLocation, (GLfloat)GL_FALSE);
+                }
+
+                // Transparent surface
+                if (textureComponent->isTransparent)
+                {
+                    glUniform1f(bIsRefractiveLocation, (GLfloat)GL_TRUE);
+                }
+                else
+                {
+                    glUniform1f(bIsRefractiveLocation, (GLfloat)GL_FALSE);
                 }
 
                 if (textureComponent->useTexture) {

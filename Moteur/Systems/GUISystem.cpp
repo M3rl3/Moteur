@@ -15,6 +15,8 @@
 #include "../Components/CharacterControllerComponent.h"
 #include "../Components/SoundComponent.h"
 
+#include "../PhysicsEngine/interfaces/ShapeType.h"
+
 #include "../Global.h"
 
 #include <glm/gtc/type_ptr.hpp>
@@ -158,7 +160,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     ImGui::Text("Camera");
     ImGui::InputFloat3("5", glm::value_ptr(cam->position));
     ImGui::Separator();
-    ImGui::Text("Index: %d", index);
+    /*ImGui::Text("Index: %d", index);
     if (ImGui::Button("+")) {
         index++;
         if (index > entities.size() - 1) {
@@ -172,7 +174,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
             index = entities.size() - 1;
         }
     }
-    ImGui::Separator();
+    ImGui::Separator();*/
     ImGui::Checkbox("Draw Reticle", &drawReticle);
     ImGui::End();
 
@@ -216,6 +218,42 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     ImGui::Begin("Rigidbody Component");
     if (rigidBodyComponent != nullptr) {
         ImGui::Checkbox("Use Physics", &rigidBodyComponent->usePhysics);
+
+        ImGui::Text("Body Shape: ");
+        ImGui::SameLine();
+
+        switch (rigidBodyComponent->bodyShape->GetShapeType())
+        {
+            case physics::ShapeType::Box: {
+                ImGui::Text("Box");
+                break;
+            }
+            case physics::ShapeType::Capsule: {
+                ImGui::Text("Capsule");
+                break;
+            }
+            case physics::ShapeType::Cylinder: {
+                ImGui::Text("Cylinder");
+                break;
+            }
+            case physics::ShapeType::Ghost: {
+                ImGui::Text("Ghost");
+                break;
+            }
+            case physics::ShapeType::Plane: {
+                ImGui::Text("Plane");
+                break;
+            }
+            case physics::ShapeType::Sphere: {
+                ImGui::Text("Sphere");
+                break;
+            }
+            default: {
+                // No idea what this shape is
+                ImGui::Text("Unknown Shape");
+                break;
+            }     
+        }
     }
     ImGui::End();
 
@@ -279,6 +317,10 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         ImGui::Text("Color");
         ImGui::InputFloat3("4", glm::value_ptr(textureComponent->rgbaColor));
         ImGui::Checkbox("Use Color", &textureComponent->useRGBAColor);
+        ImGui::Separator();
+        ImGui::Checkbox("isReflective", &textureComponent->isReflective);
+        ImGui::SameLine();
+        ImGui::Checkbox("isTransparent", &textureComponent->isTransparent);
     }
     ImGui::End();
 
