@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "../cAnimationManager/Animation.h"
+
 // The vertex structure 
 // that's ON THE GPU (eventually) 
 // So dictated from THE SHADER
@@ -33,6 +35,7 @@ struct sModelDrawInfo
 	unsigned int IndexBuffer_Start_Index;
 	unsigned int numberOfIndices;
 	unsigned int numberOfTriangles;
+	unsigned int numberOfBones;
 
 	// The "local" (i.e. "CPU side" temporary array)
 	vertLayout* pVertices;	//  = 0;

@@ -24,7 +24,7 @@ public:
 	void CopyLightInformationToShader(unsigned int shaderID);
 
 private:
-	unsigned int numLights = 0;
+	unsigned int numLights = 2;
 	int numLightsUniformLocation = -1;
 
 	float ambientLight = 0.f;

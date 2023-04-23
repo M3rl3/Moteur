@@ -1,34 +1,44 @@
 #pragma once
 
 #include "ECS/Component.h"
-#include "TransformComponent.h"
 
-enum BehaviorType
+#include <glm/vec3.hpp>
+
+enum BehaviourType
 {
 	SEEK,
 	FLEE,
-	PURSUE
+	PURSUE,
+	EVADE,
+	APPROACH
 };
 
 struct AIComponent : Component
 {
 public:
-	AIComponent() : ComponentType("AIComponent"), transformComponent(nullptr) {}
+	AIComponent() : 
+		ComponentType("AIComponent"), 
+		aiBehaviour(BehaviourType::SEEK),
+		speed(0.f),
+		radius(0.f),
+		aiVelocity(glm::vec3(0))
+	{}
+
+	// The destructor
+	~AIComponent() {};
+
 
 	// Trigger radius between player and AI agent
 	float radius;
 
-	// The speed
+	// Movement speed
 	float speed;
 
+	// a temp velocity
+	glm::vec3 aiVelocity;
+
 	// The behavior type
-	BehaviorType type;
-
-	// The agent's transformation component.
-	TransformComponent* transformComponent;
-
-	// The destructor
-	~AIComponent() {};
+	BehaviourType aiBehaviour;
 
 private:
 	// The component type

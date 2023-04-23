@@ -197,6 +197,7 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
         glm::vec3 targetLocation = cam->position + t * ray_world;
         targetLoc = targetLocation;
     }
+
 }
 
 // Init window
@@ -424,6 +425,10 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             // Set the model matrix based on transformations applied
             glm::mat4 model = glm::mat4(1.f);
 
+            if (meshComponent->meshName == "plane") {
+                model = glm::translate(model, camera->upVector * 1.9f);
+            }
+
             glm::mat4 translationMatrix = glm::translate(glm::mat4(1.f), transformComponent->position);
             glm::mat4 scaling = glm::scale(glm::mat4(1.f), transformComponent->scale);
             glm::mat4 rotation = glm::mat4(transformComponent->rotation);
@@ -461,15 +466,23 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             }
 
             GLuint isFBXLocation = glGetUniformLocation(shaderComponent->shaderID, "isFBX");
-            
-            // Check if the model type is FBX
-            if (meshComponent->modelFormat == ModelFormat::FBX) {
-                glUniform1f(isFBXLocation, (GLfloat)GL_TRUE);
-            }
-            else {
-                glUniform1f(isFBXLocation, (GLfloat)GL_FALSE);
-            }
 
+            if (meshComponent != nullptr) {
+
+                // Do not draw the mesh
+                if (!meshComponent->isVisible) {
+                    continue;
+                }
+
+                // Check if the model type is FBX
+                if (meshComponent->modelFormat == ModelFormat::FBX) {
+                    glUniform1f(isFBXLocation, (GLfloat)GL_TRUE);
+                }
+                else {
+                    glUniform1f(isFBXLocation, (GLfloat)GL_FALSE);
+                }
+            }
+            
             // Uniform location in the shader
             glUniformMatrix4fv(modelLocaction, 1, GL_FALSE, glm::value_ptr(model));
             glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(camera->view));
@@ -485,6 +498,8 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 GLint RGBAColourLocation = glGetUniformLocation(shaderComponent->shaderID, "RGBAColour");
                 GLint bIsReflectiveLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsReflective");
                 GLint bIsRefractiveLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsRefractive");
+                GLint bIsFlameObjectLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsFlameObject");
+                GLint bUseDiscardTextureLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsFlameObject");
 
                 // Check if it uses RGBA color or a texture
                 if (textureComponent->useRGBAColor) {
@@ -516,6 +531,25 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 else
                 {
                     glUniform1f(bIsRefractiveLocation, (GLfloat)GL_FALSE);
+                }
+
+                if (meshComponent->isImposter)
+                {
+                    glUniform1f(bIsFlameObjectLocation, (GLfloat)GL_TRUE);
+                    transformComponent->rotation *= glm::quat(glm::vec3(0.f, 0.f, 100.f));
+                }
+                else
+                {
+                    glUniform1f(bIsFlameObjectLocation, (GLfloat)GL_FALSE);
+                }
+
+                if (meshComponent->useDiscardTexture)
+                {
+                    glUniform1f(bUseDiscardTextureLocation, (GLfloat)GL_TRUE);
+                }
+                else
+                {
+                    glUniform1f(bUseDiscardTextureLocation, (GLfloat)GL_FALSE);
                 }
 
                 if (textureComponent->useTexture) {
@@ -767,53 +801,56 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             GLint bIsSkyboxObjectLocation = glGetUniformLocation(shaderComponent->shaderID, "bIsSkyboxObject");
 
             // Check if object is a skybox mesh
-            if (meshComponent->isSkyBox && textureComponent != nullptr) {
+            if (meshComponent != nullptr && textureComponent != nullptr) {
 
-                glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_TRUE);
+                if (meshComponent->isSkyBox) {
 
-                std::string cubeMapTextureName = textureComponent->textures[0];
-                GLuint cubeMapTextureID = 0;
+                    glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_TRUE);
 
-                // if the texture name exists
-                if (cubeMapTextureName != "") {
-                    if (textureComponent->textureFormat == TextureFormat::BMP) {
-                        cubeMapTextureID = textureManager->getTextureIDFromName(cubeMapTextureName);
+                    std::string cubeMapTextureName = textureComponent->textures[0];
+                    GLuint cubeMapTextureID = 0;
+
+                    // if the texture name exists
+                    if (cubeMapTextureName != "") {
+                        if (textureComponent->textureFormat == TextureFormat::BMP) {
+                            cubeMapTextureID = textureManager->getTextureIDFromName(cubeMapTextureName);
+                        }
+                        else {
+                            cubeMapTextureID = textureManager->getPNGTextureIDFromName(cubeMapTextureName);
+                        }
                     }
+                    // otherwise, use the assigned textureID
                     else {
-                        cubeMapTextureID = textureManager->getPNGTextureIDFromName(cubeMapTextureName);
+                        cubeMapTextureID = textureComponent->textureID[0];
                     }
+
+                    GLuint textureUnit = 30;			// Texture unit go from 0 to 79
+                    glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureID);
+                    GLint skyboxTextureLocation = glGetUniformLocation(shaderComponent->shaderID, "skyboxTexture");
+                    glUniform1i(skyboxTextureLocation, textureUnit);
+
+                    transformComponent->position = camera->position;
+                    transformComponent->scale = glm::vec3(7500.f);
                 }
-                // otherwise, use the assigned textureID
                 else {
-                    cubeMapTextureID = textureComponent->textureID[0];
+                    glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_FALSE);
                 }
 
-                GLuint textureUnit = 30;			// Texture unit go from 0 to 79
-                glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-                glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureID);
-                GLint skyboxTextureLocation = glGetUniformLocation(shaderComponent->shaderID, "skyboxTexture");
-                glUniform1i(skyboxTextureLocation, textureUnit);
-
-                transformComponent->position = camera->position;
-                transformComponent->scale = glm::vec3(7500.f);
-            }
-            else {
-                glUniform1f(bIsSkyboxObjectLocation, (GLfloat)GL_FALSE);
-            }
+                // Check if model is to be drawn in wireframe mode
+                if (meshComponent->isWireframe)
+                {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                }
+                else
+                {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                }
+            }          
 
             // Manage animations
             if (animationComponent != nullptr) {
 
-            }
-
-            // Check if model is to be drawn in wireframe mode
-            if (meshComponent->isWireframe)
-            {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            }
-            else
-            {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             }
 
             // Find model draw info

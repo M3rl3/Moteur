@@ -27,6 +27,8 @@ bool isExpanded;
 
 int selectedtexture;
 
+ImDrawList* drawlist;
+
 GUISystem::GUISystem() 
 {
     systemName = "GUISystem";
@@ -38,6 +40,8 @@ GUISystem::GUISystem()
     isExpanded = false;
 
     selectedtexture = 0;
+
+    drawlist;
 }
 
 GUISystem::~GUISystem()
@@ -94,6 +98,8 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     CharacterControllerComponent* characterController = nullptr;
     SoundComponent* soundComponent = nullptr;
 
+    MeshComponent* meshComponent_player = nullptr;
+
     // Only populate the list once
     if (doOnce) {
         MeshComponent* mesh_component = nullptr;
@@ -104,6 +110,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
             mesh_component = currentEntity->GetComponentByType<MeshComponent>();
 
             if (mesh_component != nullptr) {
+                
                 // push back all the mesh item names into this vector
                 meshNames.push_back(mesh_component->meshName);
             }
@@ -123,6 +130,14 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
 
                     // Iterate through the mesh names
                     std::string& meshName = meshNames[i];
+
+                    if (meshName == "plane") {
+                        continue;
+                    }
+                    
+                    if (meshName == "tree1") {
+                        continue;
+                    }
 
                     // Get the index of the selected item
                     if (ImGui::Selectable(meshName.c_str(), selectedItem == i)) {
@@ -178,6 +193,15 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     ImGui::Checkbox("Draw Reticle", &drawReticle);
     ImGui::End();
 
+    ImGui::Begin("Health Bar");
+    meshComponent_player = GetPlayerMesh(entities);
+
+    ImVec2 barSize(200, 20);
+
+    // Draw the progress bar
+    ImGui::ProgressBar(meshComponent_player->health, barSize);
+    ImGui::End();
+    
     ImGui::Begin("Transform Component");
     if (transformComponent != nullptr) {
 
@@ -203,6 +227,9 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         if (meshComponent->meshName.c_str() != buffer) {
             meshComponent->meshName = buffer;
         }
+
+        ImGui::Checkbox("Visible", &meshComponent->isVisible);
+        ImGui::SameLine();
         ImGui::Checkbox("Wireframe", &meshComponent->isWireframe);
     }
     ImGui::End();
@@ -335,4 +362,20 @@ void GUISystem::Shutdown()
     ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui::DestroyContext();
+}
+
+MeshComponent* GUISystem::GetPlayerMesh(const std::vector<Entity*>& entities)
+{
+    MeshComponent* meshComponent = nullptr;
+
+    for (Entity* entity : entities) {
+
+        meshComponent = entity->GetComponentByType<MeshComponent>();
+
+        if (meshComponent->isPlayer) {
+            return meshComponent;
+        }
+    }
+
+    return nullptr;
 }

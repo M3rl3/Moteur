@@ -39,6 +39,10 @@ void MotionSystem::Process(const std::vector<Entity*>& entities, float dt) {
 						velocityComponent->velocity = glm::normalize(velocityComponent->velocity);
 						transformComponent->position += velocityComponent->velocity * dt * 10.f;
 					}
+
+					if (velocityComponent->velocity.length() != 0.f) {
+						velocityComponent->facingDirection = velocityComponent->velocity;
+					}
 				}
 			}
 			

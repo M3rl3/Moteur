@@ -126,7 +126,7 @@ class aiScene;
 struct CharacterAnimationData
 {
 	CharacterAnimationData(const aiScene* scene) : AIScene(scene) { }
-	const aiScene* AIScene;											 
+	const aiScene* AIScene;									 
 
 	BoneHierarchy* BoneHierarchy;			// Utilized for Animation 
 
@@ -141,6 +141,8 @@ struct CharacterAnimationData
 
 struct Animation
 {
+	std::vector<glm::mat4> GlobalTransformations;
+	bool IsCharacterAnimation;
 	std::string AnimationType;
 	float AnimationTime;
 	bool IsPlaying;

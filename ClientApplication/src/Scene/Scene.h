@@ -44,6 +44,9 @@ public:
 	// Load the asset files
 	void LoadAssets();
 
+	// Create the floor
+	void CreateFlatPlane();
+
 	// Getters
 	ECSengine* GetEngineInstance();
 	float GetDeltaTime();
@@ -60,6 +63,7 @@ private:
 	MotionSystem* motionSystem;
 	LightSystem* lightSystem;
 	SoundSystem* soundSystem;
+	AISystem* aiSystem;
 
 	unsigned int shaderID = 0;
 };

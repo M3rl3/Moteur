@@ -6,6 +6,7 @@
 #include "../Components/RigidBodyComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
+#include "../Components/AIComponent.h"
 #include "../Components/CharacterControllerComponent.h"
 
 // Constructor
@@ -66,6 +67,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
     TransformComponent* transformComponent = nullptr;
     VelocityComponent* velocityComponent = nullptr;
     CharacterControllerComponent* characterControllerComponent = nullptr;
+    AIComponent* aiComponent = nullptr;
 
     // Iterate through all entities
     for (int i = 0; i < entities.size(); i++) {
@@ -76,6 +78,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
         rigidBodyComponent = currentEntity->GetComponentByType<RigidBodyComponent>();
         transformComponent = currentEntity->GetComponentByType<TransformComponent>();
         velocityComponent = currentEntity->GetComponentByType<VelocityComponent>();
+        aiComponent = currentEntity->GetComponentByType<AIComponent>();
         characterControllerComponent = currentEntity->GetComponentByType<CharacterControllerComponent>();
 
         // Check if a rigid body component exists
@@ -113,11 +116,11 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
                 rigidBody->GetPosition(position);
                 rigidBody->GetRotation(rotation);
 
-                transformComponent->rotation = rotation;
+                // transformComponent->rotation = rotation;
                 transformComponent->position = position;
 
                 if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
-                    rigidBody->ApplyForce(velocityComponent->velocity);
+                    rigidBody->ApplyForce(velocityComponent->velocity * 5.f);
                 }
             }
         }

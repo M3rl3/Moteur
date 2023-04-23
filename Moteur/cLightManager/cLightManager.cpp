@@ -48,7 +48,7 @@ void cLightManager::LoadLightUniformLocations(unsigned int shaderID)
 	unsigned int lightNumber = 0;
 
 	// numLightsUniformLocation = glGetUniformLocation(shaderID, "NUMBEROFLIGHTS");
-	// ambientLightUniformLocation = glGetUniformLocation(shaderID, "ambientLight");
+	ambientLightUniformLocation = glGetUniformLocation(shaderID, "ambientLight");
 
 	for (int i = 0; i < vecTheLights.size(); i++) {
 
@@ -84,7 +84,7 @@ void cLightManager::CopyLightInformationToShader(unsigned int shaderID)
 {
 	// set number of lights
 	// glUniform1i(numLightsUniformLocation, numLights);
-	// glUniform1f(ambientLightUniformLocation, ambientLight);
+	glUniform1f(ambientLightUniformLocation, ambientLight);
 
 	for (int i = 0; i < vecTheLights.size(); i++)
 	{

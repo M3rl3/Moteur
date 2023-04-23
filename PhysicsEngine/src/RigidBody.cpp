@@ -37,9 +37,11 @@ namespace physics {
 			btRigidBody::btRigidBodyConstructionInfo bodyCI(desc.mass, motionState, bulletShape, inertia);
 			bulletRigidBody = new btRigidBody(bodyCI);
 
-			// Disable deactivation is expensive on large physics simulations
-			bulletRigidBody->setActivationState(DISABLE_DEACTIVATION);
+			
 		}
+
+		// Disable deactivation is expensive on large physics simulations
+		bulletRigidBody->setActivationState(DISABLE_DEACTIVATION);
 
 		// bulletRigidBody->setCollisionFlags(bulletRigidBody->getCollisionFlags() |
 		//	btCollisionObject::CF_KINEMATIC_OBJECT);

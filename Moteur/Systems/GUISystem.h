@@ -1,7 +1,10 @@
 #pragma once
 
 #include <ECS/System.h>
+#include <ECS/Entity.h>
 #include <vector>
+
+#include "../Components/MeshComponent.h"
 
 #include "../Window/Window.h"
 
@@ -35,4 +38,6 @@ private:
 
 	// store the names of the meshes
 	std::vector<std::string> meshNames;
+
+	MeshComponent* GetPlayerMesh(const std::vector<Entity*>& entities);
 };

@@ -22,7 +22,6 @@ struct BoneNode
 
 typedef BoneNode AnimNode;
 
-
 struct BoneHierarchy
 {
 	BoneNode* root;

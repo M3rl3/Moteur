@@ -30,12 +30,12 @@ uniform bool isFBX;
 uniform vec4 eyeLocation;
 
 uniform bool useTexture;
-
 uniform sampler2D textures[8];
-
 uniform float textureRatios[8];
-
 uniform samplerCube skyboxTexture;
+
+uniform bool bIsFlameObject;
+uniform bool bUseDiscardTexture;
 
 // If true, applies the skybox texture
 uniform bool bIsSkyboxObject;
@@ -117,6 +117,37 @@ void main()
 
 		// Apply the skybox texture and return without lighting
 		return;
+	}
+
+	if (bIsFlameObject)
+	{
+
+		// DON'T light. Apply the texture. Use colour as alpha
+		vec3 flameColor = texture( textures[0], fUV2.st ).rgb;	
+		
+		outputColor.rgb = flameColor;
+		
+		// Set the alpha transparency based on the colour.
+		float RGBcolorSum = outputColor.r + outputColor.g + outputColor.b;
+		outputColor.a = max( ((RGBcolorSum - 0.1f) / 3.0f), 0.0f);
+	
+		// Exit early so bypasses lighting
+		return;
+	}
+
+	if (bUseDiscardTexture)
+	{	
+		// Compare the colour in the texture07 black and white texture
+		// If it's 'black enough' then don't draw the pixel
+		// NOTE: I'm only sampling from the red 
+		// (since it's black and white, all channels would be the same)
+		float greyscalevalue = texture( textures[7], fUV2.st ).r;
+		
+		// Here, 0.5 is "black enough" 
+		if ( greyscalevalue < 0.5f )
+		{
+			discard;
+		}
 	}
 
 	if (bIsTerrainMesh)
