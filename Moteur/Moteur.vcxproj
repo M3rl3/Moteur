@@ -220,6 +220,7 @@
     <ClInclude Include="Components\FBOComponent.h" />
     <ClInclude Include="Components\LitComponent.h" />
     <ClInclude Include="Components\MeshComponent.h" />
+    <ClInclude Include="Components\PlayerComponent.h" />
     <ClInclude Include="Components\RigidBodyComponent.h" />
     <ClInclude Include="Components\ShaderComponent.h" />
     <ClInclude Include="Components\TextureComponent.h" />

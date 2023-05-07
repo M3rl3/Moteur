@@ -1,9 +1,16 @@
 #include "AISystem.h"
 
 #include "../Components/MeshComponent.h"
+#include "../Components/PlayerComponent.h"
 
 AISystem::AISystem()
 {
+	stateMachine = new StateMachine();
+
+	/*stateMachine->AddTransition(IDLE, PURSUE);
+	stateMachine->AddTransition(PURSUE, IDLE);
+	stateMachine->AddTransition(PURSUE, CATCH);
+	stateMachine->AddTransition(CATCH, IDLE);*/
 }
 
 AISystem::~AISystem()
@@ -63,6 +70,11 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 
 					switch (aiComponent->aiBehaviour)
 					{
+					case BehaviourType::IDLE: {
+
+						velocityComponent->velocity = glm::vec3(0.f);
+						break;
+					}
 					case BehaviourType::SEEK: {
 
 						Face(playerPosition, transformComponent);
@@ -208,14 +220,14 @@ float AISystem::GetDistance(glm::vec3 aiPosition, glm::vec3 playerPosition)
 TransformComponent* AISystem::GetPlayerTransform(const std::vector<Entity*>& entities)
 {
 	TransformComponent* transformComponent = nullptr;
-	MeshComponent* meshComponent = nullptr;
+	PlayerComponent* playerComponent = nullptr;
 
 	for (Entity* entity : entities) {
 
 		transformComponent = entity->GetComponentByType<TransformComponent>();
-		meshComponent = entity->GetComponentByType<MeshComponent>();
+		playerComponent = entity->GetComponentByType<PlayerComponent>();
 
-		if (meshComponent->isPlayer) {
+		if (playerComponent != nullptr) {
 			return transformComponent;
 		}
 	}
@@ -225,14 +237,14 @@ TransformComponent* AISystem::GetPlayerTransform(const std::vector<Entity*>& ent
 VelocityComponent* AISystem::GetPlayerVelocity(const std::vector<Entity*>& entities)
 {
 	VelocityComponent* velocityComponent = nullptr;
-	MeshComponent* meshComponent = nullptr;
+	PlayerComponent* playerComponent = nullptr;
 
 	for (Entity* entity : entities) {
 
 		velocityComponent = entity->GetComponentByType<VelocityComponent>();
-		meshComponent = entity->GetComponentByType<MeshComponent>();
+		playerComponent = entity->GetComponentByType<PlayerComponent>();
 
-		if (meshComponent->isPlayer) {
+		if (playerComponent != nullptr) {
 			return velocityComponent;
 		}
 	}
@@ -243,15 +255,151 @@ VelocityComponent* AISystem::GetPlayerVelocity(const std::vector<Entity*>& entit
 MeshComponent* AISystem::GetPlayerMesh(const std::vector<Entity*>& entities)
 {
 	MeshComponent* meshComponent = nullptr;
+	PlayerComponent* playerComponent = nullptr;
 
 	for (Entity* entity : entities) {
 
 		meshComponent = entity->GetComponentByType<MeshComponent>();
+		playerComponent = entity->GetComponentByType<PlayerComponent>();
 
-		if (meshComponent->isPlayer) {
+		if (playerComponent != nullptr) {
 			return meshComponent;
 		}
 	}
 
 	return nullptr;
 }
+
+IdleState::IdleState()
+{
+}
+
+IdleState::~IdleState()
+{
+}
+
+void IdleState::Enter(Entity* entity)
+{
+	transformComponent = entity->GetComponentByType<TransformComponent>();
+	aiComponent = entity->GetComponentByType<AIComponent>();
+	velocityComponent = entity->GetComponentByType<VelocityComponent>();
+	meshComponent = entity->GetComponentByType<MeshComponent>();
+
+	aiComponent->aiBehaviour = BehaviourType::IDLE;
+}
+
+void IdleState::Update(Entity* entity)
+{
+}
+
+void IdleState::Exit(Entity* entity)
+{
+}
+
+PursueState::PursueState()
+{
+}
+
+PursueState::~PursueState()
+{
+}
+
+void PursueState::Enter(Entity* entity)
+{
+	transformComponent = entity->GetComponentByType<TransformComponent>();
+	aiComponent = entity->GetComponentByType<AIComponent>();
+	velocityComponent = entity->GetComponentByType<VelocityComponent>();
+	meshComponent = entity->GetComponentByType<MeshComponent>();
+
+	aiComponent->aiBehaviour = BehaviourType::PURSUE;
+}
+
+void PursueState::Update(Entity* entity)
+{
+}
+
+void PursueState::Exit(Entity* entity)
+{
+}
+
+// Catch state
+CatchState::CatchState()
+{
+}
+
+CatchState::~CatchState()
+{
+}
+
+void CatchState::Enter(Entity* entity)
+{
+	transformComponent = entity->GetComponentByType<TransformComponent>();
+	aiComponent = entity->GetComponentByType<AIComponent>();
+	velocityComponent = entity->GetComponentByType<VelocityComponent>();
+	meshComponent = entity->GetComponentByType<MeshComponent>();
+
+	aiComponent->aiBehaviour = BehaviourType::CATCH;
+}
+
+void CatchState::Update(Entity* entity)
+{
+}
+
+void CatchState::Exit(Entity* entity)
+{
+}
+
+// State Machine
+StateMachine::StateMachine()
+	: m_CurrentState(nullptr)
+{
+	m_CurrentState = new IdleState();
+}
+
+StateMachine::~StateMachine()
+{
+}
+
+void StateMachine::AddTransition(BehaviourType from, BehaviourType to)
+{
+	std::vector<BehaviourType>& stateVec = m_ValidTransitions[from];
+	if (std::find(stateVec.begin(), stateVec.end(), to) == stateVec.end())
+	{
+		stateVec.push_back(to);
+	}
+}
+
+State* StateMachine::GetCurrentState()
+{
+	if (m_CurrentState != nullptr) {
+		return m_CurrentState;
+	}
+	else return nullptr;
+}
+
+//void StateMachine::SetState(State* state)
+//{
+//	if (m_CurrentState != nullptr) {
+//
+//		if (m_CurrentState->GetType() == state->GetType())
+//		{
+//			return;
+//		}
+//
+//		// m_CurrentState->Exit();
+//	}	
+//
+//	std::vector<BehaviourType>& stateVec = m_ValidTransitions[m_CurrentState->GetType()];
+//	if (std::find(stateVec.begin(), stateVec.end(), state->GetType()) == stateVec.end())
+//	{
+//		printf("!! Not a valid transition!\n");
+//		// No valid transition was added from the current state to the new state
+//		return;
+//	}
+//
+//	// m_CurrentState->Exit();
+//	delete m_CurrentState;
+//
+//	m_CurrentState = state;
+//	// m_CurrentState->Enter();
+//}

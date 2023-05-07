@@ -69,6 +69,8 @@ RenderSystem::RenderSystem()
     cam = camera;
     win = window;
 
+    textureManager = textureMan;
+
     ambientLight = 1.f;
     enableMouse = false;
     enableCursor = true;

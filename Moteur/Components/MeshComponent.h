@@ -23,7 +23,6 @@ public:
 		isQuad(false),
 		isFBO(false),
 		isVisible(true),
-		isPlayer(false),
 		isImposter(false),
 		useDiscardTexture(false),
 		modelFormat(PLY),
@@ -58,9 +57,6 @@ public:
 
 	// If the mesh is visible
 	bool isVisible;
-
-	// If the mesh is the player
-	bool isPlayer;
 
 	// If is an imposter
 	bool isImposter;

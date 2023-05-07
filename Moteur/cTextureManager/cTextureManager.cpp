@@ -8,6 +8,19 @@ void cTextureManager::SetBasePath(std::string basepath)
 	return;
 }
 
+bool cTextureManager::TextureAlreadyExists(std::string textureFileName)
+{
+	std::map< std::string, CTextureFromBMP* >::iterator it0 = m_map_TexNameToTexture.find(textureFileName);
+	std::map< std::string, cPNGTexture* >::iterator it1 = m_map_PNGTexNameToTexture.find(textureFileName);
+
+	if (it0 != m_map_TexNameToTexture.end() || it1 != m_map_PNGTexNameToTexture.end())
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 bool cTextureManager::Create2DTextureFromPNGFile(std::string textureFileName, bool bGenerateMIPMap) 
 {
 	std::string fileToLoadFullPath = this->m_basePath + "/" + textureFileName;
@@ -191,6 +204,25 @@ bool cTextureManager::CreateCubeTextureFromPNGFiles(std::string cubeMapName,
 	}//if ( ! pTempTexture->CreateNewCubeTextureFromBMPFiles())
 
 	this->m_map_PNGTexNameToTexture[cubeMapName] = pTempTexture;
+
+	return true;
+}
+
+bool cTextureManager::Create2DTextureFromLocalBuffer(unsigned char* localBuffer, std::string textureName, const std::string& path, std::string& errorString)
+{
+	cPNGTexture* pTempTexture = new cPNGTexture();
+
+	if (!pTempTexture->Create2DTextureFromLocalBuffer(localBuffer, textureName, path))
+	{
+		this->m_appendErrorString("Can't load ");
+		this->m_appendErrorString(path);
+		this->m_appendErrorString("\n");
+		errorString += this->m_lastError;
+
+		return false;
+	}
+
+	this->m_map_PNGTexNameToTexture[textureName] = pTempTexture;
 
 	return true;
 }

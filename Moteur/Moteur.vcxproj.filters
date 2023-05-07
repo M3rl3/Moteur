@@ -355,6 +355,9 @@
     <ClInclude Include="cFBOManager\cFBOManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\PlayerComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\shaders\fragmentShader.glsl">

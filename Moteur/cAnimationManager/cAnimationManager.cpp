@@ -4,7 +4,7 @@
 #include <glm/gtx/easing.hpp>
 #include <iostream>
 
-cAnimationManager::cAnimationManager()
+cAnimationManager::cAnimationManager() : m_GlobalInverseTransform(glm::mat4(1.f))
 {
 }
 
@@ -17,7 +17,6 @@ bool cAnimationManager::LoadAnimation(const std::string& name, AnimationData ani
 	std::map<std::string, AnimationData>::iterator itFind = m_Animations.find(name);
 	if (itFind != m_Animations.end())
 	{
-
 		std::cout << "Error: animation with same name already exists." << std::endl;
 		return false;
 	}

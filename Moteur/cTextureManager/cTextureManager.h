@@ -4,6 +4,9 @@
 #include <string>
 #include <map>
 
+#include <assimp/scene.h>
+#include <stb_image/stb_image.h>
+
 #include "CTextureFromBMP.h"
 #include "cPNGTexture.h"
 #include "../OpenGL.h"
@@ -31,6 +34,7 @@ public:
 										std::string posZ_fileName, std::string negZ_fileName, 
 										bool bIsSeamless, std::string &errorString );
 
+	bool Create2DTextureFromLocalBuffer(unsigned char* localBuffer, std::string textureName, const std::string& path, std::string& errorString);
 
 	// returns 0 on error
 	GLuint getTextureIDFromName( std::string textureFileName );
@@ -38,6 +42,7 @@ public:
 	GLuint getPNGTextureIDFromName( std::string textureFileName );
 
 	void SetBasePath(std::string basepath);
+	bool TextureAlreadyExists(std::string textureFileName);
 
 private:
 

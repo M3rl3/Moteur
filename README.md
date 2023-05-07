@@ -1,57 +1,38 @@
 # Moteur
-The core engine for Ogun's Dice
 
-### Requirements for Image compression
+Submission for Game Jam / Tech Demo - 2023.
 
-1. `pngquant`
+## Build Instructions:
+- Built using Visual Studio 17 (2022) - Retarget solution if necessary.
+- All build requirements and other files are included within the project.
 
-    a. Download the latest version of [pngquant](https://pngquant.org/)
+## Controls
+- W,A,S,D keys : Move the character.
+- C key : control the camera.
+- F1 key : Enable/Disable pan camera with the mouse.
+- LEFT ALT key : Press and Hold to show cursor. (to Maximize the window/Interact with GUI)
+- Most other controls can be found on the GUI drawn with ImGUI.
 
-    b. Extract it to any location
-
-    c. Set `\pngquant\pngquant.exe` to executable in your environment variable
-
-
-2. `optipng`
-    a. Download the latest version of [optipng](https://sourceforge.net/projects/optipng/)
-
-    b. Extract it to any location
-
-    c. Set `\optipng-0.7.7-win32\optipng-0.7.7-win32\optipng.exe` to executable in your environment variable
-
-
-3. `PVRTexTool`
-    a. Download the latest version of [PVRTexTool](https://developer.imaginationtech.com/downloads/), download `PVRTexTool`, it requires to login before you can download
-
-    b. Run the installer, after completed, copy this path `C:\Imagination Technologies\PowerVR_Graphics\PowerVR_Tools\PVRTexTool\CLI\Windows_x86_641` to your environment variable
-
-### Python script location
-The python script is located in `..\assets\scripts\png_compressor.py`
-
-### How to build
-
-1. Open project in `visual studio 2022` and select build
-2. Select `Debug` and `Start Debugging` to run.
-
-#### Character movement
-1. Press `f` to enable movement of the main character
-2. User the `w`, `s`, `d` and `a` keys to move around
-
-#### UML diagram
+## UML diagram
 The diagram is in the root directory of this project. Folder name is `uml_diagram`
 
-#### Git Repository
-The git repo for this project is [Moteur](https://github.com/M3rl3/Moteur) and we have granted access
+## Video Demo
+A video demonstration of the project is included within `video-demo` folder in solution directory.
 
-#### External Libraries
-1. `rapidjson` for loading meshes.
+## Git Repository
+- The git repo for this project is [Moteur](https://github.com/M3rl3/Moteur).
+- Look at branch name `staging`.
 
-#### Design Patterns
-1. FactoryMethod for creating character and object
-2. Singleton for instanciating Object class
+## Game Engine Details
+- This game engine was designed using the ECS (Entity, Component, System) Pattern.
+- A thrid party physics engine (Bullet Physics) is used to implement physics into this engine via Components.
+- Meshes are loaded with the help of Assimp library.
+- Textures (PNG & BMP) are loaded using a library called stb_image.
+- The play character is controlled using the Character Controller class from Bullet Physics.
 
-#### System Design
-We created two engines and the second was designed using the ECS pattern while the first was not.
-#### Contributors
-1. Rameez Khatri
-2. Ademola Adedeji
+## Gameplay Information
+- The main goal of the player is to invade a camp belonging a group of evil Mercenaries.
+- Player must kill all of the enemies to win the game.
+- If the player stands close to an enemy, they automatically deal damage to them.
+- The enemy will try to subdue the player and chase them but the player must escape the enemy camp alive.
+- An enemy that got killed simply disappears.

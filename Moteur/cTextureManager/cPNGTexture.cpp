@@ -258,6 +258,76 @@ bool cPNGTexture::CreateNewCubeTextureFromPNGFiles(std::string cubeMapName,
 	return true;
 }
 
+bool cPNGTexture::Create2DTextureFromLocalBuffer(unsigned char* localBuffer, std::string textureName, const std::string& path, bool generateMIPMap)
+{
+	// Clear old openGL errors
+	int IHateYou = glGetError();
+
+	// flip the texture vertically
+	// since openGL expects the texture pixels to 
+	// start from the bottom left, and not from the top left
+	stbi_set_flip_vertically_on_load(1);
+
+	// Load the texture from the local buffer into this buffer
+	this->localBuffer = localBuffer;
+
+	// Initialize textureID
+	this->textureID = 0;
+	glGenTextures(1, &this->textureID);
+
+	// If there were errors
+	if ((glGetError() & GL_INVALID_VALUE) == GL_INVALID_VALUE)
+	{
+		return false;
+	}
+
+	this->filePath = path;
+	this->textureName = textureName;
+
+	glBindTexture(GL_TEXTURE_2D, this->textureID);
+
+	// In case texture is oddly aligned, set the client alignment to 1 byte (default is 4)
+	GLint GL_UNPACK_ALIGNMENT_old = 0;
+	glGetIntegerv(GL_UNPACK_ALIGNMENT, &GL_UNPACK_ALIGNMENT_old);
+
+	// Set alignment to 1 byte
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	glTexImage2D(GL_TEXTURE_2D,
+		0,
+		GL_RGBA8,
+		this->width,
+		this->height,
+		0,
+		GL_RGBA,
+		GL_UNSIGNED_BYTE,
+		this->localBuffer);
+
+	// If there were errors
+	if (this->bWasThereAnOpenGLError()) { return false; }
+
+	// Put the pixel store aligment back to what it was
+	glPixelStorei(GL_UNPACK_ALIGNMENT, GL_UNPACK_ALIGNMENT_old);
+
+	// Cleanup
+	if (this->localBuffer) {
+		stbi_image_free(this->localBuffer);
+	}
+
+	// Gen mipmaps
+	if (generateMIPMap) {
+		glGenerateMipmap(GL_TEXTURE_2D);		// OpenGL 4.0
+	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return true;
+}
+
 // Bind and set the active texture
 void cPNGTexture::Bind(unsigned int textureUnit) const
 {

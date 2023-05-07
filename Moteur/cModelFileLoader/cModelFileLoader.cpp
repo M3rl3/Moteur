@@ -1,14 +1,18 @@
 #include "cModelFileLoader.h"
+#include "../Global.h"
 
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
+
+#include <stb_image/stb_image.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
 Assimp::Importer assimpImporter;
+cTextureManager* textureMan;
 
 void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel);
 
@@ -48,7 +52,7 @@ void CastToGLM(const aiVector3D& in, glm::vec3& out)
 }
 
 cModelFileLoader::cModelFileLoader() {
-
+    textureMan = new cTextureManager();
 }
 
 cModelFileLoader::~cModelFileLoader() {
@@ -204,6 +208,7 @@ int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxMode
         aiProcess_GenSmoothNormals |
         aiProcess_FixInfacingNormals |
         aiProcess_LimitBoneWeights |
+        aiProcess_EmbedTextures |
         aiProcess_ConvertToLeftHanded);
 
     // const aiScene* scene = assimpImporter.ReadFile(fileToLoadFullPath, 
@@ -215,6 +220,17 @@ int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxMode
     }
 
     std::cout << "Loading " << fileName << std::endl;
+
+    if (scene->HasTextures())
+    {
+        aiTexture* texture = scene->mTextures[0];   // Get the first texture in the scene
+        unsigned char* buffer = LoadEmbeddedTexture(texture);
+
+        std::string errorString = "";
+        if (!textureMan->Create2DTextureFromLocalBuffer(buffer, fileName, fileToLoadFullPath, errorString)) {
+            std::cout << "\n Error: could not load embedded texture." << std::endl;
+        }
+    }
 
     // Process all nodes in the scene
     ProcessNode(scene->mRootNode, scene, fbxModel);
@@ -229,6 +245,125 @@ int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxMode
     }
 }
 
+int cModelFileLoader::TransferColorTextureToVertex(std::string fileName)
+{
+    // Load the FBX file into an Assimp scene
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality);
+
+    // Iterate through the meshes of the loaded scene
+    for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
+        aiMesh* mesh = scene->mMeshes[i];
+        aiVector3D* texCoords = mesh->mTextureCoords[0];
+        aiColor4D* colors = new aiColor4D[mesh->mNumVertices];
+
+        // Iterate through the vertices of the mesh and calculate the color for each vertex
+        for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
+            aiVector3D texCoord = texCoords[j];
+            aiColor4D color;
+            // Calculate color based on texture color and assign it to the color array
+            // For example, you can use the texture color multiplied by a constant factor
+            color.r = mesh->mColors[0][j].r * texCoord.x;
+            color.g = mesh->mColors[0][j].g * texCoord.y;
+            color.b = mesh->mColors[0][j].b * texCoord.z;
+            color.a = mesh->mColors[0][j].a;
+            colors[j] = color;
+        }
+
+        // Set the color array as the vertex color of the mesh
+        mesh->mColors[0] = colors;
+        // mesh->mNumColorChannels = 1;
+    }
+
+    // Save the modified scene back to an FBX file
+    // importer.Export(scene, "output.fbx", "fbx");
+
+    // Clean up
+    delete scene;
+
+    return 0;
+}
+
+unsigned char* cModelFileLoader::LoadEmbeddedTexture(aiTexture* texture)
+{
+    // Get the texture data as a byte array
+    const aiTexel* texel = texture->pcData;
+    size_t size = texture->mWidth * texture->mHeight * sizeof(aiTexel);
+
+    const unsigned char* texels = reinterpret_cast<const unsigned char*>(texel);
+    int* width = reinterpret_cast<int*>(texture->mWidth);
+    int* height = reinterpret_cast<int*>(texture->mHeight);
+
+    int* channels;
+    int jpg = 3;    // rgb
+    int png = 4;    // rgba
+
+    if (texture->CheckFormat("png")) {
+        channels = &png;
+    }
+    else if (texture->CheckFormat("jpg")) {
+        channels = &jpg;
+    }
+    else {
+        // Has to have atleast 3 channels
+        channels = &jpg;
+    }  
+
+    // Decode the texture using stb_image
+    unsigned char* data = stbi_load_from_memory(texels, size, width, height, channels, STBI_rgb_alpha);
+
+    // Return the texture data
+    return data;
+}
+
+void extractColorFromTexture(aiTexture* texture, float u, float v, aiColor4D& color) {
+
+    // Get texture width and height
+    int width = texture->mWidth;
+    int height = texture->mHeight;
+
+    // Compute texture coordinates
+    int x = static_cast<int>(u * width);
+    int y = static_cast<int>(v * height);
+
+    // Get texel at the specified coordinates
+    aiTexel texel = texture->pcData[y * width + x];
+
+    // Convert texel color to aiColor4D
+    color.r = static_cast<float>(texel.b) / 255.0f;
+    color.g = static_cast<float>(texel.g) / 255.0f;
+    color.b = static_cast<float>(texel.r) / 255.0f;
+    color.a = static_cast<float>(texel.a) / 255.0f;
+}
+
+void applyTextureToVertexColors(aiMesh * mesh, aiTexture * texture) {
+
+    // Iterate over all vertices in the mesh
+    for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+
+        aiVector3D& vertex = mesh->mVertices[i];
+        aiVector3D& normal = mesh->mNormals[i];
+        aiVector3D& tangent = mesh->mTangents[i];
+        aiVector3D& bitangent = mesh->mBitangents[i];
+        aiColor4D& color = mesh->mColors[0][i];
+        aiVector3D& texcoord = mesh->mTextureCoords[0][i];
+
+        // Compute texture coordinates in the range [0, 1]
+        float u = fmod(texcoord.x, 1.0f);
+        float v = fmod(texcoord.y, 1.0f);
+
+        // Extract color from texture
+        aiColor4D texelColor;
+        extractColorFromTexture(texture, u, v, texelColor);
+
+        // Apply color to vertex color
+        color.r = texelColor.r;
+        color.g = texelColor.g;
+        color.b = texelColor.b;
+        color.a = 1.0f;
+    }
+}
+
 void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
 {
     vertLayout* modelArray = NULL;
@@ -237,6 +372,29 @@ void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+
+        //// Copy over texColor to vertexColor
+        //{
+        //    aiColor4D* colors = new aiColor4D[mesh->mNumVertices];
+        //    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        //    aiTexture* texture = scene->mTextures[0];
+        //    aiVector3D& texcoord = mesh->mTextureCoords[0][i];
+
+        //    // Compute texture coordinates in the range [0, 1]
+        //    float u = fmod(texcoord.x, 1.0f);
+        //    float v = fmod(texcoord.y, 1.0f);
+
+        //    aiColor4D texelColor;
+        //    extractColorFromTexture(texture, u, v, texelColor);
+
+        //    // Apply color to vertex color
+        //    colors->r = texelColor.r;
+        //    colors->g = texelColor.g;
+        //    colors->b = texelColor.b;
+        //    colors->a = 1.0f;
+
+        //    mesh->mColors[0] = colors;
+        //}
 
         fbxModel.numberOfVertices = mesh->mNumVertices;
         fbxModel.numberOfTriangles = mesh->mNumFaces;
@@ -296,12 +454,16 @@ void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
                 const aiVertexWeight* weight = nullptr;
 
                 for (unsigned int k = 0; k < bone->mNumWeights; k++) {
-                    const aiVertexWeight& vWeight = bone->mWeights[k];
 
-                    if (vWeight.mVertexId == i) {
-                        weight = &vWeight;
-                        break;
-                    }
+                    if (mesh->HasBones()) {
+
+                        const aiVertexWeight& vWeight = bone->mWeights[k];
+
+                        if (vWeight.mVertexId == i) {
+                            weight = &vWeight;
+                            break;
+                        }
+                    }                   
                 }
 
                 if (weight) {

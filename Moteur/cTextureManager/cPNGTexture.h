@@ -28,6 +28,9 @@ public:
 		bool bIsSeamless,
 		GLenum& errorEnum, std::string& errorString, std::string& errorDetails);
 
+	// Create a 2D texture from provided PNG file path
+	bool Create2DTextureFromLocalBuffer(unsigned char* localBuffer, std::string textureName, const std::string& path, bool generateMIPMap = true);
+
 	// Bind and set the active texture
 	void Bind(unsigned int textureUnit = 0) const;
 

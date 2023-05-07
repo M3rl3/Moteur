@@ -6,27 +6,28 @@
 
 enum BehaviourType
 {
+	IDLE,
 	SEEK,
 	FLEE,
 	PURSUE,
 	EVADE,
-	APPROACH
+	APPROACH,
+	CATCH
 };
 
 struct AIComponent : Component
 {
 public:
-	AIComponent() : 
-		ComponentType("AIComponent"), 
+	AIComponent() :
+		ComponentType("AIComponent"),
 		aiBehaviour(BehaviourType::SEEK),
 		speed(0.f),
 		radius(0.f),
 		aiVelocity(glm::vec3(0))
-	{}
+	{};
 
 	// The destructor
 	~AIComponent() {};
-
 
 	// Trigger radius between player and AI agent
 	float radius;

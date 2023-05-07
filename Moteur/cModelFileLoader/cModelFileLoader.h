@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include <assimp/scene.h>
 #include <glm/vec3.hpp>
 
 #include "../OpenGL.h"
@@ -23,7 +24,12 @@ public:
 	int LoadModelPLY(std::string fileName, sModelDrawInfo& plyModel);
 	int LoadModelFBX(std::string fileName, sModelDrawInfo& plyModel);
 
+	int TransferColorTextureToVertex(std::string fileName);
+
+	unsigned char* LoadEmbeddedTexture(aiTexture* texture);
+
 private:
+
 	std::vector<sModelDrawInfo*> plyModels;
 	std::vector<sModelDrawInfo*> fbxModels;
 
