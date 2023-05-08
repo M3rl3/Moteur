@@ -7,6 +7,7 @@
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
 #include "../Components/AIComponent.h"
+#include "../Components/PlayerComponent.h"
 #include "../Components/CharacterControllerComponent.h"
 
 // Constructor
@@ -68,6 +69,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
     VelocityComponent* velocityComponent = nullptr;
     CharacterControllerComponent* characterControllerComponent = nullptr;
     AIComponent* aiComponent = nullptr;
+    PlayerComponent* playerComponent = nullptr;
 
     // Iterate through all entities
     for (int i = 0; i < entities.size(); i++) {
@@ -79,6 +81,7 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
         transformComponent = currentEntity->GetComponentByType<TransformComponent>();
         velocityComponent = currentEntity->GetComponentByType<VelocityComponent>();
         aiComponent = currentEntity->GetComponentByType<AIComponent>();
+        playerComponent = currentEntity->GetComponentByType<PlayerComponent>();
         characterControllerComponent = currentEntity->GetComponentByType<CharacterControllerComponent>();
 
         // Check if a rigid body component exists
@@ -153,12 +156,14 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
                 // Get the velocity of that guy
                 if (velocityComponent != nullptr && !velocityComponent->useVelocity) {
 
-                    // Set the direction to whatever velocity value that is coming in
-                    characterControllerComponent->characterController->SetWalkDirection(velocityComponent->velocity * dt);
+                    if (playerComponent->isControllable) {
+                        // Set the direction to whatever velocity value that is coming in
+                        characterControllerComponent->characterController->SetWalkDirection(velocityComponent->velocity * dt);
 
-                    // Check if the character can jump
-                    if (characterControllerComponent->canJump && velocityComponent->velocity.y != 0.f) {
-                        characterControllerComponent->characterController->Jump(velocityComponent->velocity);
+                        // Check if the character can jump
+                        if (characterControllerComponent->canJump && velocityComponent->velocity.y != 0.f) {
+                            characterControllerComponent->characterController->Jump(velocityComponent->velocity);
+                        }
                     }
 
                     // Update the transformation on the visual side

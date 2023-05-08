@@ -6,23 +6,10 @@
 #include "../Components/AIComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
+#include "../Components/PlayerComponent.h"
 #include "../Components/MeshComponent.h"
 
-class State
-{
-public:
-	State() { }
-	State(BehaviourType type) : m_StateType(type) { }
-	virtual ~State() { }
-	virtual BehaviourType GetType() const { return m_StateType; }
-	virtual void Enter(Entity* entity) = 0;
-	virtual void Update(Entity* entity) = 0;
-	virtual void Exit(Entity* entity) = 0;
-	virtual const char* C_Str() = 0;
-
-private:
-	BehaviourType m_StateType;
-};
+class StatePool;
 
 class IdleState : public State
 {
@@ -31,8 +18,8 @@ public:
 	virtual ~IdleState();
 
 	virtual void Enter(Entity* entity) override;
-	virtual void Update(Entity* entity) override;
-	virtual void Exit(Entity* entity) override;
+	virtual void Update(float dt, Entity* playerEntity) override;
+	virtual void Exit() override;
 	virtual const char* C_Str() override { return "IdleState"; }
 
 private:
@@ -40,6 +27,9 @@ private:
 	TransformComponent* transformComponent = nullptr;
 	VelocityComponent* velocityComponent = nullptr;
 	MeshComponent* meshComponent = nullptr;
+
+	Entity* playerEntity = nullptr;
+	Entity* aiEntity = nullptr;
 };
 
 class PursueState : public State
@@ -49,8 +39,8 @@ public:
 	virtual ~PursueState();
 
 	virtual void Enter(Entity* entity) override;
-	virtual void Update(Entity* entity) override;
-	virtual void Exit(Entity* entity) override;
+	virtual void Update(float dt, Entity* playerEntity) override;
+	virtual void Exit() override;
 	virtual const char* C_Str() override { return "PursueState"; }
 
 private:
@@ -58,6 +48,9 @@ private:
 	TransformComponent* transformComponent = nullptr;
 	VelocityComponent* velocityComponent = nullptr;
 	MeshComponent* meshComponent = nullptr;
+
+	Entity* playerEntity = nullptr;
+	Entity* aiEntity = nullptr;
 };
 
 class CatchState : public State
@@ -67,8 +60,8 @@ public:
 	virtual ~CatchState();
 
 	virtual void Enter(Entity* entity) override;
-	virtual void Update(Entity* entity) override;
-	virtual void Exit(Entity* entity) override;
+	virtual void Update(float dt, Entity* playerEntity) override;
+	virtual void Exit() override;
 	virtual const char* C_Str() override { return "CatchState"; }
 
 private:
@@ -76,6 +69,9 @@ private:
 	TransformComponent* transformComponent = nullptr;
 	VelocityComponent* velocityComponent = nullptr;
 	MeshComponent* meshComponent = nullptr;
+
+	Entity* playerEntity = nullptr;
+	Entity* aiEntity = nullptr;
 };
 
 class StateMachine
@@ -85,14 +81,19 @@ public:
 	~StateMachine();
 
 	void AddTransition(BehaviourType from, BehaviourType to);
+	void Update(float dt, Entity* playerEntity);
 	State* GetCurrentState();
-	void SetState(State* state);
+	void SetState(State* newState, Entity* entity);
+	void SetCatchTimer(int timer);
 
 private:
 	std::map<BehaviourType, std::vector<BehaviourType>> m_ValidTransitions;
 
 	Entity* entity;
+	AIComponent* aiComponent;
 	State* m_CurrentState;
+
+	int catchTimer;
 };
 
 class AISystem : public System
@@ -125,5 +126,43 @@ private:
 	VelocityComponent* GetPlayerVelocity(const std::vector<Entity*>& entities);
 	MeshComponent* GetPlayerMesh(const std::vector<Entity*>& entities);
 
+	Entity* GetPlayerEntity(const std::vector<Entity*>& entities);
+	PlayerComponent* GetPlayerComponent(const std::vector<Entity*>& entities);
+
 	StateMachine* stateMachine;
+
+	IdleState* idleState;
+	PursueState* pursueState;
+	CatchState* catchState;
+};
+
+class StatePool {
+public:
+	StatePool(int size) {
+		for (int i = 0; i < size; i++) {
+			pool.push_back(new IdleState());
+		}
+	}
+
+	State* GetState() {
+		if (pool.empty()) {
+			pool.push_back(new IdleState());
+		}
+		State* state = pool.back();
+		pool.pop_back();
+		return state;
+	}
+
+	void ReturnState(State* state) {
+		pool.push_back(state);
+	}
+
+	~StatePool() {
+		for (auto state : pool) {
+			delete state;
+		}
+	}
+
+private:
+	std::vector<State*> pool;
 };

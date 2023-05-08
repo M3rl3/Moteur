@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../Components/MeshComponent.h"
+#include "../Components/PlayerComponent.h"
 
 #include "../Window/Window.h"
 
@@ -40,4 +41,5 @@ private:
 	std::vector<std::string> meshNames;
 
 	MeshComponent* GetPlayerMesh(const std::vector<Entity*>& entities);
+	PlayerComponent* GetPlayerComponent(const std::vector<Entity*>& entities);
 };

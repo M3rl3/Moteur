@@ -6,7 +6,6 @@
 
 #include "../Components/ShaderComponent.h"
 #include "../Components/TransformComponent.h"
-#include "../Components/MeshComponent.h"
 #include "../Components/AnimationComponent.h"
 #include "../Components/BoundingBoxComponent.h"
 #include "../Components/TextureComponent.h"
@@ -14,7 +13,6 @@
 #include "../Components/RigidBodyComponent.h"
 #include "../Components/CharacterControllerComponent.h"
 #include "../Components/SoundComponent.h"
-#include "../Components/PlayerComponent.h"
 
 #include "../PhysicsEngine/interfaces/ShapeType.h"
 
@@ -100,6 +98,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     SoundComponent* soundComponent = nullptr;
 
     MeshComponent* meshComponent_player = nullptr;
+    PlayerComponent* playerComponent = nullptr;
 
     // Only populate the list once
     if (doOnce) {
@@ -196,12 +195,13 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
 
     ImGui::Begin("Health Bar");
     meshComponent_player = GetPlayerMesh(entities);
+    playerComponent = GetPlayerComponent(entities);
 
     ImVec2 barSize(200, 20);
 
     ImGui::Text("Player Health: ");
-    // Draw the progress bar
-    ImGui::ProgressBar(meshComponent_player->health, barSize);
+    // Draw the health bar
+    ImGui::ProgressBar(playerComponent->health, barSize);
     ImGui::End();
     
     ImGui::Begin("Transform Component");
@@ -378,6 +378,22 @@ MeshComponent* GUISystem::GetPlayerMesh(const std::vector<Entity*>& entities)
 
         if (playerComponent != nullptr) {
             return meshComponent;
+        }
+    }
+
+    return nullptr;
+}
+
+PlayerComponent* GUISystem::GetPlayerComponent(const std::vector<Entity*>& entities)
+{
+    PlayerComponent* playerComponent = nullptr;
+
+    for (Entity* entity : entities) {
+
+        playerComponent = entity->GetComponentByType<PlayerComponent>();
+
+        if (playerComponent != nullptr) {
+            return playerComponent;
         }
     }
 

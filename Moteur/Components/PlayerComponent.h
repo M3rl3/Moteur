@@ -10,7 +10,9 @@ public:
 	// Constructor
 	PlayerComponent() :
 		ComponentType("PlayerComponent"),
-		isPlayer(true)
+		isPlayer(true),
+		isControllable(true),
+		health(1000)
 	{};
 
 	// Destructor
@@ -18,6 +20,12 @@ public:
 
 	// A boolean value to indicate that this is in fact the player
 	bool isPlayer;
+
+	// If the player can be controlled thru user inputs
+	bool isControllable;
+
+	// Health points of the player
+	int health;
 
 private:
 	// The component type

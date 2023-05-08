@@ -3,14 +3,20 @@
 #include "../Components/MeshComponent.h"
 #include "../Components/PlayerComponent.h"
 
+int frameCount = 0;
+
 AISystem::AISystem()
 {
 	stateMachine = new StateMachine();
 
-	/*stateMachine->AddTransition(IDLE, PURSUE);
+	idleState = new IdleState();
+	pursueState = new PursueState();
+	catchState = new CatchState();
+
+	stateMachine->AddTransition(IDLE, PURSUE);
 	stateMachine->AddTransition(PURSUE, IDLE);
 	stateMachine->AddTransition(PURSUE, CATCH);
-	stateMachine->AddTransition(CATCH, IDLE);*/
+	stateMachine->AddTransition(CATCH, IDLE);
 }
 
 AISystem::~AISystem()
@@ -27,6 +33,9 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 	MeshComponent* meshComponent = nullptr;
 	MeshComponent* meshComponent_player = nullptr;
 
+	Entity* playerEntity = nullptr;
+	PlayerComponent* playerComponent = nullptr;
+
 	for (int i = 0; i < entities.size(); i++) {
 		
 		Entity* currentEntity = entities[i];
@@ -39,12 +48,16 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 
 		if (aiComponent != nullptr) {
 
-			// find player component
+			// find player entity
+			playerEntity = GetPlayerEntity(entities);
+
+			// find player components
 			transformComponent_player = GetPlayerTransform(entities);
 			velocityComponent_player = GetPlayerVelocity(entities);
 			meshComponent_player = GetPlayerMesh(entities);
+			playerComponent = GetPlayerComponent(entities);
 
-			if (meshComponent_player->health <= 0.f) {
+			if (playerComponent->health <= 0.f) {
 				meshComponent_player->isVisible = false;
 			}
 
@@ -66,121 +79,24 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 
 				glm::vec3 aheadOfPlayer = transformComponent_player->position + playerFacingDir * aheadDistance;
 
-				if (distance < aiComponent->radius) {
+				if (aiComponent->doOnce) {
+					aiComponent->currentState = pursueState;
+					
+					pursueState->Enter(currentEntity);
+					stateMachine->SetState(pursueState, currentEntity);
 
-					switch (aiComponent->aiBehaviour)
-					{
-					case BehaviourType::IDLE: {
-
-						velocityComponent->velocity = glm::vec3(0.f);
-						break;
-					}
-					case BehaviourType::SEEK: {
-
-						Face(playerPosition, transformComponent);
-
-						glm::vec3 towardsTarget = glm::normalize(aiPosition - playerPosition);
-						glm::vec3 towardsPlayer = -towardsTarget;
-
-						float dotProduct = glm::dot(towardsTarget, playerFacingDir);
-
-						if (dotProduct <= 0.f) {
-							velocityComponent->velocity = towardsPlayer * dt;
-							velocityComponent->velocity.y = 0.f;
-						}
-						else {
-							velocityComponent->velocity = glm::vec3(0.f);
-						}
-
-						if (distance > aiComponent->radius * 2) {
-							velocityComponent->velocity = glm::vec3(0.f);
-						}
-
-						break;
-					}						
-					case BehaviourType::FLEE: {
-
-						Face(-playerPosition, transformComponent);
-
-						glm::vec3 towardsTarget = glm::normalize(aiPosition - playerPosition);
-						glm::vec3 towardsPlayer = -towardsTarget;
-
-						float dotProduct = glm::dot(towardsTarget, playerFacingDir);
-
-						velocityComponent->velocity = -towardsPlayer * dt;
-						velocityComponent->velocity.y = 0;
-
-						if (distance >= aiComponent->radius * 2) {
-							velocityComponent->velocity = glm::vec3(0.f);
-						}
-
-						break;
-					}
-					case BehaviourType::PURSUE: {
-
-						Face(playerPosition, transformComponent);
-
-						glm::vec3 towardsTarget = glm::normalize(aiPosition - aheadOfPlayer);
-						glm::vec3 towardsPlayer = -towardsTarget;
-
-						float dotProduct = glm::dot(towardsTarget, playerFacingDir);
-
-						if (dotProduct <= 0.f) {
-							velocityComponent->velocity = towardsPlayer * dt;
-							velocityComponent->velocity.y = 0.f;
-						}
-						else {
-							velocityComponent->velocity = glm::vec3(0.f);
-						}
-						break;
-					}						
-					case BehaviourType::EVADE: {
-
-						Face(-playerPosition, transformComponent);
-
-						glm::vec3 towardsTarget = glm::normalize(aiPosition - aheadOfPlayer);
-						glm::vec3 towardsPlayer = -towardsTarget;
-
-						velocityComponent->velocity = -towardsPlayer * dt;
-						velocityComponent->velocity.y = 0.f;
-
-						if (distance > aiComponent->radius * 2) {
-							velocityComponent->velocity = glm::vec3(0.f);
-						}
-						break;
-					}
-					case BehaviourType::APPROACH: {
-
-						Face(playerPosition, transformComponent);
-
-						float distance = glm::distance(playerPosition, aiPosition);
-
-						glm::vec3 towardsTarget = glm::normalize(aiPosition - playerPosition);
-						glm::vec3 towardsPlayer = -towardsTarget;
-
-						velocityComponent->velocity = towardsPlayer * dt;
-						velocityComponent->velocity.y = 0.f;
-
-						// maintains a 0.5 radius distance from the player
-						if (distance <= aiComponent->radius * 0.35f + FLT_EPSILON) {
-							velocityComponent->velocity = glm::vec3(0.f);
-
-							meshComponent_player->health -= 1;
-							meshComponent->health -= 10;
-						}
-						/*else {
-							meshComponent_player->health -= 0.001f;
-							meshComponent->health -= 0.01f;
-						}*/
-
-						aiComponent->aiVelocity = velocityComponent->velocity;
-						break;
-					}						
-					default:
-						// No idea what this behaviour is
-						break;
-					}
+					aiComponent->doOnce = false;
 				}
+
+				/*if (distance >= aiComponent->radius) {
+					stateMachine->SetState(idleState, currentEntity);
+				}
+				else {
+					stateMachine->SetState(pursueState, currentEntity);
+				}*/
+				pursueState->Update(dt, playerEntity);
+
+				// stateMachine->Update(dt, playerEntity);
 			}
 		}
 	}
@@ -270,6 +186,38 @@ MeshComponent* AISystem::GetPlayerMesh(const std::vector<Entity*>& entities)
 	return nullptr;
 }
 
+Entity* AISystem::GetPlayerEntity(const std::vector<Entity*>& entities)
+{
+	PlayerComponent* playerComponent = nullptr;
+
+	for (Entity* entity : entities) {
+
+		playerComponent = entity->GetComponentByType<PlayerComponent>();
+
+		if (playerComponent != nullptr) {
+			return entity;
+		}
+	}
+
+	return nullptr;
+}
+
+PlayerComponent* AISystem::GetPlayerComponent(const std::vector<Entity*>& entities)
+{
+	PlayerComponent* playerComponent = nullptr;
+
+	for (Entity* entity : entities) {
+
+		playerComponent = entity->GetComponentByType<PlayerComponent>();
+
+		if (playerComponent != nullptr) {
+			return playerComponent;
+		}
+	}
+
+	return nullptr;
+}
+
 IdleState::IdleState()
 {
 }
@@ -286,14 +234,18 @@ void IdleState::Enter(Entity* entity)
 	meshComponent = entity->GetComponentByType<MeshComponent>();
 
 	aiComponent->aiBehaviour = BehaviourType::IDLE;
+	aiEntity = entity;
 }
 
-void IdleState::Update(Entity* entity)
+void IdleState::Update(float dt, Entity* playerEntity)
 {
+	velocityComponent->velocity = glm::vec3(0.f);
 }
 
-void IdleState::Exit(Entity* entity)
+void IdleState::Exit()
 {
+	aiComponent->aiBehaviour = BehaviourType::IDLE;
+	aiComponent->currentState = nullptr;
 }
 
 PursueState::PursueState()
@@ -312,14 +264,58 @@ void PursueState::Enter(Entity* entity)
 	meshComponent = entity->GetComponentByType<MeshComponent>();
 
 	aiComponent->aiBehaviour = BehaviourType::PURSUE;
+	aiEntity = entity;
 }
 
-void PursueState::Update(Entity* entity)
+void PursueState::Update(float dt, Entity* playerEntity)
 {
+	TransformComponent* transformComponent_player = nullptr;
+	VelocityComponent* velocityComponent_player = nullptr;
+
+	transformComponent_player = playerEntity->GetComponentByType<TransformComponent>();
+	velocityComponent_player = playerEntity->GetComponentByType<VelocityComponent>();
+
+	glm::vec3 playerPosition = transformComponent_player->position;
+	glm::vec3 aiPosition = transformComponent->position;
+
+	glm::vec3 playerVelocity = velocityComponent_player->velocity;
+	glm::vec3 aiVelocity = velocityComponent->velocity;
+
+	glm::vec3 playerFacingDirection = velocityComponent_player->facingDirection;
+
+	// pursues/evades x distance ahead of the player
+	const float aheadDistance = 25.f;
+	glm::vec3 aheadOfPlayer = playerPosition + playerFacingDirection * aheadDistance;
+
+	float distance = glm::distance(aiPosition, playerPosition);
+
+	if (distance < aiComponent->radius) {
+
+		// Face
+		transformComponent->rotation =
+			glm::quat(glm::lookAt(aiPosition, playerPosition, -glm::vec3(0, 1, 0))) *
+			glm::quat(glm::vec3(glm::radians(180.f), glm::radians(180.f), 0));
+
+		// Pursue
+		glm::vec3 towardsTarget = glm::normalize(aiPosition - aheadOfPlayer);
+		glm::vec3 towardsPlayer = -towardsTarget;
+
+		float dotProduct = glm::dot(towardsTarget, playerFacingDirection);
+
+		if (dotProduct <= 0.f) {
+			velocityComponent->velocity = towardsPlayer * dt;
+			velocityComponent->velocity.y = 0.f;
+		}
+		else {
+			velocityComponent->velocity = glm::vec3(0.f);
+		}
+	}	
 }
 
-void PursueState::Exit(Entity* entity)
+void PursueState::Exit()
 {
+	aiComponent->aiBehaviour = BehaviourType::IDLE;
+	aiComponent->currentState = nullptr;
 }
 
 // Catch state
@@ -339,25 +335,53 @@ void CatchState::Enter(Entity* entity)
 	meshComponent = entity->GetComponentByType<MeshComponent>();
 
 	aiComponent->aiBehaviour = BehaviourType::CATCH;
+	aiEntity = entity;
 }
 
-void CatchState::Update(Entity* entity)
+void CatchState::Update(float dt, Entity* playerEntity)
 {
+	frameCount++;
+
+	TransformComponent* transformComponent_player = nullptr;
+	VelocityComponent* velocityComponent_player = nullptr;
+	PlayerComponent* playerComponent = nullptr;
+
+	transformComponent_player = playerEntity->GetComponentByType<TransformComponent>();
+	velocityComponent_player = playerEntity->GetComponentByType<VelocityComponent>();
+	playerComponent = playerEntity->GetComponentByType<PlayerComponent>();
+
+	float catchDuration = 5.f; // 5 seconds
+	float catchTimer = catchDuration * 60.f;
+
+	if (playerComponent != nullptr) {
+		if (frameCount >= 300) {
+			playerComponent->isControllable = false;
+		}
+		else {
+			playerComponent->isControllable = true;
+		}
+	}
 }
 
-void CatchState::Exit(Entity* entity)
+void CatchState::Exit()
 {
+	aiComponent->aiBehaviour = BehaviourType::IDLE;
+	aiComponent->currentState = nullptr;
 }
 
 // State Machine
-StateMachine::StateMachine()
-	: m_CurrentState(nullptr)
+StateMachine::StateMachine() :
+	m_CurrentState(nullptr),
+	entity(nullptr),
+	catchTimer(0)
 {
 	m_CurrentState = new IdleState();
 }
 
 StateMachine::~StateMachine()
 {
+	m_CurrentState = nullptr;
+	delete m_CurrentState;
 }
 
 void StateMachine::AddTransition(BehaviourType from, BehaviourType to)
@@ -369,6 +393,24 @@ void StateMachine::AddTransition(BehaviourType from, BehaviourType to)
 	}
 }
 
+void StateMachine::Update(float dt, Entity* playerEntity)
+{
+	if (m_CurrentState) {
+		m_CurrentState->Update(dt, playerEntity);
+
+		/*if (m_CurrentState->GetType() == BehaviourType::CATCH) {
+			catchTimer -= 1;
+
+			if (catchTimer <= 0) {
+				m_CurrentState = nullptr;
+				delete m_CurrentState;
+
+				m_CurrentState = new IdleState();
+			}
+		}*/
+	}
+}
+
 State* StateMachine::GetCurrentState()
 {
 	if (m_CurrentState != nullptr) {
@@ -377,29 +419,37 @@ State* StateMachine::GetCurrentState()
 	else return nullptr;
 }
 
-//void StateMachine::SetState(State* state)
-//{
-//	if (m_CurrentState != nullptr) {
-//
-//		if (m_CurrentState->GetType() == state->GetType())
-//		{
-//			return;
-//		}
-//
-//		// m_CurrentState->Exit();
-//	}	
-//
-//	std::vector<BehaviourType>& stateVec = m_ValidTransitions[m_CurrentState->GetType()];
-//	if (std::find(stateVec.begin(), stateVec.end(), state->GetType()) == stateVec.end())
-//	{
-//		printf("!! Not a valid transition!\n");
-//		// No valid transition was added from the current state to the new state
-//		return;
-//	}
-//
-//	// m_CurrentState->Exit();
-//	delete m_CurrentState;
-//
-//	m_CurrentState = state;
-//	// m_CurrentState->Enter();
-//}
+void StateMachine::SetState(State* newState, Entity* entity)
+{
+	if (m_CurrentState != nullptr) {
+
+		if (m_CurrentState->GetType() == newState->GetType())
+		{
+			return;
+		}
+
+		m_CurrentState->Exit();
+	}	
+
+	m_CurrentState = newState;
+
+	aiComponent = entity->GetComponentByType<AIComponent>();
+	aiComponent->currentState = m_CurrentState;
+
+	m_CurrentState->Enter(entity);
+
+	// TODO: add valid transitions
+	
+	//std::vector<BehaviourType>& stateVec = m_ValidTransitions[m_CurrentState->GetType()];
+	//if (std::find(stateVec.begin(), stateVec.end(), newState->GetType()) == stateVec.end())
+	//{
+	//	printf("!! Not a valid transition!\n");
+	//	// No valid transition was added from the current state to the new state
+	//	return;
+	//}
+}
+
+void StateMachine::SetCatchTimer(int timer)
+{
+	catchTimer = timer;
+}
