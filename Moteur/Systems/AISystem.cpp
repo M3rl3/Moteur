@@ -51,6 +51,10 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 
 		if (aiComponent != nullptr) {
 
+			if (aiComponent->doOnce) {
+				aiComponent->doOnce = false;
+			}
+
 			// find player entity
 			playerEntity = GetPlayerEntity(entities);
 
@@ -60,32 +64,17 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 			meshComponent_player = GetPlayerMesh(entities);
 			playerComponent = GetPlayerComponent(entities);
 
-			if (playerComponent->health <= 0.f) {
-				meshComponent_player->isVisible = false;
-			}
-
-			if (meshComponent->health <= 0.f) {
-				meshComponent->isVisible = false;
-			}
-
 			if (transformComponent != nullptr && velocityComponent != nullptr) {
 
 				glm::vec3 aiPosition = transformComponent->position;
 				glm::vec3 playerPosition = transformComponent_player->position;
 
-				glm::vec3 playerFacingDir = velocityComponent_player->facingDirection;
-
 				float distance = GetDistance(aiPosition, playerPosition);
 
-				// pursues/evades x distance ahead of the player
-				const float aheadDistance = 25.f;
+				// A state pool is being used her to avoid creating a new state on every frame
+				// The state pool initializes a buffer of usable states that can be retrieved at runtime
 
-				glm::vec3 aheadOfPlayer = transformComponent_player->position + playerFacingDir * aheadDistance;
-
-				if (aiComponent->doOnce) {
-					aiComponent->doOnce = false;
-				}
-				
+				// Check how far the entity is to the player
 				if (distance >= aiComponent->radius) {
 					aiComponent->currentState = statePool->GetState<IdleState>();
 				}
@@ -93,10 +82,21 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 					aiComponent->currentState = statePool->GetState<PursueState>();
 				}
 
+				// Enter the state
 				aiComponent->currentState->Enter(currentEntity);
 				aiComponent->currentState->Update(dt, playerEntity);
 
+				// Return the state back to the state pool
 				statePool->ReturnState(aiComponent->currentState);
+
+				// Make the player/ai invisible if their health goes below 0
+				if (playerComponent->health <= 0.f) {
+					meshComponent_player->isVisible = false;
+				}
+
+				if (meshComponent->health <= 0.f) {
+					meshComponent->isVisible = false;
+				}
 			}
 		}
 	}
