@@ -149,60 +149,17 @@ private:
 class StatePool {
 public:
 	// Preferably a number divisible by 2
-	StatePool(int size) {
+	StatePool(int size);
+	~StatePool();
 
-		int newSize = size;
-
-		if (newSize % 2 != 0) {
-			newSize++;
-		}
-		for (int i = 0; i < newSize * 0.5f; i++) {
-			pool.push_back(new IdleState());
-		}
-		for (int i = 0; i < newSize * 0.5f; i++) {
-			pool.push_back(new PursueState());
-		}
-		int breakPoint = 0;
-	}
-
-	State* GetState() {
-		if (pool.empty()) {
-			pool.push_back(new IdleState());
-		}
-		State* state = pool.back();
-		pool.pop_back();
-		return state;
-	}
+	State* GetState();
 	
 	template<class T>
-	T* GetState() {
-		for (auto it = pool.begin(); it != pool.end(); it++) {
-			T* state = dynamic_cast<T*>(*it);
+	T* GetState();
 
-			if ((*it)->GetType() == typeid(T).name()) {
-				pool.erase(it);
-				return state;
-			}
-		}
+	void ReturnState(State* state);
 
-		T* newState = new T();
-		pool.push_back(newState);
-		return newState;
-	}
-
-	void ReturnState(State* state) {
-		pool.push_back(state);
-	}
-
-	std::vector<State*>& GetStatePool() {
-		return pool;
-	}
-
-	~StatePool() {
-		for (auto state : pool) {
-			delete state;
-		}
-	}
+	std::vector<State*>& GetStatePool();
 
 private:
 	std::vector<State*> pool;

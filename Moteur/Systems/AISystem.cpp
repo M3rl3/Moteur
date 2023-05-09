@@ -471,3 +471,67 @@ void StateMachine::SetCatchTimer(int timer)
 {
 	catchTimer = timer;
 }
+
+StatePool::StatePool(int size)
+{
+	int newSize = size;
+
+	if (newSize % 2 != 0) {
+		newSize++;
+	}
+	for (int i = 0; i < newSize * 0.5f; i++) {
+		pool.push_back(new IdleState());
+	}
+	for (int i = 0; i < newSize * 0.5f; i++) {
+		pool.push_back(new PursueState());
+	}
+	for (int i = 0; i < newSize * 0.5f; i++) {
+		pool.push_back(new CatchState());
+	}
+	int breakPoint = 0;
+}
+
+StatePool::~StatePool()
+{
+	for (auto state : pool) {
+		delete state;
+	}
+}
+
+template<class T>
+T* StatePool::GetState()
+{
+	for (auto it = pool.begin(); it != pool.end(); it++) {
+
+		if ((*it)->GetType() == typeid(T).name()) {
+
+			T* state = dynamic_cast<T*>(*it);
+			pool.erase(it);
+			return state;
+		}
+	}
+
+	T* newState = new T();
+	pool.push_back(newState);
+	return newState;
+}
+
+State* StatePool::GetState()
+{
+	if (pool.empty()) {
+		pool.push_back(new IdleState());
+	}
+	State* state = pool.back();
+	pool.pop_back();
+	return state;
+}
+
+void StatePool::ReturnState(State* state)
+{
+	pool.push_back(state);
+}
+
+std::vector<State*>& StatePool::GetStatePool()
+{
+	return pool;
+}
