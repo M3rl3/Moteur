@@ -3,6 +3,7 @@
 #include <ECS/Component.h>
 
 #include "../cVAOManager/cVAOManager.h"
+#include "../cAnimationManager/cAnimator.h"
 
 enum ModelFormat {
 	PLY,
@@ -26,14 +27,16 @@ public:
 		isImposter(false),
 		useDiscardTexture(false),
 		modelFormat(PLY),
-		health(1000)
+		health(1000),
+		useBones(false),
+		useModelInfo(false)
 	{};
 
 	// Destructor
 	~MeshComponent() {};
 
 	// struct holding mesh name and vertex information
-	sModelDrawInfo plyModel;
+	sModelDrawInfo model;
 
 	// name of the mesh
 	std::string meshName;
@@ -62,7 +65,12 @@ public:
 	bool isImposter;
 	bool useDiscardTexture;
 
+	bool useBones;
+	bool useModelInfo;
+
 	int health;
+
+	Animator* animator;
 
 private:
 	// name of the component

@@ -412,6 +412,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             GLint viewLocation = glGetUniformLocation(shaderComponent->shaderID, "View");
             GLint projectionLocation = glGetUniformLocation(shaderComponent->shaderID, "Projection");
             GLint modelInverseLocation = glGetUniformLocation(shaderComponent->shaderID, "ModelInverse");      
+            GLint useBonesLocation = glGetUniformLocation(shaderComponent->shaderID, "u_UseBones");
 
             // Lighting
             // ManageLights(shaderComponent->shaderID);
@@ -429,6 +430,13 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
             if (meshComponent->meshName == "plane") {
                 model = glm::translate(model, camera->upVector * 1.9f);
+            }
+
+            if (meshComponent->useBones) {
+                glUniform1f(useBonesLocation, (GLfloat)GL_TRUE);
+            }
+            else {
+                glUniform1f(useBonesLocation, (GLfloat)GL_FALSE);
             }
 
             glm::mat4 translationMatrix = glm::translate(glm::mat4(1.f), transformComponent->position);
@@ -863,7 +871,20 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 meshName = meshComponent->meshName;
             }
             else {
-                meshName = meshComponent->plyModel.meshName;
+                meshName = meshComponent->model.meshName;
+            }
+
+            if (meshComponent->useModelInfo) {
+                modelInfo = meshComponent->model;
+            }
+            
+            if (meshComponent->useBones) {
+                auto transforms = meshComponent->animator->GetFinalBoneMatrices();
+
+                for (int i = 0; i < transforms.size(); i++) {
+                    GLint boneLoc = glGetUniformLocation(shaderComponent->shaderID, std::string("BoneMatrices[" + std::to_string(i) + "]").c_str());
+                    glUniformMatrix4fv(boneLoc, 1, GL_FALSE, glm::value_ptr(transforms[i]));
+                }
             }
 
             if (vaoManager->FindDrawInfoByModelName(meshName, modelInfo)) {
@@ -938,6 +959,11 @@ bool RenderSystem::GetCursorStatus()
     return enableCursor;
 }
 
+cModelFileLoader* RenderSystem::GetModelFileLoader()
+{
+    return modelFileLoader;
+}
+
 // Set the path where the meshes are located
 void RenderSystem::SetMeshPath(std::string filePath)
 {
@@ -949,7 +975,7 @@ void RenderSystem::SetMeshPath(std::string filePath)
 // Loads model from ply file and gets it into the VAO
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
 {
-    modelFileLoader->LoadModelPLY(fileName, plyModel);
+    modelFileLoader->LoadModelFBX(fileName, plyModel);
 
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
         std::cout << "Model " << modelName << " loaded successfully." << std::endl;

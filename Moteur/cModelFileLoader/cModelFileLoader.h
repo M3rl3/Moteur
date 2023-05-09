@@ -1,10 +1,13 @@
 #pragma once
 
+#define MAX_BONE_WEIGHTS 4
+
 #include <fstream>
 #include <iostream>
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include <assimp/scene.h>
 #include <glm/vec3.hpp>
@@ -27,6 +30,8 @@ public:
 	int TransferColorTextureToVertex(std::string fileName);
 
 	unsigned char* LoadEmbeddedTexture(aiTexture* texture);
+
+	void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel);
 
 private:
 

@@ -74,6 +74,16 @@ void sModelDrawInfo::CalculateExtents(void)
 	return;
 }
 
+std::unordered_map<std::string, BonesInfo>& sModelDrawInfo::GetBoneInfoMap()
+{
+	return m_BoneInfoMap;
+}
+
+int& sModelDrawInfo::GetBoneCount()
+{
+	return m_BoneCounter;
+}
+
 bool cVAOManager::LoadModelIntoVAO(
 	std::string fileName,
 	sModelDrawInfo& drawInfo,

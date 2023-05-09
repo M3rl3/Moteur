@@ -5,7 +5,6 @@
 #include "Components/MeshComponent.h"
 #include "Components/ShaderComponent.h"
 #include "Components/TextureComponent.h"
-#include "Components/AnimationComponent.h"
 #include "Components/VelocityComponent.h"
 #include "Components/BoundingBoxComponent.h"
 #include "Components/LitComponent.h"
@@ -132,6 +131,13 @@ void Scene::Render()
         meshComponent->meshName = "merle";
         meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->isWireframe = false;
+        meshComponent->useBones = false;
+        meshComponent->useModelInfo = false;
+
+        Animation* tpose;
+        renderSystem->LoadMesh("../assets/meshes/castle_guard.fbx", "krupesh", meshComponent->model, shaderID);
+        tpose = new Animation("../assets/meshes/castle_guard.fbx", &meshComponent->model);
+        meshComponent->animator = new Animator(tpose);
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
@@ -674,6 +680,7 @@ void Scene::LoadModels()
     renderSystem->LoadModel("campfire.ply", "campfire", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("tree.ply", "tree", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("tree1.ply", "tree1", ModelFormat::PLY, shaderID);
+
 }
 
 void Scene::LoadTextures() 

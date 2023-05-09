@@ -11,6 +11,9 @@
 #include "Systems/AISystem.h"
 #include "Systems/GUISystem.h"
 
+#include "../Moteur/cAnimationManager/cAnimation.h"
+#include "../Moteur/cAnimationManager/cAnimator.h"
+
 #include "Timer/Timer.h"
 
 enum GameMode {

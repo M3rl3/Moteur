@@ -207,8 +207,12 @@
     <ClInclude Include="..\include\ECS\System.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="cAnimationManager\Animation.h" />
+    <ClInclude Include="cAnimationManager\AssimpGLMHelpers.h" />
     <ClInclude Include="cAnimationManager\BoneHierarchy.h" />
+    <ClInclude Include="cAnimationManager\cAnimation.h" />
     <ClInclude Include="cAnimationManager\cAnimationManager.h" />
+    <ClInclude Include="cAnimationManager\cAnimator.h" />
+    <ClInclude Include="cAnimationManager\cBone.h" />
     <ClInclude Include="cFBOManager\cFBO.h" />
     <ClInclude Include="cFBOManager\cFBOManager.h" />
     <ClInclude Include="cLightManager\cLight.h" />

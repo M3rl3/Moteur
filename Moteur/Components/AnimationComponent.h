@@ -26,7 +26,7 @@ public:
 	~AnimationComponent() {};
 
 	// The actual animation
-	Animation animation;
+	Animations animation;
 
 	// Character animation
 	std::vector<glm::mat4> BoneModelMatrices;

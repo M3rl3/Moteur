@@ -139,7 +139,7 @@ struct CharacterAnimationData
 	double TicksPerSecond;
 };
 
-struct Animation
+struct Animations
 {
 	std::vector<glm::mat4> GlobalTransformations;
 	bool IsCharacterAnimation;

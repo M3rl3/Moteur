@@ -1,8 +1,17 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
+#include <glm/glm.hpp>
 
-#include "../cAnimationManager/Animation.h"
+struct BonesInfo
+{
+	/*id is index in finalBoneMatrices*/
+	int id;
+
+	/*offset matrix transforms vertex from model space to bone space*/
+	glm::mat4 offset;
+};
 
 // The vertex structure 
 // that's ON THE GPU (eventually) 
@@ -37,6 +46,9 @@ struct sModelDrawInfo
 	unsigned int numberOfTriangles;
 	unsigned int numberOfBones;
 
+	std::unordered_map<std::string, BonesInfo> m_BoneInfoMap;
+	int m_BoneCounter = 0;
+
 	// The "local" (i.e. "CPU side" temporary array)
 	vertLayout* pVertices;	//  = 0;
 	// The index buffer (CPU side)
@@ -55,4 +67,7 @@ struct sModelDrawInfo
 	float maxExtent;
 
 	void CalculateExtents(void);
+
+	std::unordered_map<std::string, BonesInfo>& GetBoneInfoMap();
+	int& GetBoneCount();
 };

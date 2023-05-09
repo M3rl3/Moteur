@@ -29,16 +29,31 @@ uniform mat4 ModelInverse;
 uniform mat4 View;
 uniform mat4 Projection;
 uniform vec3 cameraPosition;
+uniform bool u_UseBones;
+uniform mat4 BoneMatrices[52];
 
 void main()
 {
 	vec3 vertPosition = vPosition.xyz;
 
 	mat4 MVP = Projection * View * Model;
-	
-	gl_Position = MVP * vec4(vertPosition, 1.f);
+	vec4 position = vec4(vertPosition, 1.0f);
 
-	gWorldLocation.xyz = (Model * vec4(vertPosition, 1.f)).xyz;
+	vec4 color = vColour;
+
+	if(u_UseBones)
+	{
+		mat4 boneTransform = BoneMatrices[int(vBoneID[0])] * vBoneWeight[0];
+		boneTransform += BoneMatrices[int(vBoneID[1])] * vBoneWeight[1];
+		boneTransform += BoneMatrices[int(vBoneID[2])] * vBoneWeight[2];
+		boneTransform += BoneMatrices[int(vBoneID[3])] * vBoneWeight[3];
+		position = boneTransform * vPosition;
+		//color = vec4(10.f, 0.f, 0.f, 1.f);
+	}
+
+	gl_Position = MVP * position;
+
+	gWorldLocation.xyz = (Model * position).xyz;
 	gWorldLocation.w = 1.f;
 
 	gNormal.xyz = normalize(ModelInverse * vec4(vNormal.xyz, 1.f)).xyz;
@@ -54,7 +69,7 @@ void main()
 	gReflectedVector = reflect(viewVector, unitNormal);
 	gRefractedVector = refract(viewVector, unitNormal, 1.0/1.33);
 
-	gColour = vColour;
+	gColour = color;
 	gUV2 = vUV2;
 	gTangent = vTangent;
 	gBiNormal = vBiNormal;

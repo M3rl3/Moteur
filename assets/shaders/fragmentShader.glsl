@@ -264,7 +264,8 @@ void main()
 	if (bIsRefractive) {
 		outputColor = mix(outputColor, environmentColor, 1.f);
 	}
-
+//	outputColor.rgb = fColour.rgb;
+//	outputColor.w = 1.f;
 	return;
 }
 

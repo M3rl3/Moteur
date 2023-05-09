@@ -17,6 +17,7 @@ public:
 	IdleState();
 	virtual ~IdleState();
 
+	virtual const char* GetType() const override;
 	virtual void Enter(Entity* entity) override;
 	virtual void Update(float dt, Entity* playerEntity) override;
 	virtual void Exit() override;
@@ -30,6 +31,8 @@ private:
 
 	Entity* playerEntity = nullptr;
 	Entity* aiEntity = nullptr;
+
+	std::string typeName;
 };
 
 class PursueState : public State
@@ -38,6 +41,7 @@ public:
 	PursueState();
 	virtual ~PursueState();
 
+	virtual const char* GetType() const override;
 	virtual void Enter(Entity* entity) override;
 	virtual void Update(float dt, Entity* playerEntity) override;
 	virtual void Exit() override;
@@ -51,6 +55,8 @@ private:
 
 	Entity* playerEntity = nullptr;
 	Entity* aiEntity = nullptr;
+
+	std::string typeName;
 };
 
 class CatchState : public State
@@ -59,6 +65,7 @@ public:
 	CatchState();
 	virtual ~CatchState();
 
+	virtual const char* GetType() const override;
 	virtual void Enter(Entity* entity) override;
 	virtual void Update(float dt, Entity* playerEntity) override;
 	virtual void Exit() override;
@@ -72,6 +79,8 @@ private:
 
 	Entity* playerEntity = nullptr;
 	Entity* aiEntity = nullptr;
+
+	std::string typeName;
 };
 
 class StateMachine
@@ -130,6 +139,7 @@ private:
 	PlayerComponent* GetPlayerComponent(const std::vector<Entity*>& entities);
 
 	StateMachine* stateMachine;
+	StatePool* statePool;
 
 	IdleState* idleState;
 	PursueState* pursueState;
@@ -138,10 +148,21 @@ private:
 
 class StatePool {
 public:
+	// Preferably a number divisible by 2
 	StatePool(int size) {
-		for (int i = 0; i < size; i++) {
+
+		int newSize = size;
+
+		if (newSize % 2 != 0) {
+			newSize++;
+		}
+		for (int i = 0; i < newSize * 0.5f; i++) {
 			pool.push_back(new IdleState());
 		}
+		for (int i = 0; i < newSize * 0.5f; i++) {
+			pool.push_back(new PursueState());
+		}
+		int breakPoint = 0;
 	}
 
 	State* GetState() {
@@ -152,9 +173,29 @@ public:
 		pool.pop_back();
 		return state;
 	}
+	
+	template<class T>
+	T* GetState() {
+		for (auto it = pool.begin(); it != pool.end(); it++) {
+			T* state = dynamic_cast<T*>(*it);
+
+			if ((*it)->GetType() == typeid(T).name()) {
+				pool.erase(it);
+				return state;
+			}
+		}
+
+		T* newState = new T();
+		pool.push_back(newState);
+		return newState;
+	}
 
 	void ReturnState(State* state) {
 		pool.push_back(state);
+	}
+
+	std::vector<State*>& GetStatePool() {
+		return pool;
 	}
 
 	~StatePool() {

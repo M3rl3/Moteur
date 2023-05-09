@@ -109,6 +109,9 @@ public:
 	bool GetMouseStatus();
 	bool GetCursorStatus();
 
+	// Get model loader object
+	cModelFileLoader* GetModelFileLoader();
+
 private:
 
 	// name of the system

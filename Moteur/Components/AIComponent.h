@@ -22,7 +22,8 @@ public:
 	State() : m_StateType(IDLE) { }
 	State(BehaviourType type) : m_StateType(type) { }
 	virtual ~State() { }
-	virtual BehaviourType GetType() const { return m_StateType; }
+	virtual const char* GetType() const = 0;
+	virtual std::string GetTypeName() const { return m_TypeName; }
 	virtual void Enter(Entity* entity) = 0;
 	virtual void Update(float dt, Entity* playerEntity) = 0;
 	virtual void Exit() = 0;
@@ -30,6 +31,7 @@ public:
 
 private:
 	BehaviourType m_StateType;
+	std::string m_TypeName;
 };
 
 

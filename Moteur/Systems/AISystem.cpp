@@ -3,11 +3,14 @@
 #include "../Components/MeshComponent.h"
 #include "../Components/PlayerComponent.h"
 
+#include <typeinfo>
+
 int frameCount = 0;
 
 AISystem::AISystem()
 {
 	stateMachine = new StateMachine();
+	statePool = new StatePool(9);
 
 	idleState = new IdleState();
 	pursueState = new PursueState();
@@ -80,23 +83,20 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 				glm::vec3 aheadOfPlayer = transformComponent_player->position + playerFacingDir * aheadDistance;
 
 				if (aiComponent->doOnce) {
-					aiComponent->currentState = pursueState;
-					
-					pursueState->Enter(currentEntity);
-					stateMachine->SetState(pursueState, currentEntity);
-
 					aiComponent->doOnce = false;
 				}
-
-				/*if (distance >= aiComponent->radius) {
-					stateMachine->SetState(idleState, currentEntity);
+				
+				if (distance >= aiComponent->radius) {
+					aiComponent->currentState = statePool->GetState<IdleState>();
 				}
 				else {
-					stateMachine->SetState(pursueState, currentEntity);
-				}*/
-				pursueState->Update(dt, playerEntity);
+					aiComponent->currentState = statePool->GetState<PursueState>();
+				}
 
-				// stateMachine->Update(dt, playerEntity);
+				aiComponent->currentState->Enter(currentEntity);
+				aiComponent->currentState->Update(dt, playerEntity);
+
+				statePool->ReturnState(aiComponent->currentState);
 			}
 		}
 	}
@@ -220,10 +220,16 @@ PlayerComponent* AISystem::GetPlayerComponent(const std::vector<Entity*>& entiti
 
 IdleState::IdleState()
 {
+	typeName = "IdleState";
 }
 
 IdleState::~IdleState()
 {
+}
+
+const char* IdleState::GetType() const
+{
+	return typeid(IdleState).name();
 }
 
 void IdleState::Enter(Entity* entity)
@@ -250,10 +256,16 @@ void IdleState::Exit()
 
 PursueState::PursueState()
 {
+	typeName = "PursueState";
 }
 
 PursueState::~PursueState()
 {
+}
+
+const char* PursueState::GetType() const
+{
+	return typeid(PursueState).name();
 }
 
 void PursueState::Enter(Entity* entity)
@@ -321,10 +333,16 @@ void PursueState::Exit()
 // Catch state
 CatchState::CatchState()
 {
+	typeName = "CatchState";
 }
 
 CatchState::~CatchState()
 {
+}
+
+const char* CatchState::GetType() const
+{
+	return typeid(CatchState).name();
 }
 
 void CatchState::Enter(Entity* entity)
@@ -436,8 +454,6 @@ void StateMachine::SetState(State* newState, Entity* entity)
 	aiComponent = entity->GetComponentByType<AIComponent>();
 	aiComponent->currentState = m_CurrentState;
 
-	m_CurrentState->Enter(entity);
-
 	// TODO: add valid transitions
 	
 	//std::vector<BehaviourType>& stateVec = m_ValidTransitions[m_CurrentState->GetType()];
@@ -447,6 +463,8 @@ void StateMachine::SetState(State* newState, Entity* entity)
 	//	// No valid transition was added from the current state to the new state
 	//	return;
 	//}
+
+	m_CurrentState->Enter(entity);
 }
 
 void StateMachine::SetCatchTimer(int timer)

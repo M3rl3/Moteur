@@ -31,9 +31,13 @@ struct triangleLayout {
     unsigned int triangleIndices[3];
 };
 
-void CastToGLM(const aiMatrix4x4& in, glm::mat4& out)
+void CastToGLM(const aiMatrix4x4& from, glm::mat4& to)
 {
-    out = glm::transpose(glm::make_mat4(&in.a1));
+    //the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
+    to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+    to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
+    to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
+    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
 }
 
 void CastToGLM(const aiQuaternion& in, glm::quat& out)
@@ -364,7 +368,29 @@ void applyTextureToVertexColors(aiMesh * mesh, aiTexture * texture) {
     }
 }
 
-void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
+void SetVertexBoneDataToDefault(vertLayout* vertex)
+{
+    for (int i = 0; i < MAX_BONE_WEIGHTS; i++)
+    {
+        vertex->BoneID[i] = -1;
+        vertex->BoneWeight[i] = 0.0f;
+    }
+}
+
+void SetVertexBoneData(vertLayout& vertex, int boneID, float weight)
+{
+    for (int i = 0; i < MAX_BONE_WEIGHTS; ++i)
+    {
+        if (vertex.BoneID[i] < 0)
+        {
+            vertex.BoneWeight[i] = weight;
+            vertex.BoneID[i] = boneID;
+            break;
+        }
+    }
+}
+
+void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
 {
     vertLayout* modelArray = NULL;
 
@@ -403,6 +429,8 @@ void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
         modelArray = new vertLayout[fbxModel.numberOfVertices];
 
         for (unsigned int i = 0; i != fbxModel.numberOfVertices; i++) {
+
+            SetVertexBoneDataToDefault(modelArray);
 
             modelArray[i].x = mesh->mVertices[i].x;
             modelArray[i].y = mesh->mVertices[i].y;
@@ -444,36 +472,38 @@ void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
                 modelArray[i].v1 = 0.f;
             }
 
-            memset(modelArray[i].BoneWeight, 0, sizeof(modelArray[i].BoneWeight));
-            memset(modelArray[i].BoneID, 0, sizeof(modelArray[i].BoneID));
+            /*memset(modelArray[i].BoneWeight, 0, sizeof(modelArray[i].BoneWeight));
+            memset(modelArray[i].BoneID, 0, sizeof(modelArray[i].BoneID));*/
 
             fbxModel.numberOfBones = mesh->mNumBones;
-            for (unsigned int j = 0; j < mesh->mNumBones; j++) {
-
-                const aiBone* bone = mesh->mBones[j];
-                const aiVertexWeight* weight = nullptr;
-
-                for (unsigned int k = 0; k < bone->mNumWeights; k++) {
-
-                    if (mesh->HasBones()) {
-
-                        const aiVertexWeight& vWeight = bone->mWeights[k];
-
-                        if (vWeight.mVertexId == i) {
-                            weight = &vWeight;
-                            break;
-                        }
-                    }                   
+            for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+            {
+                int boneID = -1;
+                std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
+                if (fbxModel.m_BoneInfoMap.find(boneName) == fbxModel.m_BoneInfoMap.end())
+                {
+                    BonesInfo newBoneInfo;
+                    newBoneInfo.id = fbxModel.m_BoneCounter;
+                    CastToGLM(
+                        mesh->mBones[boneIndex]->mOffsetMatrix, newBoneInfo.offset);
+                    fbxModel.m_BoneInfoMap[boneName] = newBoneInfo;
+                    boneID = fbxModel.m_BoneCounter;
+                    fbxModel.m_BoneCounter++;
                 }
+                else
+                {
+                    boneID = fbxModel.m_BoneInfoMap[boneName].id;
+                }
+                assert(boneID != -1);
+                auto weights = mesh->mBones[boneIndex]->mWeights;
+                int numWeights = mesh->mBones[boneIndex]->mNumWeights;
 
-                if (weight) {
-                    for (unsigned int k = 0; k < 4; k++) {
-                        if (modelArray[i].BoneWeight[k] == 0.0f) {
-                            modelArray[i].BoneWeight[k] = weight->mWeight;
-                            modelArray[i].BoneID[k] = j;
-                            break;
-                        }
-                    }
+                for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+                {
+                    int vertexId = weights[weightIndex].mVertexId;
+                    float weight = weights[weightIndex].mWeight;
+                    assert(vertexId <= fbxModel.numberOfVertices);
+                    SetVertexBoneData(modelArray[vertexId], boneID, weight);
                 }
             }
         }
@@ -540,3 +570,4 @@ void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
 
     delete[] modelArray;
 }
+
