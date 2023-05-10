@@ -69,27 +69,28 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 				glm::vec3 aiPosition = transformComponent->position;
 				glm::vec3 playerPosition = transformComponent_player->position;
 
+				// Get the distance between the AI and the player entities
 				float distance = GetDistance(aiPosition, playerPosition);
 
-				// A state pool is being used her to avoid creating a new state on every frame
+				// A state pool is being used here to avoid creating a new state on every frame
 				// The state pool initializes a buffer of usable states that can be retrieved at runtime
 
-				// Check how far the entity is to the player
-				if (distance >= aiComponent->radius) {
-					aiComponent->currentState = statePool->GetState<IdleState>();
+				// Check if the player is within the AI's radius
+				if (distance <= aiComponent->radius) {
+					aiComponent->currentState = statePool->GetState<PursueState>();
 				}
 				else {
-					aiComponent->currentState = statePool->GetState<PursueState>();
+					aiComponent->currentState = statePool->GetState<IdleState>();
 				}
 
 				// Enter the state
-				aiComponent->currentState->Enter(currentEntity);
-				aiComponent->currentState->Update(dt, playerEntity);
+				stateMachine->SetState(aiComponent->currentState, currentEntity);
+				stateMachine->Update(dt, playerEntity);
 
 				// Return the state back to the state pool
 				statePool->ReturnState(aiComponent->currentState);
 
-				// Make the player/ai invisible if their health goes below 0
+				// Make the player/AI invisible if their health goes below 0
 				if (playerComponent->health <= 0.f) {
 					meshComponent_player->isVisible = false;
 				}
@@ -437,32 +438,41 @@ State* StateMachine::GetCurrentState()
 	else return nullptr;
 }
 
+//void StateMachine::SetState(State* newState, Entity* entity)
+//{
+//	if (m_CurrentState != nullptr) {
+//
+//		if (m_CurrentState->GetType() == newState->GetType())
+//		{
+//			return;
+//		}
+//
+//		m_CurrentState->Exit();
+//	}	
+//
+//	m_CurrentState = newState;
+//
+//	aiComponent = entity->GetComponentByType<AIComponent>();
+//	aiComponent->currentState = m_CurrentState;
+//
+//	// TODO: add valid transitions
+//	
+//	//std::vector<BehaviourType>& stateVec = m_ValidTransitions[m_CurrentState->GetType()];
+//	//if (std::find(stateVec.begin(), stateVec.end(), newState->GetType()) == stateVec.end())
+//	//{
+//	//	printf("!! Not a valid transition!\n");
+//	//	// No valid transition was added from the current state to the new state
+//	//	return;
+//	//}
+//
+//	m_CurrentState->Enter(entity);
+//}
+
 void StateMachine::SetState(State* newState, Entity* entity)
 {
-	if (m_CurrentState != nullptr) {
-
-		if (m_CurrentState->GetType() == newState->GetType())
-		{
-			return;
-		}
-
-		m_CurrentState->Exit();
-	}	
-
-	m_CurrentState = newState;
-
-	aiComponent = entity->GetComponentByType<AIComponent>();
-	aiComponent->currentState = m_CurrentState;
-
-	// TODO: add valid transitions
-	
-	//std::vector<BehaviourType>& stateVec = m_ValidTransitions[m_CurrentState->GetType()];
-	//if (std::find(stateVec.begin(), stateVec.end(), newState->GetType()) == stateVec.end())
-	//{
-	//	printf("!! Not a valid transition!\n");
-	//	// No valid transition was added from the current state to the new state
-	//	return;
-	//}
+	if (newState != nullptr) {
+		m_CurrentState = newState;
+	}
 
 	m_CurrentState->Enter(entity);
 }
