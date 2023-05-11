@@ -3,18 +3,19 @@
 #include "../Components/MeshComponent.h"
 #include "../Components/PlayerComponent.h"
 
+#include <iostream>
 #include <typeinfo>
 
 int frameCount = 0;
+int anotherCounter = 0;
+bool aiActive = true;
 
 AISystem::AISystem()
 {
 	stateMachine = new StateMachine();
-	statePool = new StatePool(9);
+	statePool = new StatePool(10);
 
-	idleState = new IdleState();
-	pursueState = new PursueState();
-	catchState = new CatchState();
+	stateMachine->SetCatchTimer(150);
 
 	stateMachine->AddTransition(IDLE, PURSUE);
 	stateMachine->AddTransition(PURSUE, IDLE);
@@ -35,6 +36,7 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 	VelocityComponent* velocityComponent_player = nullptr;
 	MeshComponent* meshComponent = nullptr;
 	MeshComponent* meshComponent_player = nullptr;
+	CharacterControllerComponent* characterController = nullptr;
 
 	Entity* playerEntity = nullptr;
 	PlayerComponent* playerComponent = nullptr;
@@ -63,28 +65,12 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 			velocityComponent_player = GetPlayerVelocity(entities);
 			meshComponent_player = GetPlayerMesh(entities);
 			playerComponent = GetPlayerComponent(entities);
+			characterController = GetCharacterController(entities);
 
 			if (transformComponent != nullptr && velocityComponent != nullptr) {
 
-				glm::vec3 aiPosition = transformComponent->position;
-				glm::vec3 playerPosition = transformComponent_player->position;
-
-				// Get the distance between the AI and the player entities
-				float distance = GetDistance(aiPosition, playerPosition);
-
-				// A state pool is being used here to avoid creating a new state on every frame
-				// The state pool initializes a buffer of usable states that can be retrieved at runtime
-
-				// Check if the player is within the AI's radius
-				if (distance <= aiComponent->radius) {
-					aiComponent->currentState = statePool->GetState<PursueState>();
-				}
-				else {
-					aiComponent->currentState = statePool->GetState<IdleState>();
-				}
-
-				// Enter the state
-				stateMachine->SetState(aiComponent->currentState, currentEntity);
+				// Set the current state via the state machine
+				stateMachine->SetState(aiComponent->currentState, statePool, currentEntity, playerEntity);
 				stateMachine->Update(dt, playerEntity);
 
 				// Return the state back to the state pool
@@ -213,6 +199,24 @@ PlayerComponent* AISystem::GetPlayerComponent(const std::vector<Entity*>& entiti
 
 		if (playerComponent != nullptr) {
 			return playerComponent;
+		}
+	}
+
+	return nullptr;
+}
+
+CharacterControllerComponent* AISystem::GetCharacterController(const std::vector<Entity*>& entities)
+{
+	PlayerComponent* playerComponent = nullptr;
+	CharacterControllerComponent* characterController = nullptr;
+
+	for (Entity* entity : entities) {
+
+		playerComponent = entity->GetComponentByType<PlayerComponent>();
+		characterController = entity->GetComponentByType<CharacterControllerComponent>();
+
+		if (playerComponent != nullptr) {
+			return characterController;
 		}
 	}
 
@@ -364,21 +368,29 @@ void CatchState::Update(float dt, Entity* playerEntity)
 	TransformComponent* transformComponent_player = nullptr;
 	VelocityComponent* velocityComponent_player = nullptr;
 	PlayerComponent* playerComponent = nullptr;
+	CharacterControllerComponent* characterController = nullptr;
 
 	transformComponent_player = playerEntity->GetComponentByType<TransformComponent>();
 	velocityComponent_player = playerEntity->GetComponentByType<VelocityComponent>();
 	playerComponent = playerEntity->GetComponentByType<PlayerComponent>();
+	characterController = playerEntity->GetComponentByType<CharacterControllerComponent>();
 
 	float catchDuration = 5.f; // 5 seconds
 	float catchTimer = catchDuration * 60.f;
 
+	glm::vec3 playerPosition = transformComponent_player->position;
+	glm::vec3 aiPosition = transformComponent->position;
+
+	//// Face
+	//transformComponent->rotation =
+	//	glm::quat(glm::lookAt(aiPosition, playerPosition, -glm::vec3(0, 1, 0))) *
+	//	glm::quat(glm::vec3(glm::radians(180.f), glm::radians(180.f), 0));
+
 	if (playerComponent != nullptr) {
-		if (frameCount >= 300) {
-			playerComponent->isControllable = false;
-		}
-		else {
-			playerComponent->isControllable = true;
-		}
+
+		velocityComponent->velocity = glm::vec3(0.f);
+		velocityComponent_player->velocity = glm::vec3(0.f);
+		playerComponent->isControllable = false;
 	}
 }
 
@@ -391,10 +403,13 @@ void CatchState::Exit()
 // State Machine
 StateMachine::StateMachine() :
 	m_CurrentState(nullptr),
-	entity(nullptr),
+	aiComponent(nullptr),
+	playerTransform(nullptr),
+	aiTransform(nullptr),
 	catchTimer(0)
 {
 	m_CurrentState = new IdleState();
+	catchState = new CatchState();
 }
 
 StateMachine::~StateMachine()
@@ -416,17 +431,6 @@ void StateMachine::Update(float dt, Entity* playerEntity)
 {
 	if (m_CurrentState) {
 		m_CurrentState->Update(dt, playerEntity);
-
-		/*if (m_CurrentState->GetType() == BehaviourType::CATCH) {
-			catchTimer -= 1;
-
-			if (catchTimer <= 0) {
-				m_CurrentState = nullptr;
-				delete m_CurrentState;
-
-				m_CurrentState = new IdleState();
-			}
-		}*/
 	}
 }
 
@@ -438,35 +442,68 @@ State* StateMachine::GetCurrentState()
 	else return nullptr;
 }
 
-//void StateMachine::SetState(State* newState, Entity* entity)
-//{
-//	if (m_CurrentState != nullptr) {
-//
-//		if (m_CurrentState->GetType() == newState->GetType())
-//		{
-//			return;
-//		}
-//
-//		m_CurrentState->Exit();
-//	}	
-//
-//	m_CurrentState = newState;
-//
-//	aiComponent = entity->GetComponentByType<AIComponent>();
-//	aiComponent->currentState = m_CurrentState;
-//
-//	// TODO: add valid transitions
-//	
-//	//std::vector<BehaviourType>& stateVec = m_ValidTransitions[m_CurrentState->GetType()];
-//	//if (std::find(stateVec.begin(), stateVec.end(), newState->GetType()) == stateVec.end())
-//	//{
-//	//	printf("!! Not a valid transition!\n");
-//	//	// No valid transition was added from the current state to the new state
-//	//	return;
-//	//}
-//
-//	m_CurrentState->Enter(entity);
-//}
+void StateMachine::SetState(State* newState, StatePool* statePool, Entity* aiEntity, Entity* playerEntity)
+{
+	if (newState != nullptr) {
+		m_CurrentState = newState;
+	}
+
+	aiComponent = aiEntity->GetComponentByType<AIComponent>();
+	aiTransform = aiEntity->GetComponentByType<TransformComponent>();
+	aiVelocity = aiEntity->GetComponentByType<VelocityComponent>();
+	playerTransform = playerEntity->GetComponentByType<TransformComponent>();
+	playerComponent = playerEntity->GetComponentByType<PlayerComponent>();
+	characterController = playerEntity->GetComponentByType<CharacterControllerComponent>();
+
+	glm::vec3 aiPosition = aiTransform->position;
+	glm::vec3 playerPosition = playerTransform->position;
+
+	// Get the distance between the AI and the player entities
+	float distance = glm::distance(aiPosition, playerPosition);
+
+	// A state pool is being used here to avoid creating a new state on every frame
+	// The state pool initializes a buffer of usable states that can be retrieved at runtime
+
+	// std::cout << "\nCurrentState: " << m_CurrentState->GetType() << std::endl;
+	// std::cout << "Distance: " << distance << std::endl;
+
+	// Check if the AI should be active or inactive
+	if (!aiActive && anotherCounter >= 200) {
+		aiActive = true;
+		anotherCounter = 0;
+	}
+
+	if (aiActive) {
+		// Check if the player is within the AI's radius
+		if (distance <= aiComponent->radius / 8) {
+			aiVelocity->velocity = glm::vec3(0.f);
+			aiComponent->currentState = statePool->GetState<CatchState>();
+
+			catchTimer--;
+			if (catchTimer <= 0) {
+				playerComponent->isControllable = true;
+
+				frameCount++;
+				aiActive = false;
+				this->SetCatchTimer(100);
+			}
+		}
+		else if (distance <= aiComponent->radius) {
+			aiComponent->currentState = statePool->GetState<PursueState>();
+		}
+		else {
+			aiComponent->currentState = statePool->GetState<IdleState>();
+		}
+	}
+	else if (!aiActive && frameCount >= 100) {
+		anotherCounter++;
+		playerComponent->isControllable = true;
+		aiComponent->currentState = statePool->GetState<IdleState>();
+	}
+	
+	m_CurrentState = aiComponent->currentState;
+	m_CurrentState->Enter(aiEntity);
+}
 
 void StateMachine::SetState(State* newState, Entity* entity)
 {
@@ -484,21 +521,19 @@ void StateMachine::SetCatchTimer(int timer)
 
 StatePool::StatePool(int size)
 {
-	int newSize = size;
+	int numIdleStates = size / 2;
+	int numPursueStates = size / 4;
+	int numCatchStates = size / 4;
 
-	if (newSize % 2 != 0) {
-		newSize++;
-	}
-	for (int i = 0; i < newSize * 0.5f; i++) {
+	for (int i = 0; i < numIdleStates; i++) {
 		pool.push_back(new IdleState());
 	}
-	for (int i = 0; i < newSize * 0.5f; i++) {
+	for (int i = 0; i < numPursueStates; i++) {
 		pool.push_back(new PursueState());
 	}
-	for (int i = 0; i < newSize * 0.5f; i++) {
+	for (int i = 0; i < numCatchStates; i++) {
 		pool.push_back(new CatchState());
 	}
-	int breakPoint = 0;
 }
 
 StatePool::~StatePool()
@@ -531,6 +566,7 @@ State* StatePool::GetState()
 	if (pool.empty()) {
 		pool.push_back(new IdleState());
 	}
+
 	State* state = pool.back();
 	pool.pop_back();
 	return state;

@@ -14,8 +14,6 @@
 Assimp::Importer assimpImporter;
 cTextureManager* textureMan;
 
-void ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel);
-
 struct vertexLayout {
 
     float x, y, z;

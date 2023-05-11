@@ -164,12 +164,13 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
                         if (characterControllerComponent->canJump && velocityComponent->velocity.y != 0.f) {
                             characterControllerComponent->characterController->Jump(velocityComponent->velocity);
                         }
-                    }
 
-                    // Update the transformation on the visual side
-                    if (transformComponent->useModel) {
-                        // If the model matrix is in use
-                        characterControllerComponent->characterController->GetTransform(transformComponent->matModel);
+
+                        // Update the transformation on the visual side
+                        if (transformComponent->useModel) {
+                            // If the model matrix is in use
+                            characterControllerComponent->characterController->GetTransform(transformComponent->matModel);
+                        }
                     }
                 }
 

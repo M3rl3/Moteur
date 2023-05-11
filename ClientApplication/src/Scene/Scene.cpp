@@ -258,7 +258,7 @@ void Scene::Render()
 
         AIComponent* aiComponent = engine->AddComponent<AIComponent>(entityID);
         aiComponent->aiBehaviour = BehaviourType::IDLE;
-        aiComponent->radius = 10.f;
+        aiComponent->radius = 20.f;
     }
     
     {   // Entity "minotaur"

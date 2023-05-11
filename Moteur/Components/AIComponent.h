@@ -42,10 +42,12 @@ public:
 		ComponentType("AIComponent"),
 		aiBehaviour(BehaviourType::SEEK),
 		speed(0.f),
+		catchTimer(0.f),
 		radius(0.f),
 		aiVelocity(glm::vec3(0)),
 		currentState(nullptr),
-		doOnce(true)
+		doOnce(true),
+		aiActive(true)
 	{};
 
 	// The destructor
@@ -53,6 +55,8 @@ public:
 
 	// Trigger radius between player and AI agent
 	float radius;
+
+	float catchTimer;
 
 	// Movement speed
 	float speed;
@@ -67,6 +71,8 @@ public:
 	State* currentState;
 
 	bool doOnce;
+
+	bool aiActive;
 
 private:
 	// The component type

@@ -8,6 +8,7 @@
 #include "../Components/VelocityComponent.h"
 #include "../Components/PlayerComponent.h"
 #include "../Components/MeshComponent.h"
+#include "../Components/CharacterControllerComponent.h"
 
 class StatePool;
 
@@ -93,16 +94,27 @@ public:
 	void Update(float dt, Entity* playerEntity);
 	State* GetCurrentState();
 	void SetState(State* newState, Entity* entity);
+	void SetState(State* newState, StatePool* statePool, Entity* aiEntity, Entity* playerEntity);
 	void SetCatchTimer(int timer);
 
 private:
 	std::map<BehaviourType, std::vector<BehaviourType>> m_ValidTransitions;
 
-	Entity* entity;
 	AIComponent* aiComponent;
-	State* m_CurrentState;
 
-	int catchTimer;
+	TransformComponent* aiTransform;
+	TransformComponent* playerTransform;
+
+	VelocityComponent* aiVelocity;
+
+	PlayerComponent* playerComponent;
+	CharacterControllerComponent* characterController;
+
+	State* m_CurrentState;
+	CatchState* catchState;
+
+	
+	int catchTimer, catchDuration, catchStartTime;
 };
 
 class AISystem : public System
@@ -137,13 +149,10 @@ private:
 
 	Entity* GetPlayerEntity(const std::vector<Entity*>& entities);
 	PlayerComponent* GetPlayerComponent(const std::vector<Entity*>& entities);
+	CharacterControllerComponent* GetCharacterController(const std::vector<Entity*>& entities);
 
 	StateMachine* stateMachine;
 	StatePool* statePool;
-
-	IdleState* idleState;
-	PursueState* pursueState;
-	CatchState* catchState;
 };
 
 class StatePool {
