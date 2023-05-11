@@ -406,10 +406,11 @@ StateMachine::StateMachine() :
 	aiComponent(nullptr),
 	playerTransform(nullptr),
 	aiTransform(nullptr),
+	aiVelocity(nullptr),
+	playerComponent(nullptr),
 	catchTimer(0)
 {
 	m_CurrentState = new IdleState();
-	catchState = new CatchState();
 }
 
 StateMachine::~StateMachine()
@@ -453,7 +454,6 @@ void StateMachine::SetState(State* newState, StatePool* statePool, Entity* aiEnt
 	aiVelocity = aiEntity->GetComponentByType<VelocityComponent>();
 	playerTransform = playerEntity->GetComponentByType<TransformComponent>();
 	playerComponent = playerEntity->GetComponentByType<PlayerComponent>();
-	characterController = playerEntity->GetComponentByType<CharacterControllerComponent>();
 
 	glm::vec3 aiPosition = aiTransform->position;
 	glm::vec3 playerPosition = playerTransform->position;

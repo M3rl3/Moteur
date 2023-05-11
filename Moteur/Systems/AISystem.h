@@ -101,20 +101,14 @@ private:
 	std::map<BehaviourType, std::vector<BehaviourType>> m_ValidTransitions;
 
 	AIComponent* aiComponent;
-
 	TransformComponent* aiTransform;
 	TransformComponent* playerTransform;
-
 	VelocityComponent* aiVelocity;
-
 	PlayerComponent* playerComponent;
-	CharacterControllerComponent* characterController;
 
 	State* m_CurrentState;
-	CatchState* catchState;
-
 	
-	int catchTimer, catchDuration, catchStartTime;
+	int catchTimer;
 };
 
 class AISystem : public System
