@@ -69,4 +69,6 @@ private:
 	AISystem* aiSystem;
 
 	unsigned int shaderID = 0;
+
+	float enemyHealth = 0;
 };

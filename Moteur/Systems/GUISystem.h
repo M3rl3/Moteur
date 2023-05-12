@@ -42,4 +42,6 @@ private:
 
 	MeshComponent* GetPlayerMesh(const std::vector<Entity*>& entities);
 	PlayerComponent* GetPlayerComponent(const std::vector<Entity*>& entities);
+
+	MeshComponent* GetEnemyMesh(const std::vector<Entity*>& entities, std::string meshName);
 };

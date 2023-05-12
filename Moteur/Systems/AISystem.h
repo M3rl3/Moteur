@@ -105,6 +105,8 @@ private:
 	TransformComponent* playerTransform;
 	VelocityComponent* aiVelocity;
 	PlayerComponent* playerComponent;
+	MeshComponent* meshComponent;
+	MeshComponent* playerMesh;
 
 	State* m_CurrentState;
 	

@@ -65,6 +65,9 @@ Scene::Scene()
 
     // Khronos
     timer = new Timer();
+
+    // Enemy Health
+    enemyHealth = 500.f;
 }
 
 // Destructor
@@ -169,6 +172,7 @@ void Scene::Render()
 
         PlayerComponent* playerComponent = engine->AddComponent<PlayerComponent>(entityID);
         playerComponent->isPlayer = true;
+        playerComponent->health = 1000.f;
     }
 
     {   // Entity "creepyMonster"
@@ -186,6 +190,7 @@ void Scene::Render()
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "creepyMonster";
         meshComponent->modelFormat = ModelFormat::PLY;
+        meshComponent->health = enemyHealth;
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
@@ -236,6 +241,7 @@ void Scene::Render()
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "female_warrior";
         meshComponent->modelFormat = ModelFormat::PLY;
+        meshComponent->health = enemyHealth;
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
@@ -276,6 +282,7 @@ void Scene::Render()
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "minotaur";
         meshComponent->modelFormat = ModelFormat::PLY;
+        meshComponent->health = enemyHealth;
         meshComponent->isWireframe = false;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);

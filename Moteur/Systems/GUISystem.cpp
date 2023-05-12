@@ -28,6 +28,11 @@ int selectedtexture;
 
 ImDrawList* drawlist;
 
+MeshComponent* enemyMesh0;
+MeshComponent* enemyMesh1;
+MeshComponent* enemyMesh2;
+MeshComponent* enemyMesh3;
+
 GUISystem::GUISystem() 
 {
     systemName = "GUISystem";
@@ -193,15 +198,51 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     ImGui::Checkbox("Draw Reticle", &drawReticle);
     ImGui::End();
 
-    ImGui::Begin("Health Bar");
-    meshComponent_player = GetPlayerMesh(entities);
-    playerComponent = GetPlayerComponent(entities);
-
     ImVec2 barSize(200, 20);
 
-    ImGui::Text("Player Health: ");
-    // Draw the health bar
-    ImGui::ProgressBar(playerComponent->health, barSize);
+    ImGui::Begin("Health Bar");
+    {
+        playerComponent = GetPlayerComponent(entities);
+
+        playerComponent->health = std::max(0.0f, std::min(playerComponent->health, 1000.0f));
+        float progress = playerComponent->health / 1000.f;
+
+        ImGui::Text("Player Health: ");
+        ImGui::ProgressBar(progress, barSize);
+    }
+    ImGui::End();
+
+    ImGui::Begin("Enemy Health");
+    {
+        MeshComponent* enemyMesh;
+        enemyMesh = GetEnemyMesh(entities, "female_warrior");
+        ImGui::Text("Enemy : %s", enemyMesh->meshName);
+
+        enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, 500.0f));
+        float progress = enemyMesh->health / 500.f;
+
+        ImGui::ProgressBar(progress, barSize);
+    }
+    {
+        MeshComponent* enemyMesh;
+        enemyMesh = GetEnemyMesh(entities, "minotaur");
+        ImGui::Text("Enemy : %s", enemyMesh->meshName);
+
+        enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, 500.0f));
+        float progress = enemyMesh->health / 500.f;
+
+        ImGui::ProgressBar(progress, barSize);
+    }
+    {
+        MeshComponent* enemyMesh;
+        enemyMesh = GetEnemyMesh(entities, "creepyMonster");
+        ImGui::Text("Enemy : %s", enemyMesh->meshName);
+
+        enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, 500.0f));
+        float progress = enemyMesh->health / 500.f;
+
+        ImGui::ProgressBar(progress, barSize);
+    }
     ImGui::End();
     
     ImGui::Begin("Transform Component");
@@ -398,4 +439,21 @@ PlayerComponent* GUISystem::GetPlayerComponent(const std::vector<Entity*>& entit
     }
 
     return nullptr;
+}
+
+MeshComponent* GUISystem::GetEnemyMesh(const std::vector<Entity*>& entities, std::string meshName)
+{
+    MeshComponent* meshComponent = nullptr;
+
+    for (Entity* entity : entities) {
+
+        meshComponent = entity->GetComponentByType<MeshComponent>();
+
+        if (meshComponent != nullptr && meshComponent->meshName == meshName) {
+            return meshComponent;
+        }
+    }
+
+    return nullptr;
+
 }

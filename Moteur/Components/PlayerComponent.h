@@ -25,7 +25,7 @@ public:
 	bool isControllable;
 
 	// Health points of the player
-	int health;
+	float health;
 
 private:
 	// The component type

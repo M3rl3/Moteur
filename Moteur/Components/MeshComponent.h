@@ -68,7 +68,7 @@ public:
 	bool useBones;
 	bool useModelInfo;
 
-	int health;
+	float health;
 
 	Animator* animator;
 

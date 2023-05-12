@@ -69,20 +69,22 @@ void AISystem::Process(const std::vector<Entity*>& entities, float dt)
 
 			if (transformComponent != nullptr && velocityComponent != nullptr) {
 
-				// Set the current state via the state machine
-				stateMachine->SetState(aiComponent->currentState, statePool, currentEntity, playerEntity);
-				stateMachine->Update(dt, playerEntity);
+				if (aiComponent->aiActive) {
+					// Set the current state via the state machine
+					stateMachine->SetState(aiComponent->currentState, statePool, currentEntity, playerEntity);
+					stateMachine->Update(dt, playerEntity);
 
-				// Return the state back to the state pool
-				statePool->ReturnState(aiComponent->currentState);
-
-				// Make the player/AI invisible if their health goes below 0
-				if (playerComponent->health <= 0.f) {
-					meshComponent_player->isVisible = false;
+					// Return the state back to the state pool
+					statePool->ReturnState(aiComponent->currentState);
+				}
+				else {
+					playerComponent->isControllable = true;
 				}
 
-				if (meshComponent->health <= 0.f) {
-					meshComponent->isVisible = false;
+				if (playerComponent->health <= 0) {
+					playerComponent->isControllable = false;
+					meshComponent_player->isVisible = false;
+					aiComponent->aiActive = false;
 				}
 			}
 		}
@@ -449,11 +451,28 @@ void StateMachine::SetState(State* newState, StatePool* statePool, Entity* aiEnt
 		m_CurrentState = newState;
 	}
 
+	meshComponent = aiEntity->GetComponentByType<MeshComponent>();
 	aiComponent = aiEntity->GetComponentByType<AIComponent>();
 	aiTransform = aiEntity->GetComponentByType<TransformComponent>();
 	aiVelocity = aiEntity->GetComponentByType<VelocityComponent>();
 	playerTransform = playerEntity->GetComponentByType<TransformComponent>();
 	playerComponent = playerEntity->GetComponentByType<PlayerComponent>();
+	playerMesh = playerEntity->GetComponentByType<MeshComponent>();
+
+	if (meshComponent->health <= 0.f) {
+		meshComponent->health = 0.f;
+		meshComponent->isVisible = false;
+
+		playerComponent->isControllable = true;
+		aiComponent->aiActive = false;
+	}
+	
+	if (playerMesh->health <= 0.f) {
+		playerMesh->health = 0.f;
+		playerMesh->isVisible = false;
+
+		playerComponent->isControllable = false;
+	}
 
 	glm::vec3 aiPosition = aiTransform->position;
 	glm::vec3 playerPosition = playerTransform->position;
@@ -479,6 +498,12 @@ void StateMachine::SetState(State* newState, StatePool* statePool, Entity* aiEnt
 			aiVelocity->velocity = glm::vec3(0.f);
 			aiComponent->currentState = statePool->GetState<CatchState>();
 
+			// Deduct the health points of both the player and the enemy in question
+			{
+				meshComponent->health--;
+				playerComponent->health--;
+			}
+			
 			catchTimer--;
 			if (catchTimer <= 0) {
 				playerComponent->isControllable = true;
