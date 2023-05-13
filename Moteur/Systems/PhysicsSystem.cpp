@@ -162,9 +162,8 @@ void PhysicsSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                         // Check if the character can jump
                         if (characterControllerComponent->canJump && velocityComponent->velocity.y != 0.f) {
-                            characterControllerComponent->characterController->Jump(velocityComponent->velocity);
+                            characterControllerComponent->characterController->Jump(velocityComponent->velocity * dt);
                         }
-
 
                         // Update the transformation on the visual side
                         if (transformComponent->useModel) {
