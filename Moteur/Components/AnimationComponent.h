@@ -21,20 +21,26 @@ public:
 	AnimationComponent() : 
 		componentType("AnimationComponent"),
 		animator(nullptr),
-		animation(nullptr),
 		useAnimator(true),
-		isPlaying(true)
-	{};
+		isPlaying(true),
+		sprint(false)
+	{
+		for (int i = 0; i < 8; i++) {
+			animation[i] = nullptr;
+		}
+	};
 
 	// Destructor
 	~AnimationComponent() {};
 
 	// The actual animation
 	Animator* animator;
-	Animation* animation;
+	Animation* animation[8];
 
 	bool useAnimator;
 	bool isPlaying;
+
+	bool sprint;
 
 private:
 	// name of the component

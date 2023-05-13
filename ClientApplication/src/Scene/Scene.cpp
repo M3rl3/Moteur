@@ -59,6 +59,7 @@ Scene::Scene()
 	lightSystem = new LightSystem();
 	soundSystem = new SoundSystem();
     aiSystem = new AISystem();
+    animationSystem = new AnimationSystem();
 
     renderSys = renderSystem;
 
@@ -109,8 +110,9 @@ void Scene::Initialize()
 	engine->AddSystem(lightSystem);
 	engine->AddSystem(shaderSystem);
 	engine->AddSystem(motionSystem);
-    engine->AddSystem(aiSystem);
 	engine->AddSystem(soundSystem);
+    engine->AddSystem(aiSystem);
+	engine->AddSystem(animationSystem);
 }
 
 // Render the Scene
@@ -623,6 +625,10 @@ void Scene::UpdateCallback(float dt)
                 velocityComponent->velocity = glm::vec3(0.f);
             }
         }
+
+        if (renderSys->IsKeyPressed(GLFW_KEY_Z)) {
+            animationComponent->sprint = !animationComponent->sprint;
+        }
         break;
 
     case NONE:
@@ -633,7 +639,7 @@ void Scene::UpdateCallback(float dt)
     }
 
     if (gameMode == GameMode::PLAYER) {
-        renderSys->GetCamera()->position = transformComponent->position - glm::vec3(0, -3, 10);
+        renderSys->GetCamera()->position = transformComponent->position - glm::vec3(0, -3, 15);
 
         if (!renderSys->GetMouseStatus()) {
             renderSys->GetCamera()->target = transformComponent->position;
@@ -695,8 +701,10 @@ void Scene::LoadAnimations()
     sModelDrawInfo drawInfo;
     drawInfo = renderSystem->GetDrawInfo("merle");
 
-    animationComponent->animation = new Animation("../assets/meshes/FastRun.fbx", &drawInfo);
-    animationComponent->animator = new Animator(animationComponent->animation);
+    animationComponent->animation[0] = new Animation("../assets/meshes/BreathingIdle.fbx", &drawInfo);
+    animationComponent->animation[1] = new Animation("../assets/meshes/Walking.fbx", &drawInfo);
+    animationComponent->animation[2] = new Animation("../assets/meshes/FastRun.fbx", &drawInfo);
+    animationComponent->animator = new Animator(animationComponent->animation[0]);
 }
 
 void Scene::LoadTextures() 

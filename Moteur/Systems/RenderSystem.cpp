@@ -10,6 +10,7 @@
 #include "../Components/BoundingBoxComponent.h"
 #include "../Components/TextureComponent.h"
 #include "../Components/FBOComponent.h"
+#include "../Components/VelocityComponent.h"
 
 #include "../DrawBoundingBox/DrawBoundingBox.h"
 

@@ -10,6 +10,7 @@
 #include "Systems/SoundSystem.h"
 #include "Systems/AISystem.h"
 #include "Systems/GUISystem.h"
+#include "Systems/AnimationSystem.h"
 
 #include "../Moteur/cAnimationManager/cAnimation.h"
 #include "../Moteur/cAnimationManager/cAnimator.h"
@@ -68,6 +69,7 @@ private:
 	LightSystem* lightSystem;
 	SoundSystem* soundSystem;
 	AISystem* aiSystem;
+	AnimationSystem* animationSystem;
 
 	Animation* tpose;
 
