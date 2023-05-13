@@ -40,6 +40,7 @@ public:
 	
 	// Utility
 	void LoadModels();
+	void LoadAnimations();
 	void LoadTextures();
 	void LoadSounds();
 	void LoadLighting();
@@ -67,6 +68,8 @@ private:
 	LightSystem* lightSystem;
 	SoundSystem* soundSystem;
 	AISystem* aiSystem;
+
+	Animation* tpose;
 
 	unsigned int shaderID = 0;
 

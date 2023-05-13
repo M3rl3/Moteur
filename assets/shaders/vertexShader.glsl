@@ -30,7 +30,7 @@ uniform mat4 View;
 uniform mat4 Projection;
 uniform vec3 cameraPosition;
 uniform bool u_UseBones;
-uniform mat4 BoneMatrices[52];
+uniform mat4 BoneMatrices[100];
 
 void main()
 {
@@ -47,7 +47,7 @@ void main()
 		boneTransform += BoneMatrices[int(vBoneID[1])] * vBoneWeight[1];
 		boneTransform += BoneMatrices[int(vBoneID[2])] * vBoneWeight[2];
 		boneTransform += BoneMatrices[int(vBoneID[3])] * vBoneWeight[3];
-		position = boneTransform * vPosition;
+		position = boneTransform * vec4(vertPosition, 1.0f);
 		//color = vec4(10.f, 0.f, 0.f, 1.f);
 	}
 

@@ -29,7 +29,9 @@ public:
 		modelFormat(PLY),
 		health(1000),
 		useBones(false),
-		useModelInfo(false)
+		useModelInfo(false),
+		animation(nullptr),
+		animator(nullptr)
 	{};
 
 	// Destructor
@@ -70,7 +72,8 @@ public:
 
 	float health;
 
-	Animator* animator;
+	Animator* animator = nullptr;
+	Animation* animation = nullptr;
 
 private:
 	// name of the component

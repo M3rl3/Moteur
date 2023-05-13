@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include "Components/AIComponent.h"
+#include "Components/AnimationComponent.h"
 #include "Components/TransformComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/ShaderComponent.h"
@@ -31,6 +32,7 @@ TransformComponent* transformComponent;
 VelocityComponent* velocityComponent;
 RigidBodyComponent* rigidBodyComponent;
 CharacterControllerComponent* characterControllerComponent;
+AnimationComponent* animationComponent;
 
 // Systems
 RenderSystem* renderSys;
@@ -134,13 +136,7 @@ void Scene::Render()
         meshComponent->meshName = "merle";
         meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->isWireframe = false;
-        meshComponent->useBones = false;
-        meshComponent->useModelInfo = false;
-
-        Animation* tpose;
-        renderSystem->LoadMesh("../assets/meshes/castle_guard.fbx", "krupesh", meshComponent->model, shaderID);
-        tpose = new Animation("../assets/meshes/castle_guard.fbx", &meshComponent->model);
-        meshComponent->animator = new Animator(tpose);
+        meshComponent->useBones = true;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
@@ -156,6 +152,7 @@ void Scene::Render()
 
         SoundComponent* soundComponent = engine->AddComponent<SoundComponent>(entityID);
         soundComponent->isPlaying = true;
+        soundComponent->isPaused = true;
         soundComponent->maxDistance = 1.f;
         soundComponent->soundVolume = 5.f;
         soundComponent->soundName = "my_dark_disquiet.mp3";
@@ -169,6 +166,9 @@ void Scene::Render()
         velocityComponent = engine->AddComponent<VelocityComponent>(entityID);
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
         velocityComponent->useVelocity = false;
+
+        animationComponent = engine->AddComponent<AnimationComponent>(entityID);
+        animationComponent->useAnimator = true;
 
         PlayerComponent* playerComponent = engine->AddComponent<PlayerComponent>(entityID);
         playerComponent->isPlayer = true;
@@ -667,6 +667,7 @@ void Scene::LoadAssets()
 {
     LoadLighting();
     LoadModels();
+    LoadAnimations();
     LoadTextures();
     LoadSounds();
 }
@@ -676,9 +677,9 @@ void Scene::LoadModels()
     // Meshes loaded here
     renderSystem->SetMeshPath("../assets/meshes");
 
+    renderSystem->LoadModel("FastRun.fbx", "merle", ModelFormat::FBX, shaderID);
     renderSystem->LoadModel("skybox_sphere.ply", "skybox", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("steve.ply", "steve", ModelFormat::PLY, shaderID);
-    renderSystem->LoadModel("castle_guard.fbx", "merle", ModelFormat::FBX, shaderID);
     renderSystem->LoadModel("creepyMonster.ply", "creepyMonster", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("female_warrior.ply", "female_warrior", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("plane.ply", "plane", ModelFormat::PLY, shaderID);
@@ -687,7 +688,15 @@ void Scene::LoadModels()
     renderSystem->LoadModel("campfire.ply", "campfire", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("tree.ply", "tree", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("tree1.ply", "tree1", ModelFormat::PLY, shaderID);
+}
 
+void Scene::LoadAnimations() 
+{
+    sModelDrawInfo drawInfo;
+    drawInfo = renderSystem->GetDrawInfo("merle");
+
+    animationComponent->animation = new Animation("../assets/meshes/FastRun.fbx", &drawInfo);
+    animationComponent->animator = new Animator(animationComponent->animation);
 }
 
 void Scene::LoadTextures() 

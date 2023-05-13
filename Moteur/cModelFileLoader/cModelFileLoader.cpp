@@ -375,14 +375,14 @@ void SetVertexBoneDataToDefault(vertLayout* vertex)
     }
 }
 
-void SetVertexBoneData(vertLayout& vertex, int boneID, float weight)
+void SetVertexBoneData(vertLayout* vertex, int boneID, float weight)
 {
     for (int i = 0; i < MAX_BONE_WEIGHTS; ++i)
     {
-        if (vertex.BoneID[i] < 0)
+        if (vertex->BoneID[i] < 0)
         {
-            vertex.BoneWeight[i] = weight;
-            vertex.BoneID[i] = boneID;
+            vertex->BoneWeight[i] = weight;
+            vertex->BoneID[i] = boneID;
             break;
         }
     }
@@ -428,7 +428,7 @@ void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDra
 
         for (unsigned int i = 0; i != fbxModel.numberOfVertices; i++) {
 
-            SetVertexBoneDataToDefault(modelArray);
+            SetVertexBoneDataToDefault(&modelArray[i]);
 
             modelArray[i].x = mesh->mVertices[i].x;
             modelArray[i].y = mesh->mVertices[i].y;
@@ -501,7 +501,7 @@ void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDra
                     int vertexId = weights[weightIndex].mVertexId;
                     float weight = weights[weightIndex].mWeight;
                     assert(vertexId <= fbxModel.numberOfVertices);
-                    SetVertexBoneData(modelArray[vertexId], boneID, weight);
+                    SetVertexBoneData(&modelArray[vertexId], boneID, weight);
                 }
             }
         }

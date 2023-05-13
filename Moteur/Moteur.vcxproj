@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="cAnimationManager\cAnimationManager.cpp" />
+    <ClCompile Include="cAnimationManager\cAnimator.cpp" />
     <ClCompile Include="cFBOManager\cFBO.cpp" />
     <ClCompile Include="cFBOManager\cFBOManager.cpp" />
     <ClCompile Include="cLightManager\cLight.cpp" />

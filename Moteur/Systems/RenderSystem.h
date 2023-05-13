@@ -56,6 +56,8 @@ public:
 	// Load a PNG 2D texture
 	bool Load2DTexturePNG(const char* filePath);
 
+	sModelDrawInfo GetDrawInfo(std::string meshName);
+
 	// Load a BMP skybox texture
 	bool LoadCubeMapTextureBMP(
 		unsigned int& textureID,
@@ -140,4 +142,6 @@ private:
 
 	// Amount of ambient light
 	float ambientLight;
+
+	float deltaTime, lastFrame = 0.f;
 };

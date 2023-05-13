@@ -3,6 +3,7 @@
 #include "../Global.h"
 
 #include "../Components/ShaderComponent.h"
+#include "../Components/AnimationComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/MeshComponent.h"
 #include "../Components/AnimationComponent.h"
@@ -339,6 +340,9 @@ void RenderSystem::Initialize(const char* title, const int width, const int heig
 // Update method called every tick
 void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 {
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
     memcpy(&(lastKeyPressedID[0]), &(keyPressedID[0]), 255);
 
     // Cull back facing triangles
@@ -856,34 +860,38 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
                 {
                     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
                 }
-            }          
-
-            // Manage animations
-            if (animationComponent != nullptr) {
-
             }
 
             // Find model draw info
             sModelDrawInfo modelInfo;
             std::string meshName;
 
-            if (meshComponent->meshName != "") {
-                meshName = meshComponent->meshName;
-            }
-            else {
-                meshName = meshComponent->model.meshName;
-            }
+            if (meshComponent != nullptr) {
 
-            if (meshComponent->useModelInfo) {
-                modelInfo = meshComponent->model;
+                if (meshComponent->meshName != "") {
+                    meshName = meshComponent->meshName;
+                }
+                else {
+                    meshName = meshComponent->model.meshName;
+                }
+
+                if (meshComponent->useModelInfo) {
+                    modelInfo = meshComponent->model;
+                }
             }
             
-            if (meshComponent->useBones) {
-                auto transforms = meshComponent->animator->GetFinalBoneMatrices();
+            // Manage animations
+            if (animationComponent != nullptr) {
 
-                for (int i = 0; i < transforms.size(); i++) {
-                    GLint boneLoc = glGetUniformLocation(shaderComponent->shaderID, std::string("BoneMatrices[" + std::to_string(i) + "]").c_str());
-                    glUniformMatrix4fv(boneLoc, 1, GL_FALSE, glm::value_ptr(transforms[i]));
+                if (animationComponent->useAnimator) {
+
+                    animationComponent->animator->UpdateAnimation(deltaTime);
+                    std::vector<glm::mat4> transforms = animationComponent->animator->GetFinalBoneMatrices();
+
+                    for (int i = 0; i < transforms.size(); i++) {
+                        GLint boneLoc = glGetUniformLocation(shaderComponent->shaderID, std::string("BoneMatrices[" + std::to_string(i) + "]").c_str());
+                        glUniformMatrix4fv(boneLoc, 1, GL_FALSE, glm::value_ptr(transforms[i]));
+                    }
                 }
             }
 
@@ -975,7 +983,8 @@ void RenderSystem::SetMeshPath(std::string filePath)
 // Loads model from ply file and gets it into the VAO
 bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelDrawInfo& plyModel, unsigned int shaderID)
 {
-    modelFileLoader->LoadModelFBX(fileName, plyModel);
+    sModelDrawInfo model;
+    modelFileLoader->LoadModelFBX(fileName, model);
 
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
         std::cout << "Model " << modelName << " loaded successfully." << std::endl;
@@ -985,6 +994,8 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
         std::cout << "Could not load model " << modelName << " into VAO" << std::endl;
         return false;
     }
+
+    plyModel = model;
 }
 
 bool RenderSystem::LoadModel(std::string fileName, std::string modelName, ModelFormat modelType, unsigned int shaderID)
@@ -1088,6 +1099,16 @@ bool RenderSystem::Load2DTexturePNG(const char* filePath)
         std::cout << "Error: failed to load " << filePath << " texture." << std::endl;
         return false;
     }
+}
+
+sModelDrawInfo RenderSystem::GetDrawInfo(std::string meshName)
+{
+    sModelDrawInfo modelInfo;
+    if (vaoManager->FindDrawInfoByModelName(meshName, modelInfo))
+    {
+        std::cout << meshName << " model found" << std::endl;
+    }
+    return modelInfo;
 }
 
 // Load a BMP skybox texture

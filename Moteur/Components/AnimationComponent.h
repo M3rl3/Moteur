@@ -2,7 +2,7 @@
 
 #include <ECS/Component.h>
 
-#include "../cAnimationManager/Animation.h"
+#include "../cAnimationManager/cAnimator.h"
 
 #include <glm/glm.hpp>
 
@@ -19,24 +19,24 @@ struct AnimationComponent : Component {
 public:
 	// Constructor
 	AnimationComponent() : 
-		componentType("AnimationComponent")
+		componentType("AnimationComponent"),
+		animator(nullptr),
+		animation(nullptr),
+		useAnimator(true),
+		isPlaying(true)
 	{};
 
 	// Destructor
 	~AnimationComponent() {};
 
 	// The actual animation
-	Animations animation;
+	Animator* animator;
+	Animation* animation;
 
-	// Character animation
-	std::vector<glm::mat4> BoneModelMatrices;
-	std::vector<glm::mat4> GlobalTransformations;
-	glm::mat4 BoneRotationMatrices[66];
-
-	bool isCharacterAnimation;
+	bool useAnimator;
+	bool isPlaying;
 
 private:
-
 	// name of the component
 	std::string componentType;
 };

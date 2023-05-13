@@ -179,6 +179,9 @@
     <ClCompile Include="cFBOManager\cFBOManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cAnimationManager\cAnimator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenGL.h">
