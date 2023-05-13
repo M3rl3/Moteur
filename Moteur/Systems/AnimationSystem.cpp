@@ -44,16 +44,16 @@ void AnimationSystem::Process(const std::vector<Entity*>& entities, float dt)
 		switch (animationComponent->animationState)
 		{
 		case AnimationState::BREATHING_IDLE: {
-			animationComponent->animator->PlayAnimation(animationComponent->animation[0], false);
+			animationComponent->animator->PlayAnimation(animationComponent->animation[BREATHING_IDLE], false);
 			break;
 		}
 		case AnimationState::WALK: {
 			velocityComponent->velocity *= 0.6f;
-			animationComponent->animator->PlayAnimation(animationComponent->animation[1], false);
+			animationComponent->animator->PlayAnimation(animationComponent->animation[WALK], false);
 			break;
 		}
 		case AnimationState::SPRINT: {
-			animationComponent->animator->PlayAnimation(animationComponent->animation[2], false);
+			animationComponent->animator->PlayAnimation(animationComponent->animation[SPRINT], false);
 			break;
 		}
 		default:

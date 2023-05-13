@@ -71,8 +71,6 @@ private:
 	AISystem* aiSystem;
 	AnimationSystem* animationSystem;
 
-	Animation* tpose;
-
 	unsigned int shaderID = 0;
 
 	float enemyHealth = 0;

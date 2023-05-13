@@ -701,10 +701,10 @@ void Scene::LoadAnimations()
     sModelDrawInfo drawInfo;
     drawInfo = renderSystem->GetDrawInfo("merle");
 
-    animationComponent->animation[0] = new Animation("../assets/meshes/BreathingIdle.fbx", &drawInfo);
-    animationComponent->animation[1] = new Animation("../assets/meshes/Walking.fbx", &drawInfo);
-    animationComponent->animation[2] = new Animation("../assets/meshes/FastRun.fbx", &drawInfo);
-    animationComponent->animator = new Animator(animationComponent->animation[0]);
+    animationComponent->animation[BREATHING_IDLE] = new Animation("../assets/meshes/BreathingIdle.fbx", &drawInfo);
+    animationComponent->animation[WALK] = new Animation("../assets/meshes/Walking.fbx", &drawInfo);
+    animationComponent->animation[SPRINT] = new Animation("../assets/meshes/FastRun.fbx", &drawInfo);
+    animationComponent->animator = new Animator(animationComponent->animation[BREATHING_IDLE]);
 }
 
 void Scene::LoadTextures() 
