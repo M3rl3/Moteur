@@ -520,56 +520,6 @@ void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDra
             }
         }
 
-        std::vector<aiBone*> boneArray(mesh->mNumBones);
-
-        for (int i = 0; i < mesh->mNumBones; i++) {
-            aiBone* bone = mesh->mBones[i];
-
-            boneArray[i] = bone;
-        }
-        
-        int numBones = mesh->mNumBones;
-
-        for (int i = 0; i < numBones; i++) {
-            aiBone* bone = mesh->mBones[i];
-            int numWeights = bone->mNumWeights;
-
-            /*for (unsigned int j = 0; j < 4; j++) {
-                if (j < numBones) {
-                    std::string boneName = bone->mName.data;
-                    unsigned int boneIndex = fbxModel.m_BoneInfoMap[boneName].id;
-                    modelArray[i].BoneID[j] = boneIndex;
-                    modelArray[i].BoneWeight[j] = bone->mWeights[j].mWeight;
-                }
-                else {
-                    modelArray[i].BoneID[j] = 0;
-                    modelArray[i].BoneWeight[j] = 0.0f;
-                }
-            }*/
-
-            // Copy over the bone IDs
-            //for (int j = 0; j < 4; j++) {
-            //    if (j < bone->mNumWeights) {
-            //        modelArray[i].BoneID[j] = GetBoneIDFromName(boneName, boneArray);
-            //    }
-            //    else {
-            //        // Set the bone ID to -1 if there are fewer than 4 weights for this bone
-            //        modelArray[i].BoneID[j] = -1;
-            //    }
-            //}
-
-            // Copy over the bone weights
-            for (int j = 0; j < 4; j++) {
-                if (j < numWeights) {
-                    modelArray[i].BoneWeight[j] = bone->mWeights[j].mWeight + 50;
-                }
-                else {
-                    // Set the bone weight to 0 if there are fewer than 4 weights for this bone
-                    modelArray[i].BoneWeight[j] = 0.0f;
-                }
-            }
-        }
-
         // Copy the vertex data
         fbxModel.pVertices = new vertLayout[fbxModel.numberOfVertices];
 

@@ -133,10 +133,10 @@ bool cVAOManager::LoadModelIntoVAO(
 		GL_STATIC_DRAW);
 	// glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	if (error != GL_NO_ERROR) {
+	/*if (error != GL_NO_ERROR) {
 		std::cout << "OpenGL has reported an error: " << error << std::endl;
 		return false;
-	}
+	}*/
 
 	// Copy the index buffer into the video card, too
 	// Create an index buffer.
@@ -150,10 +150,10 @@ bool cVAOManager::LoadModelIntoVAO(
 		GL_STATIC_DRAW);
 	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	if (error != GL_NO_ERROR) {
+	/*if (error != GL_NO_ERROR) {
 		std::cout << "OpenGL has reported an error: " << error << std::endl;
 		return false;
-	}
+	}*/
 
 	// Set the vertex attributes.
 
@@ -215,10 +215,10 @@ bool cVAOManager::LoadModelIntoVAO(
 							sizeof(vertLayout),						// Stride	(number of bytes)
 							(void*)offsetof(vertLayout, BoneWeight[0]));
 
-	if (error != GL_NO_ERROR) {
+	/*if (error != GL_NO_ERROR) {
 		std::cout << "OpenGL has reported an error: " << error << std::endl;
 		return false;
-	}
+	}*/
 
 	// Now that all the parts are set up, set the VAO to zero
 	glBindVertexArray(0);
@@ -235,14 +235,13 @@ bool cVAOManager::LoadModelIntoVAO(
 	glDisableVertexAttribArray(vBoneIDLocation);
 	glDisableVertexAttribArray(vBoneWeightLocation);
 
-	if (error != GL_NO_ERROR) {
+	/*if (error != GL_NO_ERROR) {
 		std::cout << "OpenGL has reported an error: " << error << std::endl;
 		return false;
-	}
+	}*/
 
 	// Store the draw information into the map
 	this->m_map_ModelName_to_VAOID[drawInfo.meshName] = drawInfo;
-
 
 	return true;
 }
