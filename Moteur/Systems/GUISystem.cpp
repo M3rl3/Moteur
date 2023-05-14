@@ -215,7 +215,7 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     ImGui::Begin("Enemy Health");
     {
         MeshComponent* enemyMesh;
-        enemyMesh = GetEnemyMesh(entities, "female_warrior");
+        enemyMesh = GetEnemyMesh(entities, "femaleWarrior");
         ImGui::Text("Enemy : %s", enemyMesh->meshName);
 
         enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, 500.0f));

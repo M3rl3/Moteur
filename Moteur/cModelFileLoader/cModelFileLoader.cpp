@@ -388,6 +388,19 @@ void SetVertexBoneData(vertLayout* vertex, int boneID, float weight)
     }
 }
 
+unsigned int GetBoneIDFromName(const std::string& boneName, const std::vector<aiBone*>& boneArray)
+{
+    for (unsigned int i = 0; i < boneArray.size(); i++)
+    {
+        aiBone* bone = boneArray[i];
+        if (bone->mName.data == boneName)
+        {
+            return i;
+        }
+    }
+    return 0;
+}
+
 void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDrawInfo& fbxModel)
 {
     vertLayout* modelArray = NULL;
@@ -492,6 +505,7 @@ void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDra
                 {
                     boneID = fbxModel.m_BoneInfoMap[boneName].id;
                 }
+
                 assert(boneID != -1);
                 auto weights = mesh->mBones[boneIndex]->mWeights;
                 int numWeights = mesh->mBones[boneIndex]->mNumWeights;
@@ -502,6 +516,56 @@ void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDra
                     float weight = weights[weightIndex].mWeight;
                     assert(vertexId <= fbxModel.numberOfVertices);
                     SetVertexBoneData(&modelArray[vertexId], boneID, weight);
+                }
+            }
+        }
+
+        std::vector<aiBone*> boneArray(mesh->mNumBones);
+
+        for (int i = 0; i < mesh->mNumBones; i++) {
+            aiBone* bone = mesh->mBones[i];
+
+            boneArray[i] = bone;
+        }
+        
+        int numBones = mesh->mNumBones;
+
+        for (int i = 0; i < numBones; i++) {
+            aiBone* bone = mesh->mBones[i];
+            int numWeights = bone->mNumWeights;
+
+            /*for (unsigned int j = 0; j < 4; j++) {
+                if (j < numBones) {
+                    std::string boneName = bone->mName.data;
+                    unsigned int boneIndex = fbxModel.m_BoneInfoMap[boneName].id;
+                    modelArray[i].BoneID[j] = boneIndex;
+                    modelArray[i].BoneWeight[j] = bone->mWeights[j].mWeight;
+                }
+                else {
+                    modelArray[i].BoneID[j] = 0;
+                    modelArray[i].BoneWeight[j] = 0.0f;
+                }
+            }*/
+
+            // Copy over the bone IDs
+            //for (int j = 0; j < 4; j++) {
+            //    if (j < bone->mNumWeights) {
+            //        modelArray[i].BoneID[j] = GetBoneIDFromName(boneName, boneArray);
+            //    }
+            //    else {
+            //        // Set the bone ID to -1 if there are fewer than 4 weights for this bone
+            //        modelArray[i].BoneID[j] = -1;
+            //    }
+            //}
+
+            // Copy over the bone weights
+            for (int j = 0; j < 4; j++) {
+                if (j < numWeights) {
+                    modelArray[i].BoneWeight[j] = bone->mWeights[j].mWeight + 50;
+                }
+                else {
+                    // Set the bone weight to 0 if there are fewer than 4 weights for this bone
+                    modelArray[i].BoneWeight[j] = 0.0f;
                 }
             }
         }

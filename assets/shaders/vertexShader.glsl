@@ -47,8 +47,7 @@ void main()
 		boneTransform += BoneMatrices[int(vBoneID[1])] * vBoneWeight[1];
 		boneTransform += BoneMatrices[int(vBoneID[2])] * vBoneWeight[2];
 		boneTransform += BoneMatrices[int(vBoneID[3])] * vBoneWeight[3];
-		position = boneTransform * vec4(vertPosition, 1.0f);
-		//color = vec4(10.f, 0.f, 0.f, 1.f);
+		position = boneTransform * position;
 	}
 
 	gl_Position = MVP * position;

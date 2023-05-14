@@ -9,7 +9,6 @@ Animator::Animator(Animation* animation)
 
     for (int i = 0; i < 100; i++)
         m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
-    int breakme = 0;
 }
 
 void Animator::UpdateAnimation(float dt)

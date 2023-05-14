@@ -886,7 +886,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
 
                 if (animationComponent->useAnimator) {
 
-                    animationComponent->animator->UpdateAnimation(deltaTime);
+                    animationComponent->animator->UpdateAnimation(dt);
                     std::vector<glm::mat4> transforms = animationComponent->animator->GetFinalBoneMatrices();
 
                     for (int i = 0; i < transforms.size(); i++) {

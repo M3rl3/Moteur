@@ -34,6 +34,11 @@ RigidBodyComponent* rigidBodyComponent;
 CharacterControllerComponent* characterControllerComponent;
 AnimationComponent* animationComponent;
 
+// AI animation attributes
+AnimationComponent* ac_femaleWarrior;
+AnimationComponent* ac_creepyMonster;
+AnimationComponent* ac_minotaur;
+
 // Systems
 RenderSystem* renderSys;
 
@@ -154,9 +159,9 @@ void Scene::Render()
 
         SoundComponent* soundComponent = engine->AddComponent<SoundComponent>(entityID);
         soundComponent->isPlaying = true;
-        soundComponent->isPaused = true;
+        soundComponent->isPaused = false;
         soundComponent->maxDistance = 1.f;
-        soundComponent->soundVolume = 5.f;
+        soundComponent->soundVolume = 2.5f;
         soundComponent->soundName = "my_dark_disquiet.mp3";
 
         characterControllerComponent = engine->AddComponent<CharacterControllerComponent>(entityID);
@@ -183,7 +188,7 @@ void Scene::Render()
 
         TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(100.f, 2.4f, 65.f);
-        transformComponent->scale = glm::vec3(1.f);
+        transformComponent->scale = glm::vec3(0.015f);
         transformComponent->rotation = glm::quat(glm::vec3(0.f, 0.f, 0.f));
 
         ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
@@ -191,9 +196,10 @@ void Scene::Render()
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "creepyMonster";
-        meshComponent->modelFormat = ModelFormat::PLY;
+        meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->health = enemyHealth;
         meshComponent->isWireframe = false;
+        meshComponent->useBones = true;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
@@ -226,25 +232,30 @@ void Scene::Render()
         AIComponent* aiComponent = engine->AddComponent<AIComponent>(entityID);
         aiComponent->aiBehaviour = BehaviourType::IDLE;
         aiComponent->radius = 10.f;
+
+        ac_creepyMonster = engine->AddComponent<AnimationComponent>(entityID);
+        ac_creepyMonster->useAnimator = true;
+        ac_creepyMonster->sprint = true;
     }
 
-    {   // Entity "female_warrior"
+    {   // Entity "femaleWarrior"
 
         unsigned int entityID = engine->CreateEntity();
 
         TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(100.f, 2.4f, 55.f);
-        transformComponent->scale = glm::vec3(0.2f);
-        transformComponent->rotation = glm::quat(glm::vec3(0.f, glm::radians(180.f), 0.f));
+        transformComponent->scale = glm::vec3(0.02f);
+        transformComponent->rotation = glm::quat(glm::vec3(0.f, glm::radians(-180.f), 0.f));
 
         ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
-        meshComponent->meshName = "female_warrior";
-        meshComponent->modelFormat = ModelFormat::PLY;
+        meshComponent->meshName = "femaleWarrior";
+        meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->health = enemyHealth;
         meshComponent->isWireframe = false;
+        meshComponent->useBones = true;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = true;
@@ -267,6 +278,10 @@ void Scene::Render()
         AIComponent* aiComponent = engine->AddComponent<AIComponent>(entityID);
         aiComponent->aiBehaviour = BehaviourType::IDLE;
         aiComponent->radius = 20.f;
+
+        ac_femaleWarrior = engine->AddComponent<AnimationComponent>(entityID);
+        ac_femaleWarrior->useAnimator = true;
+        ac_femaleWarrior->sprint = true;
     }
     
     {   // Entity "minotaur"
@@ -276,16 +291,17 @@ void Scene::Render()
         TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
         transformComponent->position = glm::vec3(105.f, 2.4f, 60.f);
         transformComponent->scale = glm::vec3(0.025);
-        transformComponent->rotation = glm::quat(glm::vec3(0.f, glm::radians(90.f), 0.f));
+        transformComponent->rotation = glm::quat(glm::vec3(0.f, glm::radians(-90.f), 0.f));
 
         ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
         shaderComponent->shaderID = shaderID;
 
         MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
         meshComponent->meshName = "minotaur";
-        meshComponent->modelFormat = ModelFormat::PLY;
+        meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->health = enemyHealth;
         meshComponent->isWireframe = false;
+        meshComponent->useBones = true;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = true;
@@ -307,7 +323,11 @@ void Scene::Render()
 
         AIComponent* aiComponent = engine->AddComponent<AIComponent>(entityID);
         aiComponent->aiBehaviour = BehaviourType::IDLE;
-        aiComponent->radius = 10.f;
+        aiComponent->radius = 30.f;
+
+        ac_minotaur = engine->AddComponent<AnimationComponent>(entityID);
+        ac_minotaur->useAnimator = true;
+        ac_minotaur->sprint = false;
     }
 
     {   // Entity "plane"
@@ -683,14 +703,12 @@ void Scene::LoadModels()
     // Meshes loaded here
     renderSystem->SetMeshPath("../assets/meshes");
 
-    renderSystem->LoadModel("FastRun.fbx", "merle", ModelFormat::FBX, shaderID);
+    renderSystem->LoadModel("castleGuard.fbx", "merle", ModelFormat::FBX, shaderID);
     renderSystem->LoadModel("skybox_sphere.ply", "skybox", ModelFormat::PLY, shaderID);
-    renderSystem->LoadModel("steve.ply", "steve", ModelFormat::PLY, shaderID);
-    renderSystem->LoadModel("creepyMonster.ply", "creepyMonster", ModelFormat::PLY, shaderID);
-    renderSystem->LoadModel("female_warrior.ply", "female_warrior", ModelFormat::PLY, shaderID);
+    renderSystem->LoadModel("creepyMonster.fbx", "creepyMonster", ModelFormat::FBX, shaderID);
+    renderSystem->LoadModel("femaleWarrior.fbx", "femaleWarrior", ModelFormat::FBX, shaderID);
+    renderSystem->LoadModel("minotaur.fbx", "minotaur", ModelFormat::FBX, shaderID);
     renderSystem->LoadModel("plane.ply", "plane", ModelFormat::PLY, shaderID);
-    renderSystem->LoadModel("imposter.ply", "flame", ModelFormat::PLY, shaderID);
-    renderSystem->LoadModel("minotaur.ply", "minotaur", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("campfire.ply", "campfire", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("tree.ply", "tree", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("tree1.ply", "tree1", ModelFormat::PLY, shaderID);
@@ -698,13 +716,42 @@ void Scene::LoadModels()
 
 void Scene::LoadAnimations() 
 {
-    sModelDrawInfo drawInfo;
-    drawInfo = renderSystem->GetDrawInfo("merle");
+    {
+        sModelDrawInfo drawInfo;
+        drawInfo = renderSystem->GetDrawInfo("merle");
 
-    animationComponent->animation[BREATHING_IDLE] = new Animation("../assets/meshes/BreathingIdle.fbx", &drawInfo);
-    animationComponent->animation[WALK] = new Animation("../assets/meshes/Walking.fbx", &drawInfo);
-    animationComponent->animation[SPRINT] = new Animation("../assets/meshes/FastRun.fbx", &drawInfo);
-    animationComponent->animator = new Animator(animationComponent->animation[BREATHING_IDLE]);
+        animationComponent->animation[BREATHING_IDLE] = new Animation("../assets/meshes/BreathingIdle.fbx", &drawInfo);
+        animationComponent->animation[WALK] = new Animation("../assets/meshes/Walking.fbx", &drawInfo);
+        animationComponent->animation[SPRINT] = new Animation("../assets/meshes/FastRun.fbx", &drawInfo);
+        animationComponent->animator = new Animator(animationComponent->animation[BREATHING_IDLE]);
+    }
+    
+    {
+        sModelDrawInfo drawInfo;
+        drawInfo = renderSystem->GetDrawInfo("femaleWarrior");
+
+        ac_femaleWarrior->animation[BREATHING_IDLE] = new Animation("../assets/meshes/FemaleIdle.fbx", &drawInfo);
+        ac_femaleWarrior->animation[SPRINT] = new Animation("../assets/meshes/FemaleRun.fbx", &drawInfo);
+        ac_femaleWarrior->animator = new Animator(ac_femaleWarrior->animation[BREATHING_IDLE]);
+    }
+    
+    {
+        sModelDrawInfo drawInfo;
+        drawInfo = renderSystem->GetDrawInfo("creepyMonster");
+
+        ac_creepyMonster->animation[BREATHING_IDLE] = new Animation("../assets/meshes/MutantIdle.fbx", &drawInfo);
+        ac_creepyMonster->animation[SPRINT] = new Animation("../assets/meshes/MutantRun.fbx", &drawInfo);
+        ac_creepyMonster->animator = new Animator(ac_creepyMonster->animation[BREATHING_IDLE]);
+    }
+
+    {
+        sModelDrawInfo drawInfo;
+        drawInfo = renderSystem->GetDrawInfo("minotaur");
+
+        ac_minotaur->animation[BREATHING_IDLE] = new Animation("../assets/meshes/MinotaurIdle.fbx", &drawInfo);
+        ac_minotaur->animation[WALK] = new Animation("../assets/meshes/MinotaurWalk.fbx", &drawInfo);
+        ac_minotaur->animator = new Animator(ac_minotaur->animation[BREATHING_IDLE]);
+    }
 }
 
 void Scene::LoadTextures() 
@@ -862,117 +909,117 @@ void Scene::CreateFlatPlane() {
         position.z += 20.f;
     }
 
-    //{   // Entity "tree"
+    {   // Entity "tree"
 
-    //    unsigned int entityID = engine->CreateEntity();
+        unsigned int entityID = engine->CreateEntity();
 
-    //    TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
-    //    transformComponent->position = glm::vec3(100.f, 1.9f, 20.f);
-    //    transformComponent->scale = glm::vec3(2.f);
-    //    transformComponent->rotation = glm::quat(glm::vec3(0.f, 0.f, 0.f));
+        TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
+        transformComponent->position = glm::vec3(100.f, 1.9f, 20.f);
+        transformComponent->scale = glm::vec3(2.f);
+        transformComponent->rotation = glm::quat(glm::vec3(0.f, 0.f, 0.f));
 
-    //    ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
-    //    shaderComponent->shaderID = shaderID;
+        ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
+        shaderComponent->shaderID = shaderID;
 
-    //    MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
-    //    meshComponent->meshName = "tree1";
-    //    meshComponent->modelFormat = ModelFormat::PLY;
+        MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
+        meshComponent->meshName = "tree1";
+        meshComponent->modelFormat = ModelFormat::PLY;
 
-    //    RigidBodyComponent* rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
-    //    rigidBodyComponent->bodyShape = new physics::CylinderShape(glm::vec3(1.f));
-    //    rigidBodyComponent->rigidBodyDesc.isStatic = true;
-    //    rigidBodyComponent->rigidBodyDesc.useInertia = false;
-    //    rigidBodyComponent->usePhysics = true;
+        RigidBodyComponent* rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
+        rigidBodyComponent->bodyShape = new physics::CylinderShape(glm::vec3(1.f));
+        rigidBodyComponent->rigidBodyDesc.isStatic = true;
+        rigidBodyComponent->rigidBodyDesc.useInertia = false;
+        rigidBodyComponent->usePhysics = true;
 
-    //    TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
-    //    textureComponent->textureFormat = TextureFormat::PNG;
-    //    textureComponent->useTexture = true;
-    //    textureComponent->textures[0] = "tree001.png";
-    //    textureComponent->textureRatios[0] = 0.45f;
-    //    textureComponent->textures[1] = "tree001_SubsurfaceColor.png";
-    //    textureComponent->textureRatios[1] = 0.5f;
-    //    textureComponent->textures[2] = "tree001_Gloss.png";
-    //    textureComponent->textureRatios[2] = 0.01f;
-    //    textureComponent->textures[3] = "tree001_Opacity.png";
-    //    textureComponent->textureRatios[3] = 1.f;
+        TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
+        textureComponent->textureFormat = TextureFormat::PNG;
+        textureComponent->useTexture = true;
+        textureComponent->textures[0] = "tree001.png";
+        textureComponent->textureRatios[0] = 0.45f;
+        textureComponent->textures[1] = "tree001_SubsurfaceColor.png";
+        textureComponent->textureRatios[1] = 0.5f;
+        textureComponent->textures[2] = "tree001_Gloss.png";
+        textureComponent->textureRatios[2] = 0.01f;
+        textureComponent->textures[3] = "tree001_Opacity.png";
+        textureComponent->textureRatios[3] = 1.f;
 
-    //    LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
-    //    litComponent->isLit = true;
-    //}
-    //
-    //{   // Entity "tree"
+        LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
+        litComponent->isLit = true;
+    }
+    
+    {   // Entity "tree"
 
-    //    unsigned int entityID = engine->CreateEntity();
+        unsigned int entityID = engine->CreateEntity();
 
-    //    TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
-    //    transformComponent->position = glm::vec3(80.f, 1.9f, 60.f);
-    //    transformComponent->scale = glm::vec3(2.f);
-    //    transformComponent->rotation = glm::quat(glm::vec3(0.f, 0.f, 0.f));
+        TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
+        transformComponent->position = glm::vec3(80.f, 1.9f, 60.f);
+        transformComponent->scale = glm::vec3(2.f);
+        transformComponent->rotation = glm::quat(glm::vec3(0.f, 0.f, 0.f));
 
-    //    ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
-    //    shaderComponent->shaderID = shaderID;
+        ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
+        shaderComponent->shaderID = shaderID;
 
-    //    MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
-    //    meshComponent->meshName = "tree1";
-    //    meshComponent->modelFormat = ModelFormat::PLY;
+        MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
+        meshComponent->meshName = "tree1";
+        meshComponent->modelFormat = ModelFormat::PLY;
 
-    //    RigidBodyComponent* rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
-    //    rigidBodyComponent->bodyShape = new physics::CylinderShape(glm::vec3(1.f));
-    //    rigidBodyComponent->rigidBodyDesc.isStatic = true;
-    //    rigidBodyComponent->rigidBodyDesc.useInertia = false;
-    //    rigidBodyComponent->usePhysics = true;
+        RigidBodyComponent* rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
+        rigidBodyComponent->bodyShape = new physics::CylinderShape(glm::vec3(1.f));
+        rigidBodyComponent->rigidBodyDesc.isStatic = true;
+        rigidBodyComponent->rigidBodyDesc.useInertia = false;
+        rigidBodyComponent->usePhysics = true;
 
-    //    TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
-    //    textureComponent->textureFormat = TextureFormat::PNG;
-    //    textureComponent->useTexture = true;
-    //    textureComponent->textures[0] = "tree001.png";
-    //    textureComponent->textureRatios[0] = 0.45f;
-    //    textureComponent->textures[1] = "tree001_SubsurfaceColor.png";
-    //    textureComponent->textureRatios[1] = 0.5f;
-    //    textureComponent->textures[2] = "tree001_Gloss.png";
-    //    textureComponent->textureRatios[2] = 0.01f;
-    //    textureComponent->textures[3] = "tree001_Opacity.png";
-    //    textureComponent->textureRatios[3] = 1.f;
+        TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
+        textureComponent->textureFormat = TextureFormat::PNG;
+        textureComponent->useTexture = true;
+        textureComponent->textures[0] = "tree001.png";
+        textureComponent->textureRatios[0] = 0.45f;
+        textureComponent->textures[1] = "tree001_SubsurfaceColor.png";
+        textureComponent->textureRatios[1] = 0.5f;
+        textureComponent->textures[2] = "tree001_Gloss.png";
+        textureComponent->textureRatios[2] = 0.01f;
+        textureComponent->textures[3] = "tree001_Opacity.png";
+        textureComponent->textureRatios[3] = 1.f;
 
-    //    LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
-    //    litComponent->isLit = true;
-    //}
-    //
-    //{   // Entity "tree"
+        LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
+        litComponent->isLit = true;
+    }
+    
+    {   // Entity "tree"
 
-    //    unsigned int entityID = engine->CreateEntity();
+        unsigned int entityID = engine->CreateEntity();
 
-    //    TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
-    //    transformComponent->position = glm::vec3(20.f, 1.9f, 40.f);
-    //    transformComponent->scale = glm::vec3(2.f);
-    //    transformComponent->rotation = glm::quat(glm::vec3(0.f, 0.f, 0.f));
+        TransformComponent* transformComponent = engine->AddComponent<TransformComponent>(entityID);
+        transformComponent->position = glm::vec3(20.f, 1.9f, 40.f);
+        transformComponent->scale = glm::vec3(2.f);
+        transformComponent->rotation = glm::quat(glm::vec3(0.f, 0.f, 0.f));
 
-    //    ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
-    //    shaderComponent->shaderID = shaderID;
+        ShaderComponent* shaderComponent = engine->AddComponent<ShaderComponent>(entityID);
+        shaderComponent->shaderID = shaderID;
 
-    //    MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
-    //    meshComponent->meshName = "tree1";
-    //    meshComponent->modelFormat = ModelFormat::PLY;
+        MeshComponent* meshComponent = engine->AddComponent<MeshComponent>(entityID);
+        meshComponent->meshName = "tree1";
+        meshComponent->modelFormat = ModelFormat::PLY;
 
-    //    RigidBodyComponent* rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
-    //    rigidBodyComponent->bodyShape = new physics::CylinderShape(glm::vec3(1.f));
-    //    rigidBodyComponent->rigidBodyDesc.isStatic = true;
-    //    rigidBodyComponent->rigidBodyDesc.useInertia = false;
-    //    rigidBodyComponent->usePhysics = true;
+        RigidBodyComponent* rigidBodyComponent = engine->AddComponent<RigidBodyComponent>(entityID);
+        rigidBodyComponent->bodyShape = new physics::CylinderShape(glm::vec3(1.f));
+        rigidBodyComponent->rigidBodyDesc.isStatic = true;
+        rigidBodyComponent->rigidBodyDesc.useInertia = false;
+        rigidBodyComponent->usePhysics = true;
 
-    //    TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
-    //    textureComponent->textureFormat = TextureFormat::PNG;
-    //    textureComponent->useTexture = true;
-    //    textureComponent->textures[0] = "tree001.png";
-    //    textureComponent->textureRatios[0] = 0.45f;
-    //    textureComponent->textures[1] = "tree001_SubsurfaceColor.png";
-    //    textureComponent->textureRatios[1] = 0.5f;
-    //    textureComponent->textures[2] = "tree001_Gloss.png";
-    //    textureComponent->textureRatios[2] = 0.01f;
-    //    textureComponent->textures[3] = "tree001_Opacity.png";
-    //    textureComponent->textureRatios[3] = 1.f;
+        TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
+        textureComponent->textureFormat = TextureFormat::PNG;
+        textureComponent->useTexture = true;
+        textureComponent->textures[0] = "tree001.png";
+        textureComponent->textureRatios[0] = 0.45f;
+        textureComponent->textures[1] = "tree001_SubsurfaceColor.png";
+        textureComponent->textureRatios[1] = 0.5f;
+        textureComponent->textures[2] = "tree001_Gloss.png";
+        textureComponent->textureRatios[2] = 0.01f;
+        textureComponent->textures[3] = "tree001_Opacity.png";
+        textureComponent->textureRatios[3] = 1.f;
 
-    //    LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
-    //    litComponent->isLit = true;
-    //}
+        LitComponent* litComponent = engine->AddComponent<LitComponent>(entityID);
+        litComponent->isLit = true;
+    }
 }
