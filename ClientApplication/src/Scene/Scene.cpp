@@ -808,10 +808,6 @@ void Scene::LoadTextures()
     unsigned int textureID = 0;
     renderSystem->Load2DTexturePNG("man.png");
     renderSystem->Load2DTexturePNG("noman.png");
-    renderSystem->Load2DTexturePNG("herobrinehd.png");
-    renderSystem->Load2DTexturePNG("dummy.png");
-    renderSystem->Load2DTexturePNG("flame.png");
-    renderSystem->Load2DTexturePNG("fire-flames-texture.png");
     renderSystem->Load2DTexturePNG("Campfire_MAT_BaseColor_00.png");
     renderSystem->Load2DTexturePNG("Campfire_MAT_BaseColor_01.png");
     renderSystem->Load2DTexturePNG("Campfire_MAT_Metallic.png");
@@ -825,7 +821,6 @@ void Scene::LoadTextures()
     // BMP Textures
     renderSystem->Load2DTextureBMP("seamless-green-grass-pattern.bmp");
     renderSystem->Load2DTextureBMP("full_low_body__BaseColor.bmp");
-    renderSystem->Load2DTextureBMP("blue_flame.bmp");
 }
 
 void Scene::LoadSounds()
