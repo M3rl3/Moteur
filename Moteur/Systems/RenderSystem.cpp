@@ -4,6 +4,7 @@
 
 #include "../Components/ShaderComponent.h"
 #include "../Components/AnimationComponent.h"
+#include "../Components/AIComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/MeshComponent.h"
 #include "../Components/AnimationComponent.h"
@@ -391,6 +392,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
     ShaderComponent* shaderComponent = nullptr;
     MeshComponent* meshComponent = nullptr;
     AnimationComponent* animationComponent = nullptr;
+    AIComponent* aiComponent = nullptr;
     BoundingBoxComponent* boundingBoxComponent = nullptr;
     TextureComponent* textureComponent = nullptr;
     FBOComponent* fboComponent = nullptr;
@@ -408,6 +410,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
         boundingBoxComponent = currentEntity->GetComponentByType<BoundingBoxComponent>();
         textureComponent = currentEntity->GetComponentByType<TextureComponent>();
         fboComponent = currentEntity->GetComponentByType<FBOComponent>();
+        aiComponent = currentEntity->GetComponentByType<AIComponent>();
 
         // check if the component exists
         if (transformComponent != nullptr && shaderComponent != nullptr)
@@ -447,6 +450,13 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             glm::mat4 translationMatrix = glm::translate(glm::mat4(1.f), transformComponent->position);
             glm::mat4 scaling = glm::scale(glm::mat4(1.f), transformComponent->scale);
             glm::mat4 rotation = glm::mat4(transformComponent->rotation);
+
+            // Adjust the rotation on all AI entities
+            if (aiComponent != nullptr) {
+                glm::quat oneEighty = glm::quat(glm::vec3(0.f, glm::radians(180.f), 0.f));
+                glm::quat finalRotation = transformComponent->rotation * oneEighty;
+                rotation = glm::mat4(finalRotation);
+            }
 
             model *= translationMatrix;
             model *= rotation;

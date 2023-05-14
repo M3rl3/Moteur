@@ -720,6 +720,8 @@ void Scene::LoadModels()
 
 void Scene::LoadAnimations() 
 {
+    std::cout << "\nLoading animations..." << std::endl;
+
     {
         sModelDrawInfo drawInfo;
         drawInfo = renderSystem->GetDrawInfo("merle");
