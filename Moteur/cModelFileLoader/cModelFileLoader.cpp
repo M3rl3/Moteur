@@ -1,4 +1,5 @@
 #include "cModelFileLoader.h"
+#include "../cAnimationManager/AssimpGLMHelpers.h"
 #include "../Global.h"
 
 #include <assimp/scene.h>
@@ -31,11 +32,13 @@ struct triangleLayout {
 
 void CastToGLM(const aiMatrix4x4& from, glm::mat4& to)
 {
+    to = glm::transpose(glm::make_mat4(&from.a1));
+
     //the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
-    to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+    /*to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
     to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
     to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
-    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
+    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;*/
 }
 
 void CastToGLM(const aiQuaternion& in, glm::quat& out)
@@ -210,11 +213,7 @@ int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxMode
         aiProcess_GenSmoothNormals |
         aiProcess_FixInfacingNormals |
         aiProcess_LimitBoneWeights |
-        aiProcess_EmbedTextures |
         aiProcess_ConvertToLeftHanded);
-
-    // const aiScene* scene = assimpImporter.ReadFile(fileToLoadFullPath, 
-    //     aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene) {
         std::cout << "Could not load model file " << fileName << std::endl;
@@ -410,29 +409,6 @@ void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDra
 
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
-        //// Copy over texColor to vertexColor
-        //{
-        //    aiColor4D* colors = new aiColor4D[mesh->mNumVertices];
-        //    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        //    aiTexture* texture = scene->mTextures[0];
-        //    aiVector3D& texcoord = mesh->mTextureCoords[0][i];
-
-        //    // Compute texture coordinates in the range [0, 1]
-        //    float u = fmod(texcoord.x, 1.0f);
-        //    float v = fmod(texcoord.y, 1.0f);
-
-        //    aiColor4D texelColor;
-        //    extractColorFromTexture(texture, u, v, texelColor);
-
-        //    // Apply color to vertex color
-        //    colors->r = texelColor.r;
-        //    colors->g = texelColor.g;
-        //    colors->b = texelColor.b;
-        //    colors->a = 1.0f;
-
-        //    mesh->mColors[0] = colors;
-        //}
-
         fbxModel.numberOfVertices = mesh->mNumVertices;
         fbxModel.numberOfTriangles = mesh->mNumFaces;
         fbxModel.numberOfIndices = mesh->mNumFaces * 3;
@@ -482,9 +458,6 @@ void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDra
                 modelArray[i].u1 = 0.f;
                 modelArray[i].v1 = 0.f;
             }
-
-            /*memset(modelArray[i].BoneWeight, 0, sizeof(modelArray[i].BoneWeight));
-            memset(modelArray[i].BoneID, 0, sizeof(modelArray[i].BoneID));*/
 
             fbxModel.numberOfBones = mesh->mNumBones;
             for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
@@ -554,8 +527,6 @@ void cModelFileLoader::ProcessNode(aiNode* node, const aiScene* scene, sModelDra
             fbxModel.pVertices[index].BoneWeight[1] = modelArray[index].BoneWeight[1];
             fbxModel.pVertices[index].BoneWeight[2] = modelArray[index].BoneWeight[2];
             fbxModel.pVertices[index].BoneWeight[3] = modelArray[index].BoneWeight[3];
-
-            int breakpoint = 0;
         }
 
         // Copy the index data
