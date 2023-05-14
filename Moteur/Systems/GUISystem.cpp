@@ -204,8 +204,8 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
     {
         playerComponent = GetPlayerComponent(entities);
 
-        playerComponent->health = std::max(0.0f, std::min(playerComponent->health, 1000.0f));
-        float progress = playerComponent->health / 1000.f;
+        playerComponent->health = std::max(0.0f, std::min(playerComponent->health, playerComponent->maxHealth));
+        float progress = playerComponent->health / playerComponent->maxHealth;
 
         ImGui::Text("Player Health: ");
         ImGui::ProgressBar(progress, barSize);
@@ -218,8 +218,8 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         enemyMesh = GetEnemyMesh(entities, "femaleWarrior");
         ImGui::Text("Enemy : %s", enemyMesh->meshName);
 
-        enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, 500.0f));
-        float progress = enemyMesh->health / 500.f;
+        enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, enemyMesh->maxHealth));
+        float progress = enemyMesh->health / enemyMesh->maxHealth;
 
         ImGui::ProgressBar(progress, barSize);
     }
@@ -228,8 +228,8 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         enemyMesh = GetEnemyMesh(entities, "minotaur");
         ImGui::Text("Enemy : %s", enemyMesh->meshName);
 
-        enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, 500.0f));
-        float progress = enemyMesh->health / 500.f;
+        enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, enemyMesh->maxHealth));
+        float progress = enemyMesh->health / enemyMesh->maxHealth;
 
         ImGui::ProgressBar(progress, barSize);
     }
@@ -238,8 +238,8 @@ void GUISystem::Process(const std::vector<Entity*>& entities, float dt)
         enemyMesh = GetEnemyMesh(entities, "creepyMonster");
         ImGui::Text("Enemy : %s", enemyMesh->meshName);
 
-        enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, 500.0f));
-        float progress = enemyMesh->health / 500.f;
+        enemyMesh->health = std::max(0.0f, std::min(enemyMesh->health, enemyMesh->maxHealth));
+        float progress = enemyMesh->health / enemyMesh->maxHealth;
 
         ImGui::ProgressBar(progress, barSize);
     }

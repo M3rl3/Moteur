@@ -47,7 +47,7 @@ void SoundSystem::SetSoundPath(std::string filePath)
 bool SoundSystem::LoadSound(const std::string& path, const std::string& sound_name, const int mode)
 {
 	if (soundManager->LoadSounds(sound_name, path, mode)) {
-		std::cout << "Model " << sound_name << " loaded successfully." << std::endl;
+		std::cout << "Loaded sound " << sound_name << std::endl;
 		return true;
 	}
 	else {
@@ -59,7 +59,7 @@ bool SoundSystem::LoadSound(const std::string& path, const std::string& sound_na
 bool SoundSystem::LoadSound(const std::string& sound_name, const int mode)
 {
 	if (soundManager->LoadSounds(sound_name, mode)) {
-		std::cout << "Sound " << sound_name << " loaded successfully." << std::endl;
+		std::cout << "Loaded sound " << sound_name << std::endl;
 		return true;
 	}
 	else {

@@ -12,7 +12,8 @@ public:
 		ComponentType("PlayerComponent"),
 		isPlayer(true),
 		isControllable(true),
-		health(1000)
+		health(100),
+		maxHealth(100)
 	{};
 
 	// Destructor
@@ -26,6 +27,9 @@ public:
 
 	// Health points of the player
 	float health;
+
+	// Maximum health of the player
+	float maxHealth;
 
 private:
 	// The component type

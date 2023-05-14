@@ -1,8 +1,9 @@
 #pragma once
 
 #include "cBone.h"
-
 #include "../cVAOManager/sModelDrawInfo.h"
+
+#include <iostream>
 
 struct AssimpNodeData
 {
@@ -27,6 +28,8 @@ public:
         m_TicksPerSecond = animation->mTicksPerSecond;
         ReadHeirarchyData(m_RootNode, scene->mRootNode);
         ReadMissingBones(animation, *model);
+
+        std::cout << "Loaded animation " << animationPath << std::endl;
     }
 
     ~Animation()

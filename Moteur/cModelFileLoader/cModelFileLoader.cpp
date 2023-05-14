@@ -123,7 +123,6 @@ int cModelFileLoader::LoadModelPLY(std::string fileName, sModelDrawInfo& plyMode
     //Vertex Layout
     modelArray = new vertexLayout[plyModel.numberOfVertices];
 
-    std::cout << "Loading " << fileName << std::endl;
     for (unsigned int count = 0; count != plyModel.numberOfVertices; count++)
     {
         plyFile >> modelArray[count].x;
@@ -219,8 +218,6 @@ int cModelFileLoader::LoadModelFBX(std::string fileName, sModelDrawInfo& fbxMode
         std::cout << "Could not load model file " << fileName << std::endl;
         return -1;
     }
-
-    std::cout << "Loading " << fileName << std::endl;
 
     if (scene->HasTextures())
     {

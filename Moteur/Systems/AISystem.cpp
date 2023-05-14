@@ -383,11 +383,6 @@ void CatchState::Update(float dt, Entity* playerEntity)
 	glm::vec3 playerPosition = transformComponent_player->position;
 	glm::vec3 aiPosition = transformComponent->position;
 
-	//// Face
-	//transformComponent->rotation =
-	//	glm::quat(glm::lookAt(aiPosition, playerPosition, -glm::vec3(0, 1, 0))) *
-	//	glm::quat(glm::vec3(glm::radians(180.f), glm::radians(180.f), 0));
-
 	if (playerComponent != nullptr) {
 
 		velocityComponent->velocity = glm::vec3(0.f);
@@ -410,6 +405,8 @@ StateMachine::StateMachine() :
 	aiTransform(nullptr),
 	aiVelocity(nullptr),
 	playerComponent(nullptr),
+	meshComponent(nullptr),
+	playerMesh(nullptr),
 	catchTimer(0)
 {
 	m_CurrentState = new IdleState();
@@ -482,9 +479,6 @@ void StateMachine::SetState(State* newState, StatePool* statePool, Entity* aiEnt
 
 	// A state pool is being used here to avoid creating a new state on every frame
 	// The state pool initializes a buffer of usable states that can be retrieved at runtime
-
-	// std::cout << "\nCurrentState: " << m_CurrentState->GetType() << std::endl;
-	// std::cout << "Distance: " << distance << std::endl;
 
 	// Check if the AI should be active or inactive
 	if (!aiActive && anotherCounter >= 200) {

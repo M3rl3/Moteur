@@ -20,7 +20,6 @@
 #include "../PhysicsEngine/interfaces/PlaneShape.h"
 #include "../PhysicsEngine/interfaces/RigidBodyDesc.h"
 
-#include <assimp/version.h>
 #include <sstream>
 
 // Globals
@@ -77,9 +76,6 @@ Scene::Scene()
 
     // Enemy Health
     enemyHealth = 500.f;
-
-    std::cout << "Assimp version: " << aiGetVersionMajor() << "."
-        << aiGetVersionMinor() << "." << aiGetVersionRevision() << std::endl;
 }
 
 // Destructor
@@ -183,7 +179,8 @@ void Scene::Render()
 
         PlayerComponent* playerComponent = engine->AddComponent<PlayerComponent>(entityID);
         playerComponent->isPlayer = true;
-        playerComponent->health = 1000.f;
+        playerComponent->health = 2000.f;
+        playerComponent->maxHealth = 2000.f;
     }
 
     {   // Entity "creepyMonster"
@@ -202,6 +199,7 @@ void Scene::Render()
         meshComponent->meshName = "creepyMonster";
         meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->health = enemyHealth;
+        meshComponent->maxHealth = enemyHealth;
         meshComponent->isWireframe = false;
         meshComponent->useBones = true;
 
@@ -258,6 +256,7 @@ void Scene::Render()
         meshComponent->meshName = "femaleWarrior";
         meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->health = enemyHealth;
+        meshComponent->maxHealth = enemyHealth;
         meshComponent->isWireframe = false;
         meshComponent->useBones = true;
 
@@ -304,6 +303,7 @@ void Scene::Render()
         meshComponent->meshName = "minotaur";
         meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->health = enemyHealth;
+        meshComponent->maxHealth = enemyHealth;
         meshComponent->isWireframe = false;
         meshComponent->useBones = true;
 
@@ -765,52 +765,24 @@ void Scene::LoadTextures()
     // Textures loaded here
     renderSystem->SetTexturePath("../assets/textures");
 
-    // Skybox textures
+    // Cubemap textures
 
-    // BMP
-    unsigned int skyboxTextureID0 = 0;
-    std::string errorString0 = "";
+    unsigned int skyboxTextureID = 0;
+    std::string errorString = "";
 
-    std::string skyboxNameBMP = "sunnyday";
-    renderSystem->LoadCubeMapTextureBMP(skyboxTextureID0, skyboxNameBMP,
-        "TropicalSunnyDayLeft2048.bmp",
-        "TropicalSunnyDayRight2048.bmp",
-        "TropicalSunnyDayDown2048.bmp",
-        "TropicalSunnyDayUp2048.bmp",
-        "TropicalSunnyDayFront2048.bmp",
-        "TropicalSunnyDayBack2048.bmp",
-        true, errorString0);
-
-    // PNG
-    unsigned int skyboxTextureID1 = 0;
-    std::string errorString1 = "";
-
-    std::string skyboxNamePNG1 = "desert";
-    renderSystem->LoadCubeMapTexturePNG(skyboxTextureID1, skyboxNamePNG1,
-        "desertlf.png",
-        "desertrt.png",
-        "desertdn.png",
-        "desertup.png",
-        "desertft.png",
-        "desertbk.png",
-        true, errorString1);
-    
-    unsigned int skyboxTextureID2 = 0;
-    std::string errorString2 = "";
-
-    std::string skyboxNamePNG2 = "orangeSky";
-    renderSystem->LoadCubeMapTexturePNG(skyboxTextureID2, skyboxNamePNG2,
+    std::string skyboxName = "orangeSky";
+    renderSystem->LoadCubeMapTexturePNG(skyboxTextureID, skyboxName,
         "sky106lf.png",
         "sky106rt.png",
         "sky106dn.png",
         "sky106up.png",
         "sky106ft.png",
         "sky106bk.png",
-        true, errorString2);
+        true, errorString);
 
     // 2D textures
 
-    // PNG Textures
+    // PNG textures
     unsigned int textureID = 0;
     renderSystem->Load2DTexturePNG("man.png");
     renderSystem->Load2DTexturePNG("noman.png");
@@ -824,7 +796,7 @@ void Scene::LoadTextures()
     renderSystem->Load2DTexturePNG("tree001_Gloss.png");
     renderSystem->Load2DTexturePNG("tree001_Opacity.png");
 
-    // BMP Textures
+    // BMP textures
     renderSystem->Load2DTextureBMP("seamless-green-grass-pattern.bmp");
     renderSystem->Load2DTextureBMP("full_low_body__BaseColor.bmp");
 }

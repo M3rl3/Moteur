@@ -27,7 +27,8 @@ public:
 		isImposter(false),
 		useDiscardTexture(false),
 		modelFormat(PLY),
-		health(1000),
+		health(100),
+		maxHealth(100),
 		useBones(false),
 		useModelInfo(false),
 		animation(nullptr),
@@ -71,6 +72,7 @@ public:
 	bool useModelInfo;
 
 	float health;
+	float maxHealth;
 
 	Animator* animator = nullptr;
 	Animation* animation = nullptr;

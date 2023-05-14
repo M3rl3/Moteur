@@ -986,7 +986,7 @@ cModelFileLoader* RenderSystem::GetModelFileLoader()
 // Set the path where the meshes are located
 void RenderSystem::SetMeshPath(std::string filePath)
 {
-    std::cout << "\nLoading meshes..." << std::endl;
+    std::cout << "\nLoading models..." << std::endl;
 
     modelFileLoader->SetBasePath(filePath);
 }
@@ -998,11 +998,11 @@ bool RenderSystem::LoadMesh(std::string fileName, std::string modelName, sModelD
     modelFileLoader->LoadModelFBX(fileName, model);
 
     if (vaoManager->LoadModelIntoVAO(modelName, plyModel, shaderID)) {
-        std::cout << "Model " << modelName << " loaded successfully." << std::endl;
+        std::cout << "Loaded model " << fileName << std::endl;
         return true;
     }
     else {
-        std::cout << "Could not load model " << modelName << " into VAO" << std::endl;
+        std::cout << "Could not load model " << fileName << " into VAO" << std::endl;
         return false;
     }
 
@@ -1027,11 +1027,11 @@ bool RenderSystem::LoadModel(std::string fileName, std::string modelName, ModelF
     }
     
     if (vaoManager->LoadModelIntoVAO(modelName, model, shaderID)) {
-        std::cout << "Model " << modelName << " loaded successfully into VAO." << std::endl;
+        std::cout << "Loaded model " << fileName << std::endl;
         return true;
     }
     else {
-        std::cout << "Could not load model " << modelName << " into VAO" << std::endl;
+        std::cout << "Could not load model " << fileName << " into VAO" << std::endl;
         return false;
     }
 }
@@ -1052,7 +1052,7 @@ bool RenderSystem::Load2DTextureBMP(unsigned int& textureID, const char* filePat
     {
         textureID = textureManager->getTextureIDFromName(filePath);
 
-        std::cout << "Loaded " << filePath << " texture." << std::endl;
+        std::cout << "Loaded texture " << filePath << std::endl;
         return true;
     }
     else
@@ -1068,7 +1068,7 @@ bool RenderSystem::Load2DTextureBMP(const char* filePath)
     // Check if the texture loaded
     if (textureManager->Create2DTextureFromBMPFile(filePath))
     {
-        std::cout << "Loaded " << filePath << " texture." << std::endl;
+        std::cout << "Loaded texture " << filePath << std::endl;
         return true;
     }
     else
@@ -1086,7 +1086,7 @@ bool RenderSystem::Load2DTexturePNG(unsigned int& textureID, const char* filePat
     {
         textureID = textureManager->getPNGTextureIDFromName(filePath);
 
-        std::cout << "Loaded " << filePath << " texture." << std::endl;
+        std::cout << "Loaded texture " << filePath << std::endl;
         return true;
     }
     else
@@ -1102,7 +1102,7 @@ bool RenderSystem::Load2DTexturePNG(const char* filePath)
     // Check if the texture loaded
     if (textureManager->Create2DTextureFromPNGFile(filePath))
     {
-        std::cout << "Loaded " << filePath << " texture." << std::endl;
+        std::cout << "Loaded texture " << filePath << std::endl;
         return true;
     }
     else
@@ -1115,10 +1115,7 @@ bool RenderSystem::Load2DTexturePNG(const char* filePath)
 sModelDrawInfo RenderSystem::GetDrawInfo(std::string meshName)
 {
     sModelDrawInfo modelInfo;
-    if (vaoManager->FindDrawInfoByModelName(meshName, modelInfo))
-    {
-        std::cout << meshName << " model found" << std::endl;
-    }
+    vaoManager->FindDrawInfoByModelName(meshName, modelInfo);
     return modelInfo;
 }
 

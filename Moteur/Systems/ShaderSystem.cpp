@@ -71,6 +71,8 @@ void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* ve
     vertexShader.fileName = vertShader;
     fragmentShader.fileName = fragShader;
 
+    std::cout << "\nCompiling shaders..." << std::endl;
+
     // Check if the shaders compile
     if (!shaderManager->createProgramFromFile("ShadyProgram", vertexShader, fragmentShader)) {
         std::cout << "Error: Shader program failed to compile." << std::endl;
@@ -98,6 +100,8 @@ void ShaderSystem::CreateShaderProgramFromFiles(unsigned int& id, const char* ve
     vertexShader.fileName = vertShader;
     geometryShader.fileName = geomShader;
     fragmentShader.fileName = fragShader;
+
+    std::cout << "\nCompiling shaders..." << std::endl;
 
     // Check if the shaders compile
     if (!shaderManager->createProgramFromFile("ShadyProgram", vertexShader, geometryShader, fragmentShader)) {
