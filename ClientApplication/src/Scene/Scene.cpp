@@ -147,7 +147,7 @@ void Scene::Render()
         meshComponent->meshName = "merle";
         meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->isWireframe = false;
-        meshComponent->useBones = false;
+        meshComponent->useBones = true;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useTexture = true;
@@ -178,8 +178,8 @@ void Scene::Render()
         velocityComponent->velocity = glm::vec3(0.f, 0.f, 0.f);
         velocityComponent->useVelocity = false;
 
-        /*animationComponent = engine->AddComponent<AnimationComponent>(entityID);
-        animationComponent->useAnimator = false;*/
+        animationComponent = engine->AddComponent<AnimationComponent>(entityID);
+        animationComponent->useAnimator = true;
 
         PlayerComponent* playerComponent = engine->AddComponent<PlayerComponent>(entityID);
         playerComponent->isPlayer = true;
@@ -259,7 +259,7 @@ void Scene::Render()
         meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->health = enemyHealth;
         meshComponent->isWireframe = false;
-        meshComponent->useBones = false;
+        meshComponent->useBones = true;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = true;
@@ -283,9 +283,9 @@ void Scene::Render()
         aiComponent->aiBehaviour = BehaviourType::IDLE;
         aiComponent->radius = 20.f;
 
-        /*ac_femaleWarrior = engine->AddComponent<AnimationComponent>(entityID);
+        ac_femaleWarrior = engine->AddComponent<AnimationComponent>(entityID);
         ac_femaleWarrior->useAnimator = true;
-        ac_femaleWarrior->sprint = true;*/
+        ac_femaleWarrior->sprint = true;
     }
     
     {   // Entity "minotaur"
@@ -305,7 +305,7 @@ void Scene::Render()
         meshComponent->modelFormat = ModelFormat::FBX;
         meshComponent->health = enemyHealth;
         meshComponent->isWireframe = false;
-        meshComponent->useBones = false;
+        meshComponent->useBones = true;
 
         TextureComponent* textureComponent = engine->AddComponent<TextureComponent>(entityID);
         textureComponent->useRGBAColor = true;
@@ -329,9 +329,9 @@ void Scene::Render()
         aiComponent->aiBehaviour = BehaviourType::IDLE;
         aiComponent->radius = 30.f;
 
-        /*ac_minotaur = engine->AddComponent<AnimationComponent>(entityID);
-        ac_minotaur->useAnimator = false;
-        ac_minotaur->sprint = false;*/
+        ac_minotaur = engine->AddComponent<AnimationComponent>(entityID);
+        ac_minotaur->useAnimator = true;
+        ac_minotaur->sprint = false;
     }
 
     {   // Entity "plane"
@@ -707,10 +707,10 @@ void Scene::LoadModels()
     // Meshes loaded here
     renderSystem->SetMeshPath("../assets/meshes");
 
-    renderSystem->LoadModel("castleGuard.fbx", "merle", ModelFormat::FBX, shaderID);
     renderSystem->LoadModel("skybox_sphere.ply", "skybox", ModelFormat::PLY, shaderID);
+    renderSystem->LoadModel("castleGuard.fbx", "merle", ModelFormat::FBX, shaderID);
     renderSystem->LoadModel("creepyMonster.fbx", "creepyMonster", ModelFormat::FBX, shaderID);
-    renderSystem->LoadModel("femaleWarrior.ply", "femaleWarrior", ModelFormat::PLY, shaderID);
+    renderSystem->LoadModel("femaleWarrior.fbx", "femaleWarrior", ModelFormat::FBX, shaderID);
     renderSystem->LoadModel("minotaur.fbx", "minotaur", ModelFormat::FBX, shaderID);
     renderSystem->LoadModel("plane.ply", "plane", ModelFormat::PLY, shaderID);
     renderSystem->LoadModel("campfire.ply", "campfire", ModelFormat::PLY, shaderID);
@@ -720,7 +720,7 @@ void Scene::LoadModels()
 
 void Scene::LoadAnimations() 
 {
-    /*{
+    {
         sModelDrawInfo drawInfo;
         drawInfo = renderSystem->GetDrawInfo("merle");
 
@@ -728,16 +728,16 @@ void Scene::LoadAnimations()
         animationComponent->animation[WALK] = new Animation("../assets/meshes/Walking.fbx", &drawInfo);
         animationComponent->animation[SPRINT] = new Animation("../assets/meshes/FastRun.fbx", &drawInfo);
         animationComponent->animator = new Animator(animationComponent->animation[BREATHING_IDLE]);
-    }*/
+    }
     
-    /*{
+    {
         sModelDrawInfo drawInfo;
         drawInfo = renderSystem->GetDrawInfo("femaleWarrior");
 
         ac_femaleWarrior->animation[BREATHING_IDLE] = new Animation("../assets/meshes/FemaleIdle.fbx", &drawInfo);
         ac_femaleWarrior->animation[SPRINT] = new Animation("../assets/meshes/FemaleRun.fbx", &drawInfo);
         ac_femaleWarrior->animator = new Animator(ac_femaleWarrior->animation[BREATHING_IDLE]);
-    }*/
+    }
     
     {
         sModelDrawInfo drawInfo;
@@ -748,14 +748,14 @@ void Scene::LoadAnimations()
         ac_creepyMonster->animator = new Animator(ac_creepyMonster->animation[BREATHING_IDLE]);
     }
 
-    /*{
+    {
         sModelDrawInfo drawInfo;
         drawInfo = renderSystem->GetDrawInfo("minotaur");
 
         ac_minotaur->animation[BREATHING_IDLE] = new Animation("../assets/meshes/MinotaurIdle.fbx", &drawInfo);
         ac_minotaur->animation[WALK] = new Animation("../assets/meshes/MinotaurWalk.fbx", &drawInfo);
         ac_minotaur->animator = new Animator(ac_minotaur->animation[BREATHING_IDLE]);
-    }*/
+    }
 }
 
 void Scene::LoadTextures() 
