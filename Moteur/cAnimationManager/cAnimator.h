@@ -19,5 +19,7 @@ public:
 private:
     std::vector<glm::mat4> m_FinalBoneMatrices;
     Animation* m_CurrentAnimation = nullptr;
+    Animation* m_PreviousAnimation = nullptr;
+    float transitionTime = 0.f;
     float m_CurrentTime;
 };

@@ -452,7 +452,7 @@ void RenderSystem::Process(const std::vector<Entity*>& entities, float dt)
             glm::mat4 rotation = glm::mat4(transformComponent->rotation);
 
             // Adjust the rotation on all AI entities
-            if (aiComponent != nullptr) {
+            if (animationComponent != nullptr) {
                 glm::quat oneEighty = glm::quat(glm::vec3(0.f, glm::radians(180.f), 0.f));
                 glm::quat finalRotation = transformComponent->rotation * oneEighty;
                 rotation = glm::mat4(finalRotation);
